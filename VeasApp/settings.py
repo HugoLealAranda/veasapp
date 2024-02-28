@@ -77,11 +77,11 @@ WSGI_APPLICATION = 'VeasApp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'veasdb',
+        'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': '1313',
-        'HOST': '127.0.0.1',
-        'DATABASE_PORT': '5432',
+        'PASSWORD': '1CbbAEb4C54Bdagdb*-gAd56C1GG3Eff',
+        'HOST': 'monorail.proxy.rlwy.net',
+        'DATABASE_PORT': '16222',
     }
 }
 
