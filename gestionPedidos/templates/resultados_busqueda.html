@@ -1,0 +1,830 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="metrica1-container">
+        <h2>Estás buscando: <strong>{{ query }}</strong></h2>
+
+        <button class="button" onclick="printPage()">Descargar PDF o Imprimir</button>
+    </div>
+</div>
+
+    {% if metricas1 %}
+
+<div class="container">
+
+    <div class="metrica1-container">
+        <!-- Tarjeta de métrica para el último valor unitario de Rental Veas -->
+        <div class="metrica1-card">
+            <div class="metrica-titulo">Último valor Venta</div>
+            <div class="metrica-valor">{{ metricas1.ultimo_valor_rental_veas | default:'No disponible' }}</div>
+        </div>
+        
+        <!-- Tarjeta de métrica para el último valor unitario de otros -->
+        <div class="metrica1-card">
+            <div class="metrica-titulo">Último valor Compra</div>
+            <div class="metrica-valor">{{ metricas1.ultimo_valor_otros | default:'No disponible' }}</div>
+        </div>
+        
+        <!-- Tarjeta de métrica para el promedio de Rental Veas -->
+        <div class="metrica1-card">
+            <div class="metrica-titulo">Precio Promedio de Venta</div>
+            <div class="metrica-valor">{{ metricas1.promedio_rental_veas | default:'No disponible' }}</div>
+        </div>
+        
+        <!-- Tarjeta de métrica para el promedio de otros -->
+        <div class="metrica1-card">
+            <div class="metrica-titulo">Precio Promedio de Compra</div>
+            <div class="metrica-valor">{{ metricas1.promedio_otros | default:'No disponible' }}</div>
+        </div>
+    
+        <!-- Tarjeta de métrica para la utilidad  -->
+    
+        <div class="metrica1-card">
+            <div class="metrica-titulo">Utilidad</div>
+            <div class="metrica-valor">{{ metricas1.utilidad|floatformat:2 }}</div>
+        </div>
+            
+        <!-- Tarjeta de métrica para la utilidad porcentual -->
+            <div class="metrica1-card">
+                <div class="metrica-titulo">Utilidad en %</div>
+            <div class="metrica-valor">{{ metricas1.utilidad_porcentual|floatformat:2 }} %</div>
+        </div>
+    </div>  
+    {% endif %}
+
+
+
+
+        <div class="chart-card card" id="bar-chart-card">
+            <canvas id="graficoBarras"></canvas>
+        </div>
+    
+
+        <div class="chart-card card" id="line-chart-card">
+            <canvas id="myChart"></canvas>
+        </div>
+
+
+        <div class="chart-card card" id="pie-chart-card">
+            <canvas id="myPieChart"></canvas>
+        </div>
+    
+
+        <div class="chart-card card" id="line-chart-card">
+            <canvas id="graficoBarras2"></canvas>
+        </div>
+    
+        <div class="reactive-element">
+            <span class="stock-label">Stock Teórico:</span>
+            <div class="stock-value-container">
+                <span class="stock-value">{{ stock_teorico }}</span>
+            </div>
+        </div>              
+
+
+
+
+<div class="reactive-element">
+    <span class="stock-label tiempos-espera-titulo">Tiempos de Espera:</span>
+    <div class="stock-value-container tiempos-espera-container">
+        <ul class="tiempos-espera">
+            {% for resultado in resultados %}
+                <li>
+                    <strong class="nombre-empresa">{{ resultado.empresa_vendedora }}</strong>: <span class="resultado">{{ resultado.entrega }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+    
+
+<div class="container">
+    <div class="search-container">
+        <h2>Cantidad de Compras por empresa en pesos (clp)</h2>
+    </div>  
+    {% if metricas2 %}
+    <div class="metrica1-container">
+        <div class="row">
+            {% for venta_por_empresa in metricas2.valor_ventas_por_empresa %}
+            <div class="col-sm-6">
+                <div class="metrica1-card">
+                    <div class="metrica-titulo"><strong>{{ venta_por_empresa.empresa_vendedora }}</strong> </div>
+                    <div class="metrica-valor">Cantidad comprada:  <span style="color: green; font-weight: bold;">${{ venta_por_empresa.valor_total_sum }}</span></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="container">
+    <div class="search-container">
+        <h2>Rendimiento Compradores en pesos (clp)</h2>
+    </div>  
+    {% if metricas3 %}
+    <div class="metrica1-container">
+        <div class="row">
+            {% for rendimiento_compradores in metricas3.rendimiento_compradores %}
+            <div class="col-sm-6"> 
+                <div class="metrica1-card">
+                    <div class="metrica-titulo"><strong>{{ rendimiento_compradores.comprador }}</strong> </div>
+                    <div class="metrica-valor">Cantidad comprada:  <span style="color: green; font-weight: bold;">${{ rendimiento_compradores.valor_total_comprado }}</span></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="container">
+    <div class="search-container">
+        <h2>Volumenes de Compras por empresa (unidades)</h2>
+    </div>
+    {% if metricas4 %}
+    <div class="metrica1-container">
+        <div class="row" id="firstEight">
+            {% for volumen_ventas_por_empresa in metricas4.volumen_ventas_por_empresa|slice:":3" %}
+            <div class="col-sm-6"> 
+                <div class="metrica1-card">
+                    <div class="metrica-titulo"><strong>{{ volumen_ventas_por_empresa.empresa_vendedora }}</strong></div>
+                    <div class="metrica-valor">Cantidad comprada: <span style="color: red; font-weight: bold;">{{ volumen_ventas_por_empresa.volumen_total }}</span></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row" id="remaining" style="display: none;">
+            {% for volumen_ventas_por_empresa in metricas4.volumen_ventas_por_empresa|slice:"3:" %}
+            <div class="col-sm-6"> 
+                <div class="metrica1-card">
+                    <div class="metrica-titulo"><strong>{{ volumen_ventas_por_empresa.empresa_vendedora }}</strong></div>
+                    <div class="metrica-valor">Cantidad comprada: <span style="color: red; font-weight: bold;">{{ volumen_ventas_por_empresa.volumen_total }}</span></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div id="showMoreBtn">
+            <button onclick="showMore()">Mostrar más</button>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<div class="container">
+    <div id="showLessBtn" style="display: none;">
+        <button onclick="showLess()">Mostrar menos</button>
+    </div>
+</div>
+
+
+
+    
+
+
+    
+
+
+
+
+
+
+
+
+<style>
+/* Aplica margen superior a las tarjetas, excepto para la primera */
+.metrica1-container .metrica1-card:not(:first-child) {
+    margin-top: 30px; /* Ajusta el valor del margen superior según sea necesario */
+    margin-bottom: 30px;
+}
+.metrica1-container .metrica1-card .metrica-titulo {
+    font-weight: bold;
+}
+/* Aplica margen superior al contenedor de métricas */
+.metrica1-container {
+    margin-top: 20px; /* Ajusta el valor del margen superior según sea necesario */
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px; /* Espacio entre tarjetas */
+    margin-bottom: 30px;
+
+}
+.button {
+      background-color: #007bffb4;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+      border-radius: 8px;
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+      position: absolute;
+    right: 0;
+    margin-top: 1em;
+    }
+
+    .button:hover {
+      background-color: #0057b3c6;
+    }
+.metrica1-card {
+    background: #fff;
+    border-left: 4px solid #440af1; /* Cambia el color según la categoría de la métrica */
+    margin: 30px; /* Añade margen entre las tarjetas */
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px; /* Puedes ajustar el padding para ahorrar espacio */
+    min-height: 120px; /* Ajusta la altura mínima según sea necesario */
+    min-width: 150px
+    
+}
+
+.tiempos-espera-container {
+    max-height: 200px; /* Altura máxima de la lista */
+    overflow-y: auto; /* Agrega desplazamiento vertical cuando sea necesario */
+}
+
+.tiempos-espera-titulo {
+    font-size: 24px; /* Tamaño del título */
+}
+
+.nombre-empresa {
+    font-size: 14px; /* Tamaño del nombre de la empresa */
+}
+
+.resultado {
+    font-size: 12px; /* Tamaño del resultado */
+}
+
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  margin-bottom: 30px;
+
+}
+
+.container > * {
+  margin-bottom: 20px; /* Ajusta el valor del margen según sea necesario */
+  margin-top: 20px;
+}
+
+
+.chart-card {
+  flex: 1 1 100%; /* Cada tarjeta ocupa todo el ancho de su contenedor */
+  margin-bottom: 10px; /* Añade un margen inferior entre las tarjetas */
+  margin-top: 30px;
+}
+
+/* Media query para ajustar el diseño cuando la pantalla sea más pequeña */
+@media (max-width: 768px) {
+  .chart-card {
+    flex-basis: 100%; /* Cuando la pantalla sea más pequeña, cada tarjeta ocupará el 100% del ancho */
+  }
+  .button {
+        position: static;
+        margin-top: 1em; /* Ajusta este valor según sea necesario */
+    }
+}
+
+.search-container {
+        top: 0;
+        left: 0;
+        z-index: 1; /* Asegura que el contenedor de búsqueda esté sobre los contenedores de métricas */
+        width: 100%; /* Ajusta el ancho del contenedor de búsqueda para que ocupe toda la anchura del contenedor principal */
+        padding: 10px; /* Ajusta el relleno según sea necesario */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade sombra si lo deseas */
+        margin-top: 10px;
+        margin-bottom: 10px;
+        background: #fff;
+    border-radius: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    }
+
+    .search-container h2 {
+        margin: 0;
+        font-size: 1.5em;
+        color: #333;
+        margin-bottom: 20px;
+        margin-top: 10px
+
+    }
+
+    .metrica-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .metrica-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        flex: 1 1 calc(20% - 20px);
+        text-align: center;
+
+    }
+    .reactive-element {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+    }
+
+    .stock-label {
+        font-size: 24px; /* Ajusta el tamaño del título según sea necesario */
+        font-weight: bold;
+        color: #333;
+        display: block;
+        margin-bottom: 20px;
+    }
+
+    .stock-value-container {
+        font-size: 36px; /* Ajusta el tamaño del número según sea necesario */
+        color: #007bff;
+        line-height: 1;
+    }
+
+    .metrica-titulo {
+        font-size: 1.2em;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .tiempos-espera-titulo {
+    font-size: 24px; /* Tamaño del título */
+    color: black; /* Color del texto */
+}
+
+
+.nombre-empresa {
+    font-size: 22px; /* Tamaño del nombre de la empresa */
+    color: black; /* Color del texto */
+}
+
+.resultado {
+    font-size: 18px; /* Tamaño del resultado */
+    text-decoration: underline red; /* Subrayado con color rojo */
+}
+
+
+
+    .metrica-valor {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #4e73df;
+        margin-top: 10px;
+        margin-bottom: 30px;
+
+    }
+    .cuadro-stock {
+                width: 200px;
+                height: 200px;
+                background-color: #4e73df;
+                border: 5px solid #fff;
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-size: 24px;
+                color: #fff;
+                text-align: center;
+            }
+
+    .numero-stock {
+                margin-top: 10px; 
+            }
+
+
+    .charts-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+
+.card {
+    flex: 1 1 300px; /* O cualquier otro valor adecuado */
+    max-width: 100%;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+
+}
+
+.card .numero-stock {
+    font-size: 24px;
+}
+
+.numero-stock {
+    font-size: 24px;
+}
+    canvas {
+        width: 100%;
+        height: auto;
+    }
+
+
+</style>
+
+<!-- Bootstrap CSS desde CDN -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<!-- jQuery desde CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- Bootstrap Bundle JS desde CDN (incluye Popper) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.2"></script>
+
+
+<script>
+    function showMore() {
+        // Mostrar las tarjetas adicionales ocultas
+        var remainingCards = document.getElementById('remaining');
+        if (remainingCards) {
+            remainingCards.style.display = 'flex';
+        }
+        
+        // Mostrar el botón "Mostrar menos" y ocultar el botón "Mostrar más"
+        document.getElementById('showMoreBtn').style.display = 'none';
+        document.getElementById('showLessBtn').style.display = 'block';
+    }
+
+    function showLess() {
+        // Ocultar las tarjetas adicionales
+        var remainingCards = document.getElementById('remaining');
+        if (remainingCards) {
+            remainingCards.style.display = 'none';
+        }
+        
+        // Mostrar el botón "Mostrar más" y ocultar el botón "Mostrar menos"
+        document.getElementById('showMoreBtn').style.display = 'block';
+        document.getElementById('showLessBtn').style.display = 'none';
+    }
+</script>
+
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fechasRentalVeas = JSON.parse('{{ fechas_rental_veas|safe }}');
+        const valoresUnitariosRentalVeas = JSON.parse('{{ valores_unitarios_rental_veas|safe }}');
+        const fechasOtros = JSON.parse('{{ fechas_otros|safe }}');
+        const valoresUnitariosOtros = JSON.parse('{{ valores_unitarios_otros|safe }}');
+    
+        const datosRentalVeas = fechasRentalVeas.map((fecha, index) => ({
+            x: fecha,
+            y: valoresUnitariosRentalVeas[index]
+        }));
+    
+        const datosOtros = fechasOtros.map((fecha, index) => ({
+            x: fecha,
+            y: valoresUnitariosOtros[index]
+        }));
+    
+        const config = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Rental Veas',
+                    data: datosRentalVeas,
+                    fill: false,
+                    borderColor: 'rgb(255, 99, 132)',
+                    tension: 0.05,
+                    pointRadius: 7
+                    
+                }, {
+                    label: 'Proveedores',
+                    data: datosOtros,
+                    fill: false,
+                    borderColor: 'rgb(54, 162, 235)',
+                    tension: 0.05,
+                    pointRadius: 7
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'month',
+                            tooltipFormat: 'yyyy-MM-dd'
+                        },
+                        distribution: 'linear'
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.parsed.y;
+                                return label;
+                            }
+                        }
+                    },
+                    // Agrega esta sección para incluir el título
+                    title: {
+                        display: true,
+                        text: 'Evolución de Precios',
+                        font: {
+                            size: 18
+                        }
+                    }
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                }
+            }
+        };
+    
+        var myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    });
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const etiquetasPieChart = JSON.parse('{{ etiquetas_pie|safe }}');
+        const valoresPieChart = JSON.parse('{{ valores_pie_chart|safe }}');
+
+        // Configuración del gráfico de doughnut
+        const dataPieChart = {
+            labels: etiquetasPieChart,
+            datasets: [{
+                data: valoresPieChart,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+
+        const configPieChart = {
+            type: 'doughnut',
+            data: dataPieChart,
+            options: {
+                maintainAspectRatio: true, // Asegura que el gráfico mantenga la relación de aspecto
+                animation: {
+                    animateRotate: true, // Para animar la rotación
+                    animateScale: false, // Para animar la escala (true para activar)
+                    duration: 3000 // 3000 milisegundos = 3 segundos
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Lugar de Compra', // Título del gráfico
+                        fontSize: 18,
+                        fontColor: '#333',
+                        padding: 20
+                    }
+                }
+            }
+        };
+
+        var myPieChart = new Chart(
+            document.getElementById('myPieChart'),
+            configPieChart
+        );
+    });
+</script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var empresas = JSON.parse('{{ empresas|safe }}');
+    var valores = JSON.parse('{{ valores|safe }}');
+
+    // Colores sólidos para las barras (sin transparencia)
+    const backgroundColors = [
+        'rgb(255, 99, 132)',
+        'rgb(255, 159, 64)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(54, 162, 235)',
+        'rgb(153, 102, 255)',
+        'rgb(201, 203, 207)'
+    ];
+
+    // Encuentra el índice del valor más bajo
+    const minValueIndex = valores.indexOf(Math.min(...valores));
+
+    // Asigna colores personalizados
+    let customBackgroundColors = [...backgroundColors].slice(0, empresas.length);
+    let customBorderColors = [...backgroundColors].slice(0, empresas.length); 
+
+    // Establece un color diferente para el valor más bajo
+    customBackgroundColors[minValueIndex] = 'rgb(102, 187, 106)'; // Verde pastel para el fondo
+    customBorderColors[minValueIndex] = 'rgb(102, 187, 106)'; // Verde pastel para el borde
+
+    var ctx = document.getElementById('graficoBarras').getContext('2d');
+    var graficoBarras = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: empresas,
+            datasets: [{
+                label: 'Ranking Últimos Precios por Proveedor',
+                data: valores,
+                backgroundColor: customBackgroundColors,
+                borderColor: customBorderColors,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    gridLines: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    gridLines: {
+                        display: true
+                    }
+                }
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            animation: {
+                duration: 2000 // Hace que la animación sea un poco más lenta
+            },
+            plugins: {
+                annotation: {
+                    annotations: [{
+                        type: 'line',
+                        mode: 'vertical',
+                        scaleID: 'x', // Asegúrate de que 'scaleID' coincida con el ID de tu eje X.
+                        value: empresas[minValueIndex], // La etiqueta exacta de la barra que quieres resaltar
+                        borderColor: 'red',
+                        borderWidth: 3,
+                        label: {
+                            enabled: true,
+                            content: 'Mejor precio',
+                            position: 'top',
+                            backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                            yAdjust: -6,
+                        }
+                    }]
+                }
+            }
+        }
+    });
+});
+
+</script>
+<script id="empresas-data" type="application/json">{{ empresas_json }}</script>
+<script id="valores-data" type="application/json">{{ valores_json }}</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Se asume que las variables se pasan correctamente desde el backend
+        var fechas_rental_veas = JSON.parse('{{ fechas_rental_veas|safe }}');
+        var valores_unitarios_rental_veas = JSON.parse('{{ valores_unitarios_rental_veas|safe }}');
+        var fechas_otros = JSON.parse('{{ fechas_otros|safe }}');
+        var valores_unitarios_otros = JSON.parse('{{ valores_unitarios_otros|safe }}');
+
+        var ctx = document.getElementById('graficoBarras2').getContext('2d');
+
+        // Filtrar todas las fechas desde el último año mes a mes
+        var today = new Date();
+        var oneYearAgo = new Date();
+        oneYearAgo.setFullYear(today.getFullYear() - 1);
+
+        var filteredFechasRentalVeas = fechas_rental_veas.filter(function(fecha) {
+            return new Date(fecha) >= oneYearAgo;
+        });
+
+        var filteredFechasOtros = fechas_otros.filter(function(fecha) {
+            return new Date(fecha) >= oneYearAgo;
+        });
+
+        var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: filteredFechasRentalVeas.concat(filteredFechasOtros),
+        datasets: [
+            {
+                label: 'Valores Rental Veas',
+                data: valores_unitarios_rental_veas,
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                borderWidth: 2,
+                barThickness: 20 // Ajusta este valor según tus preferencias
+            },
+            {
+                label: 'Valores Otros',
+                data: valores_unitarios_otros,
+                backgroundColor: 'rgb(54, 162, 235)',
+                borderColor: 'rgb(54, 162, 235)',
+                borderWidth: 2,
+                barThickness: 20 // Ajusta este valor según tus preferencias
+            }
+        ]
+    },
+    options: {
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'month',
+                    displayFormats: {
+                        month: 'MMM yyyy'
+                    }
+                },
+                grid: {
+                    display: true
+                }
+            },
+            y: {
+                beginAtZero: true,
+                grid: {
+                    display: true
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false
+            },
+            animation: {
+                duration: 2000 
+            }
+        }
+    }
+});
+    });
+</script>
+
+<script>
+    function printPage() {
+        window.print();
+    }
+</script>
+
+
+
+
+
+
+
+
+
+    
+    {% endblock %}
+

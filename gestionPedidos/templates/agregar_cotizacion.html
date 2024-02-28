@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 120vh;
+            background-color: #f5f5f5;
+        }
+
+        .custom-card {
+    box-shadow: 0 10px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 10px;
+    margin: 0px;
+    width: 72%; 
+    margin-left: 0px; /* Ajustar el margen izquierdo en pantallas pequeñas */
+    margin-right: 0px; /* Asegurarse de que el margen derecho sea automático */
+}
+
+        .custom-card h2, .custom-card h3 {
+            font-weight: 2;
+        }
+
+        #cotizacionForm {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #cotizacionFormFields{
+            flex-basis: 20%;
+        }
+        #articuloFormSet {
+            flex-basis: 50%;
+        }
+
+
+        .articuloForm {
+            display: flex;
+            justify-content: space-between; /* Distribuir elementos horizontalmente */
+            align-items: stretch ; /* Alinear los elementos verticalmente */
+            margin-bottom: 5px;
+        }
+
+        .articuloForm > p {
+            margin: 0;
+            flex: 1;
+            margin-right: 10px;
+            margin-left: 20px;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-start;
+            margin-left: 20px;
+
+        }
+
+        .form-buttons button:first-child {
+            margin-right: 4px; /* Agrega un margen derecho al primer botón */
+        }
+
+        .form-buttons button:last-child {
+            margin-left: 0px; /* Agrega un margen izquierdo al último botón */
+        }
+
+        .button-container {
+            margin-top: 10px;
+            text-align: upright;
+            margin-right: 10px; /* Alinea el botón a la derecha */
+            margin-left: 20px;
+
+        }
+
+        button {
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            background-color: #4e62cc;
+            color: white;
+            cursor: pointer;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        button:hover {
+            background-color: #2e0777;
+        }
+        @media screen and (max-width: 600px) {
+            #cotizacionFormFields, #articuloFormSet {
+                flex-basis: 90%; /* Cambiar a 100% en pantallas más pequeñas */
+            }
+
+            .articuloForm {
+                flex-direction: column; /* Cambiar a dirección de columna en pantallas más pequeñas */
+            }
+
+            .articuloForm > p {
+                margin: 5px 0; /* Añadir margen vertical */
+                margin-left: 20px; /* Eliminar el margen izquierdo en pantallas más pequeñas */
+            }
+
+            .form-buttons {
+                margin-left: 10px; /* Ajustar el margen izquierdo */
+            }
+
+            .button-container {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+
+            .custom-card {
+                box-shadow: 0 10px 6px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+                padding: 10px;
+                margin: 0px;
+                width: 100%; 
+                margin-left: 0px; /* Ajustar el margen izquierdo en pantallas pequeñas */
+                margin-right: 0px; /* Asegurarse de que el margen derecho sea automático */
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <style>
+        .warning-tooltip {
+            position: absolute;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #f5c6cb;
+            z-index: 1000;
+        }
+    </style>
+
+    <div class="custom-card">
+        <form id="cotizacionForm" method="post">
+            {% csrf_token %}
+            <div id="cotizacionFormFields">
+                <h3>Datos del Documento</h3>
+                {{ cotizacion_form.as_p }}
+            </div>
+            <div id="articuloFormSet" data-form-count="{{ articulo_formset.total_form_count }}">
+                <h3>Artículos del Documento</h3>
+                {{ articulo_formset.management_form }}
+                <div class="articuloForm">
+                    {% for form in articulo_formset %}
+                        {{ form.as_p }}
+                    {% endfor %}
+                </div>
+                <div class="form-buttons">
+                    <button type="button" id="addArticuloButton">Agregar Artículo</button>
+                    <button type="button" id="removeArticuloButton">Quitar Artículo</button>
+                </div>
+            </div>
+            <div class="button-container">
+                <button type="submit">Guardar Articulos</button>
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        let formCount = parseInt(document.getElementById('articuloFormSet').getAttribute('data-form-count'), 10);
+        const addArticuloButton = document.getElementById('addArticuloButton');
+        const removeArticuloButton = document.getElementById('removeArticuloButton');
+
+        function updateElementIndex(el, prefix, index) {
+            var idRegex = new RegExp('(' + prefix + '-\\d+)');
+            var replacement = prefix + '-' + index;
+            if (el.id) el.id = el.id.replace(idRegex, replacement);
+            if (el.name) el.name = el.name.replace(idRegex, replacement);
+        }
+
+        addArticuloButton.addEventListener('click', () => {
+            const newForm = articuloFormSet.getElementsByClassName('articuloForm')[0].cloneNode(true);
+            const formRegex = RegExp(`-0-`, 'g'); // Regex para encontrar el índice base del formulario
+            formCount++;
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `-${formCount - 1}-`);
+            newForm.querySelectorAll('input, select, textarea').forEach(function(field) {
+                updateElementIndex(field, 'form', formCount - 1);
+                if (field.tagName === 'INPUT' && field.type !== 'checkbox' && field.type !== 'radio' || field.tagName === 'TEXTAREA') {
+                    field.value = '';
+                }
+                if (field.tagName === 'SELECT') {
+                    field.selectedIndex = 0;
+                }
+            });
+            articuloFormSet.insertBefore(newForm, articuloFormSet.children[articuloFormSet.children.length - 1]);
+            document.getElementById('id_articulo-TOTAL_FORMS').setAttribute('value', formCount);
+        });
+
+        removeArticuloButton.addEventListener('click', () => {
+            if (formCount > 1) {
+                const lastForm = articuloFormSet.getElementsByClassName('articuloForm')[formCount - 1];
+                articuloFormSet.removeChild(lastForm);
+                formCount--;
+                document.getElementById('id_articulo-TOTAL_FORMS').setAttribute('value', formCount);
+            }
+        });
+
+        document.getElementById('cotizacionForm').addEventListener('submit', function(event) {
+    var fields = this.querySelectorAll('input[type="text"]');
+    var hasUpperCase = false;
+    fields.forEach(function(field) {
+        var inputValue = field.value;
+        if (/[A-Z]/.test(inputValue)) {
+            var warningElement = document.createElement('div');
+            warningElement.textContent = 'Por favor, no uses letras mayúsculas.';
+            warningElement.className = 'text-danger warning-tooltip';
+            field.insertAdjacentElement('afterend', warningElement);
+            hasUpperCase = true;
+            // Desaparecer el mensaje después de 3 segundos
+            setTimeout(function() {
+                warningElement.style.opacity = 0;
+                warningElement.style.transition = 'opacity 0.5s ease-out';
+                setTimeout(function() {
+                    warningElement.remove();
+                }, 500); // Esperar a que termine la transición y luego eliminar el elemento
+            }, 3000); // Esperar 3 segundos antes de iniciar el proceso de desaparición
+        }
+    });
+    if (hasUpperCase) {
+        event.preventDefault();
+    }
+});
+    </script>
+
+    
+</body>
+
+{% endblock %}
