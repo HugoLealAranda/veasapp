@@ -1,3 +1,4 @@
 *.sqlite3
 minusculas.py
 __pycache__
+venv
