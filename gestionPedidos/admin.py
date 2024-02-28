@@ -3,7 +3,7 @@ from gestionPedidos.models import Articulos
 from django.contrib.admin import AdminSite
 
 class CustomAdminSite(AdminSite):
-    site_header = 'Administracion Veas App'
+    site_header = 'Administracion Veas App v1'
 
 class ClientesAdmin(admin.ModelAdmin):
     list_display = ("nombre", "direccion", "telefono")
