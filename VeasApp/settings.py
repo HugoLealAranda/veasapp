@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-num(b=f%@d23sasn$bwko&092b9wklv1u72n!ihe*+)e6^3ozt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost','veasapp-production.up.railway.app']
 
 # Application definition
 
