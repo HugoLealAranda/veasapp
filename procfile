@@ -1,1 +1,1 @@
-web: gunicorn VeasApp.wsgi
+web: python manage.py collectstatic && gunicorn VeasApp.wsgi
