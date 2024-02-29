@@ -30,6 +30,7 @@ SECRET_KEY = 'django-insecure-num(b=f%@d23sasn$bwko&092b9wklv1u72n!ihe*+)e6^3ozt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -135,11 +136,10 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-
-ALLOWED_HOSTS = ['*']
-
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = ['http://*','https://veasapp-production.up.railway.app']
 
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+ALLOWED_HOSTS = ['localhost', 'https://veasapp-production.up.railway.app']
