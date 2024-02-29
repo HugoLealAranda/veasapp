@@ -142,4 +142,4 @@ CSRF_TRUSTED_ORIGINS = ['http://*','https://veasapp-production.up.railway.app']
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-ALLOWED_HOSTS = ['localhost', 'https://veasapp-production.up.railway.app']
+ALLOWED_HOSTS = ['localhost', 'veasapp-production.up.railway.app']
