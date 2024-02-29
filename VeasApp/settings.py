@@ -80,15 +80,8 @@ WSGI_APPLICATION = 'VeasApp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {  
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': '1CbbAEb4C54Bdagdb*-gAd56C1GG3Eff',
-        'HOST': 'monorail.proxy.rlwy.net',
-        'DATABASE_PORT': '16222',
-    }
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
 
 
