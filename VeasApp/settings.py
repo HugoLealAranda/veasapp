@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'VeasApp.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://postgres:614G*aCA-g61FE1-1e1-d3ef3cc43C6f@postgres.railway.internal:5432/railway'
+        default='postgresql://postgres:614G*aCA-g61FE1-1e1-d3ef3cc43C6f@monorail.proxy.rlwy.net:30711/railway'
     )
 }
 
