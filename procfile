@@ -1,2 +1,2 @@
-web: gunicorn VeasApp:app -b 0.0.0.0:$PORT
+web: gunicorn VeasApp.wsgi:application -b 0.0.0.0:$PORT
 
