@@ -10,7 +10,7 @@
     
     "deploy": {
     
-    "startCommand": "python manage.py collectstatic --noinput && gunicorn core.wsgi",
+        "startCommand": "python manage.py collectstatic --noinput && gunicorn core.wsgi",
     
     "restartPolicyType": "ON_FAILURE",
     
