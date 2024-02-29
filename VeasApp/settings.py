@@ -61,7 +61,7 @@ ROOT_URLCONF = 'VeasApp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "gestionPedidos/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
