@@ -18,7 +18,12 @@
     {% block extra_styles %}
     {% endblock extra_styles %}
 </head>
-
+<style>
+    /* Ajuste para eliminar el espacio en el margen superior */
+    .navbar {
+        margin-top: 1px ;
+    }
+</style>
 <body>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
@@ -27,6 +32,7 @@
     <div id="page-content-wrapper">
         <!-- Top navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+
             <div class="container-fluid">
 
 
@@ -141,11 +147,12 @@
 .container-fluid {
   display: flex;
   flex-wrap: wrap;
+  margin-top: 0;
 }
 
 /* Estilos para cada formulario de botón */
 .container-fluid form {
-  flex: 1 1 100%; /* Establece que cada formulario ocupe el 50% del contenedor, es decir, 2 elementos por fila */
+  flex: 1 1 80%; /* Establece que cada formulario ocupe el 50% del contenedor, es decir, 2 elementos por fila */
 }
 
 /* Media query para ajustar el diseño cuando la pantalla sea más pequeña */
