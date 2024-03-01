@@ -30,13 +30,27 @@ class CotizacionForm(forms.Form):
     correo_vendedor = forms.EmailField(required=False)
 
 class ArticuloCotizacionForm(forms.ModelForm):
+    UNIDAD_CHOICES = [
+        ('unidad', 'Unidad'),
+        ('bolsa', 'Bolsa'),
+        ('caja', 'Caja'),
+        ('galon', 'Galón'),
+        ('kilo', 'Kilo'),
+        ('litro', 'Litro'),
+        ('metro', 'Metro'),
+        ('rollo', 'Rollo'),
+        ('tira', 'Tira'),
+
+    ]
+
+    unidad = forms.ChoiceField(label="Unidad", choices=UNIDAD_CHOICES)
+
     class Meta:
         model = Articulos
-        fields = ['nombre', 'cantidad', 'unidad', 'valor_unitario']
+        fields = ['nombre', 'cantidad',  'valor_unitario','unidad']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'field-xlarge'}),  
             'cantidad': forms.NumberInput(attrs={'class': 'field-small'}),  
-            'unidad': forms.TextInput(attrs={'class': 'field-small'}), 
             'valor_unitario': forms.NumberInput(attrs={'class': 'field-small'}),  
         }
 
