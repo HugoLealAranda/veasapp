@@ -18,7 +18,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 #'django-insecure-num(b=f%@d23sasn$bwko&092b9wklv1u72n!ihe*+)e6^3ozt'
-DEBUG = os.environ.get("DEBUG", "False").lower() == "True"
+DEBUG = True
                        
 
 ALLOWED_HOSTS = ['*']
@@ -130,14 +130,14 @@ LOGIN_REDIRECT_URL = 'home'
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "gestionPedidos/static")
-]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "gestionPedidos\static")
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "staticfiles")]
+
+
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
