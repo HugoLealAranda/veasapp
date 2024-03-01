@@ -21,15 +21,13 @@ class CotizacionForm(forms.Form):
     numero_documento = forms.CharField(max_length=100, required=False)
     fecha = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}), required=False)
     lugar = forms.CharField(max_length=100, required=False)
-    vendedor = forms.CharField(max_length=100, required=False)
-    comprador = forms.CharField(max_length=100, required=False)
+    vendedor = forms.CharField(label="Nombre de vendedor", max_length=100, required=False)
+    comprador = forms.CharField(label="Nombre de comprador", max_length=100, required=False)
     empresa_compradora = forms.CharField(max_length=100, required=False)
     empresa_vendedora = forms.CharField(max_length=100, required=False)
     forma_pago = forms.CharField(max_length=100, required=False)
     entrega = forms.CharField(max_length=100, required=False)
     correo_vendedor = forms.EmailField(required=False)
-    vendedor = forms.CharField(max_length=100, required=False)
-
 
 class ArticuloCotizacionForm(forms.ModelForm):
     class Meta:
