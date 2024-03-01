@@ -1,6 +1,9 @@
 from django.contrib import admin
 from gestionPedidos.models import Articulos
 from django.contrib.admin import AdminSite
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+
 
 class CustomAdminSite(AdminSite):
     site_header = 'Administracion Veas App'
@@ -29,10 +32,24 @@ class ArticulosAdmin(admin.ModelAdmin):
     )
 
 
-
+class CustomUserAdmin(UserAdmin):
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Información personal', {'fields': ('first_name', 'last_name', 'email')}),
+        ('Permisos', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Fechas importantes', {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'password1', 'password2', 'first_name', 'last_name', 'email', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+        }),
+    )
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
 
 
 admin.site.register(Articulos, ArticulosAdmin)
 custom_admin_site = CustomAdminSite(name='custom_admin')
 admin.site = custom_admin_site
 custom_admin_site.register(Articulos, ArticulosAdmin)
+admin.site.register(User, CustomUserAdmin)
