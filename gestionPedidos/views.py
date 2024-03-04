@@ -337,6 +337,10 @@ def cotizacion_view(request):
                     nuevo_articulo.correo_vendedor = datos_cotizacion.get('correo_vendedor')
                     nuevo_articulo.seccion = datos_cotizacion.get('seccion')
 
+                    # Asignar los nuevos campos
+                    nuevo_articulo.comentarios = datos_cotizacion.get('comentarios')
+                    nuevo_articulo.aprobado = datos_cotizacion.get('aprobado')
+
                     # Obtener el tipo de documento para cada artículo
                     tipo_documento = datos_cotizacion.get('tipo_documento')
 

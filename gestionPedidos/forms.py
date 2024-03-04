@@ -11,6 +11,7 @@ class ArticuloForm(forms.ModelForm):
         }
 
 
+
 class CotizacionForm(forms.Form):
     TIPO_DOCUMENTO_CHOICES = [
         ('cotizacion', 'Cotización'),
@@ -28,7 +29,10 @@ class CotizacionForm(forms.Form):
     forma_pago = forms.CharField(max_length=100, required=False)
     entrega = forms.CharField(max_length=100, required=False)
     seccion = forms.CharField(max_length=100, required=False)
+    comentarios = forms.CharField(label="Comentarios", widget=forms.Textarea(attrs={'rows': 3, 'cols': 25}), required=False)  # Modificado
+    aprobado = forms.ChoiceField(label="Aprobado/Rechazado", choices=[('aprobado', 'Aprobado'), ('rechazado', 'Rechazado')], required=False)
     correo_vendedor = forms.EmailField(required=False)
+
 
 class ArticuloCotizacionForm(forms.ModelForm):
     UNIDAD_CHOICES = [

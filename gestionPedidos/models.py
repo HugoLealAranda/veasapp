@@ -20,6 +20,8 @@ class Articulos(models.Model):
     numero_boleta = models.CharField(max_length=100, verbose_name="Número de Boleta", null=True, blank=True)
     numero_cotizacion = models.CharField(max_length=100, verbose_name="Número de Cotización", null=True, blank=True)
     seccion = models.CharField(max_length=100, verbose_name="Sección", null=True, blank=True)
+    comentarios = models.TextField(verbose_name="Comentarios", null=True, blank=True)
+    aprobado = models.CharField(max_length=20, verbose_name="Aprobado/Rechazado", choices=[('aprobado', 'Aprobado'), ('rechazado', 'Rechazado')], null=True, blank=True)
     
     def __str__(self):
         return f"{self.nombre}"
