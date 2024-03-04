@@ -27,6 +27,7 @@ class CotizacionForm(forms.Form):
     empresa_vendedora = forms.CharField(max_length=100, required=False)
     forma_pago = forms.CharField(max_length=100, required=False)
     entrega = forms.CharField(max_length=100, required=False)
+    seccion = forms.CharField(max_length=100, required=False)
     correo_vendedor = forms.EmailField(required=False)
 
 class ArticuloCotizacionForm(forms.ModelForm):
