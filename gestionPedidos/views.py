@@ -65,7 +65,6 @@ def buscar(request):
         else:
             articulos = Articulos.objects.filter(nombre__icontains=producto).order_by('fecha')
             if articulos.exists():
-                # Obtener los 3 valores unitarios más bajos de diferentes empresas, excluyendo 'Rental Veas'
                 
 
                 
@@ -93,8 +92,18 @@ def buscar(request):
 
 
 
-                                # Obtener la transacción más reciente para cada empresa vendedora
-                transacciones_recientes = Articulos.objects.exclude(entrega__isnull=True).values(
+                empresas_con_producto = Articulos.objects.filter(
+                    nombre__icontains=producto
+                ).values('empresa_vendedora').distinct()
+
+
+
+
+
+
+                transacciones_recientes = Articulos.objects.filter(
+                    empresa_vendedora__in=empresas_con_producto
+                ).exclude(entrega__isnull=True).values(
                     'empresa_vendedora'
                 ).annotate(
                     ultima_transaccion=Max('fecha')
@@ -103,15 +112,24 @@ def buscar(request):
                 # Obtener los detalles de la transacción más reciente para cada empresa vendedora
                 resultados = []
                 for transaccion in transacciones_recientes:
+                    empresa = transaccion['empresa_vendedora']
                     transaccion_mas_reciente = Articulos.objects.filter(
-                        empresa_vendedora=transaccion['empresa_vendedora'],
-                        fecha=transaccion['ultima_transaccion']
+                        empresa_vendedora=empresa,
+                        fecha=transaccion['ultima_transaccion'],
+                        entrega__isnull=False,  # Asegurar que la entrega no sea nula
+                        nombre__icontains=producto  # Verificar si la transacción es para el artículo buscado
                     ).first()
                     if transaccion_mas_reciente:
                         resultados.append({
-                            'empresa_vendedora': transaccion_mas_reciente.empresa_vendedora,
+                            'empresa_vendedora': empresa,
                             'entrega': transaccion_mas_reciente.entrega
                         })
+
+
+                    print(empresa)
+                    print(transaccion_mas_reciente)
+
+
 
 
                 volumen_ventas_por_empresa = Articulos.objects.exclude(empresa_vendedora__iexact='Rental Veas') \
