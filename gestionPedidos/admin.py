@@ -3,6 +3,8 @@ from gestionPedidos.models import Articulos
 from django.contrib.admin import AdminSite
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+from django.contrib import messages
+from django.utils.translation import ngettext
 
 
 class CustomAdminSite(AdminSite):
@@ -29,6 +31,25 @@ class CotizacionFilter(admin.SimpleListFilter):
         if self.value() == 'rechazadas':
             return queryset.filter(aprobado='rechazado', numero_cotizacion__isnull=False)
 
+def cambiar_seccion_a_ferreteria(admin, request, queryset):
+    queryset.update(seccion='ferreteria')
+
+def cambiar_seccion_a_electricidad(admin, request, queryset):
+    queryset.update(seccion='electricidad')
+
+def cambiar_seccion_a_pintura(admin, request, queryset):
+    queryset.update(seccion='pintura')
+
+def cambiar_seccion_a_maestranza(admin, request, queryset):
+    queryset.update(seccion='maestranza')
+
+def cambiar_seccion_a_muebles(admin, request, queryset):
+    queryset.update(seccion='muebles')
+
+def cambiar_seccion_a_mineria(admin, request, queryset):
+    queryset.update(seccion='mineria')
+
+
 class ArticulosAdmin(admin.ModelAdmin):
     list_display = (
         'nombre', 'cantidad', 'unidad', 'valor_unitario', 'fecha', 'lugar', 'vendedor', 'comprador',
@@ -52,6 +73,17 @@ class ArticulosAdmin(admin.ModelAdmin):
         'numero_boleta',  # Filtro para número de boleta insensible a mayúsculas y minúsculas
         CotizacionFilter,  # Filtro combinado para cotizaciones aprobadas/rechazadas con número de cotización no nulo
     )
+    actions = [
+        cambiar_seccion_a_ferreteria,
+        cambiar_seccion_a_electricidad,
+        cambiar_seccion_a_pintura,
+        cambiar_seccion_a_muebles,
+        cambiar_seccion_a_maestranza,
+        cambiar_seccion_a_mineria,
+    ]
+
+
+
 
 
 
