@@ -133,7 +133,7 @@ def buscar(request):
 
 
                 volumen_ventas_por_empresa = Articulos.objects.exclude(empresa_vendedora__iexact='Rental Veas') \
-                                            .exclude(numero_cotizacion__exact="-") \
+                                            .exclude(numero_cotizacion__isnull=True) \
                                             .filter(nombre__icontains=producto) \
                                             .values('empresa_vendedora') \
                                             .annotate(volumen_total=Sum('cantidad')) \
@@ -142,7 +142,7 @@ def buscar(request):
 
 
                 valor_ventas_por_empresa = articulos.exclude(empresa_vendedora__iexact='Rental Veas') \
-                                                    .exclude(numero_cotizacion__exact="-") \
+                                                    .exclude(numero_cotizacion__isnull=True) \
                                                     .annotate(valor_total=F('cantidad') * F('valor_unitario')) \
                                                     .values('empresa_vendedora') \
                                                     .annotate(valor_total_sum=Sum('valor_total', output_field=FloatField())) \
@@ -151,28 +151,28 @@ def buscar(request):
 
 
 
-                rendimiento_compradores = articulos.exclude(numero_cotizacion__exact="-") \
+                rendimiento_compradores = articulos.exclude(numero_cotizacion__isnull=True) \
                                                     .filter(nombre__icontains=producto) \
                                                     .values('comprador') \
                                                     .annotate(total_comprado=Sum('cantidad'), 
                                                             valor_total_comprado=Sum(F('cantidad') * F('valor_unitario'))) \
                                                     .order_by('-total_comprado')
                 
-
-                ventas_totales_veas = Articulos.objects.filter(empresa_vendedora__iexact='Rental Veas') \
-                                                        .exclude(numero_cotizacion__exact="-") \
-                                                        .filter(nombre__icontains=producto) \
-                                                        .values('empresa_vendedora') \
-                                                        .annotate(volumen_total=Sum('cantidad')) \
-                                                        .order_by('-volumen_total')
-
                 compras_totales_veas = Articulos.objects.exclude(empresa_vendedora__iexact='Rental Veas') \
-                                                        .exclude(numero_cotizacion__exact="-") \
+                                                        .exclude(numero_cotizacion__isnull=True) \
                                                         .filter(nombre__icontains=producto) \
                                                         .values('empresa_vendedora') \
                                                         .annotate(volumen_total=Sum('cantidad')) \
                                                         .order_by('-volumen_total') 
                 
+                ventas_totales_veas = Articulos.objects.filter(empresa_vendedora__iexact='Rental Veas') \
+                                                        .exclude(numero_cotizacion__isnull=True) \
+                                                        .filter(nombre__icontains=producto) \
+                                                        .values('empresa_vendedora') \
+                                                        .annotate(volumen_total=Sum('cantidad')) \
+                                                        .order_by('-volumen_total')
+
+
                 total_compras_veas = sum(item['volumen_total'] for item in compras_totales_veas)
 
                 

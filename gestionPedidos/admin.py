@@ -13,9 +13,29 @@ class ClientesAdmin(admin.ModelAdmin):
     search_fields = ("nombre", "telefono", "direccion")
     list_filter = ("direccion",)
 
+class CotizacionFilter(admin.SimpleListFilter):
+    title = 'Cotizaciones'
+    parameter_name = 'cotizaciones'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('aprobadas', 'Aprobadas'),
+            ('rechazadas', 'Rechazadas'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'aprobadas':
+            return queryset.filter(aprobado='aprobado', numero_cotizacion__isnull=False)
+        if self.value() == 'rechazadas':
+            return queryset.filter(aprobado='rechazado', numero_cotizacion__isnull=False)
+
 class ArticulosAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'cantidad', 'unidad', 'valor_unitario', 'fecha', 'lugar', 'vendedor', 'comprador', 'empresa_compradora', 'empresa_vendedora', 'forma_pago', 'entrega', 'correo_vendedor', 'numero_factura', 'numero_cotizacion', 'seccion')
-    search_fields = ['nombre', 'vendedor', 'comprador', 'empresa_compradora', 'empresa_vendedora', 'numero_factura', 'numero_cotizacion']
+    list_display = (
+        'nombre', 'cantidad', 'unidad', 'valor_unitario', 'fecha', 'lugar', 'vendedor', 'comprador',
+        'empresa_compradora', 'empresa_vendedora', 'forma_pago', 'entrega', 'correo_vendedor',
+        'numero_factura', 'numero_boleta', 'numero_cotizacion', 'seccion', 'comentarios', 'aprobado'
+    )
+    search_fields = ['nombre', 'vendedor', 'comprador', 'empresa_compradora', 'empresa_vendedora', 'numero_factura', 'numero_cotizacion', 'numero_boleta']
     list_filter = (
         'seccion',
         'empresa_compradora',
@@ -29,7 +49,11 @@ class ArticulosAdmin(admin.ModelAdmin):
         'unidad',  # Filtro para unidad insensible a mayúsculas y minúsculas
         'numero_factura',  # Filtro para número de factura insensible a mayúsculas y minúsculas
         'numero_cotizacion',  # Filtro para número de cotización insensible a mayúsculas y minúsculas
+        'numero_boleta',  # Filtro para número de boleta insensible a mayúsculas y minúsculas
+        CotizacionFilter,  # Filtro combinado para cotizaciones aprobadas/rechazadas con número de cotización no nulo
     )
+
+
 
 
 class CustomUserAdmin(UserAdmin):
