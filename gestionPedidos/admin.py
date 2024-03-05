@@ -82,7 +82,8 @@ class ArticulosAdmin(admin.ModelAdmin):
         cambiar_seccion_a_mineria,
     ]
 
-
+    list_per_page = 20
+    list_filter_collapse = True
 
 
 
