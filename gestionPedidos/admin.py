@@ -6,6 +6,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib import messages
 from django.utils.translation import ngettext
 from .models import Tarea
+from .models import Message
+
 
 
 
@@ -101,6 +103,10 @@ class ArticulosAdmin(admin.ModelAdmin):
     list_filter_collapse = True
 
 
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'content', 'timestamp')
+    search_fields = ('content',)
+    list_filter = ('user', 'timestamp')
 
 
 
@@ -126,3 +132,4 @@ admin.site = custom_admin_site
 custom_admin_site.register(Articulos, ArticulosAdmin)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Tarea, TareaAdmin)
+admin.site.register(Message, MessageAdmin)
