@@ -48,6 +48,7 @@ class Tarea(models.Model):
     fecha_vencimiento = models.DateField()
     completada = models.BooleanField(default=False)
     asignadas = models.ManyToManyField(User, related_name='tareas_asignadas', blank=True)
+    estado = models.CharField(max_length=200, default="Sin Movimiento")  # Establecer el estado predeterminado como una cadena
 
     def __str__(self):
         return self.titulo
