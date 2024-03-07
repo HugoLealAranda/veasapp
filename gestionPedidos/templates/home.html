@@ -2,40 +2,41 @@
 
 {% block extra_styles %}
 <style>
-
-  
-    .tittle-container {
-        background-color: #f0f4f8;
-        padding: 15px;
-        border-radius: 8px;
-        text-align: center;
-        max-width: 600px;
-        margin: 20px auto;
-        overflow-y: auto; /* Habilitar desplazamiento vertical */
-    }
+.tittle-container {
+    background-color: #f0f4f8;
+    text-align: center;
+    max-width: 500px;
+    margin: 20px 10px; /* Ajuste automático horizontal y 20px de margen superior e inferior */
+}
 
     .subtitle-container {
-        margin-top: 20px;
+        margin-top: 10px;
     }
 
     .chat-container {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        height: 500px;
-        width: 400px;
-        overflow-y: auto;
-        padding: 10px;
-        margin-top: 20px;
-        margin: 20px auto; /* Centrar el chat */
-    }
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 400px;
+    width: 650px; /* Ancho del chat */
+    padding: 10px;
+    margin-top: 10px;
+    margin-right: 150px;
+    overflow-y: auto; /* Habilitar desplazamiento vertical */
+}
+
+.container {
+    display: inline-block;
+    vertical-align: top; /* Alinear la parte superior del contenedor */
+}
 
     .chat-header {
-        background-color: #f0f0f0;
+        background-color: #3f87fb; /* Cambiar color a azul */
         border-bottom: 1px solid #ccc;
         border-radius: 5px 5px 0 0;
         padding: 10px;
         text-align: center;
+        color: white; /* Cambiar color del texto a blanco */
     }
 
     .chat-form {
@@ -60,43 +61,133 @@
         margin-left: 5px;
     }
 
+    #chartdiv {
+        width: 100%; /* Ancho del mapamundi */
+        height: 450px;
+        float: left; /* Hacer que el mapamundi se posicione a la derecha */
+    }
+
+
     @media screen and (min-width: 768px) {
         .tittle-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            
+        }
+
+        .container {
+            display: flex;
+            align-items: flex-start;
         }
     }
 </style>
 {% endblock extra_styles %}
 
-
 {% block content %}
 <div class="main-container">
     <div class="tittle-container">
-        <h1>Bienvenido a <span style="color: #007bff;">Veas App</span></h1>
+        <h1>Bienvenido a <span style="color: #3f87fb;">Veas App</span></h1>
         <div class="subtitle-container">
             <p style="font-size: larger;">Tu gestor de costos personalizado</p>
         </div>
     </div>
 
-    <div class="chat-container">
-      <div class="chat-header" style="color: #007bff;">Chat Empresas Veas</div>
+    <div class="container">
+        <div class="chat-container">
+            <div class="chat-header">Chat Empresas Veas</div>
 
-        <form class="chat-form" action="{% url 'send_message' %}" method="post">
-            {% csrf_token %}
-            <input type="text" name="content">
-            <button type="submit">Enviar</button>
-        </form>
+            <form class="chat-form" action="{% url 'send_message' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="content">
+                <button type="submit">Enviar</button>
+            </form>
 
-        <div class="chat-messages">
-            {% for message in messages %}
-            <div class="chat-message">
-                <span class="user">{{ message.user.username }}:</span> {{ message.content }}
-                <span class="timestamp">({{ message.timestamp|date:"Y-m-d H:i:s" }})</span>
+            <div class="chat-messages">
+                {% for message in messages %}
+                <div class="chat-message">
+                    <span class="user">{{ message.user.username }}:</span> {{ message.content }}
+                    <span class="timestamp">({{ message.timestamp|date:"Y-m-d H:i:s" }})</span>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
+        <div class="container2" style="width: 600px; height: 700px;">
+          <div id="chartdiv"></div>
+        </div>
 </div>
+
+{% block extra_scripts %}
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/map.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<script>
+    am5.ready(function() {
+    
+    // Create root element
+    var root = am5.Root.new("chartdiv");
+    
+    // Set themes
+    root.setThemes([
+      am5themes_Animated.new(root)
+    ]);
+    
+    // Create the map chart
+    var chart = root.container.children.push(am5map.MapChart.new(root, {
+      panX: "translateX",
+      panY: "translateY",
+      projection: am5map.geoMercator()
+    }));
+    
+    // Create main polygon series for countries
+    var polygonSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
+      geoJSON: am5geodata_worldLow,
+      exclude: ["AQ"]
+    }));
+    
+    polygonSeries.mapPolygons.template.setAll({
+      tooltipText: "{name}",
+      toggleKey: "active",
+      interactive: true
+    });
+    
+    polygonSeries.mapPolygons.template.states.create("hover", {
+      fill: root.interfaceColors.get("primaryButtonHover")
+    });
+    
+    polygonSeries.mapPolygons.template.states.create("active", {
+      fill: root.interfaceColors.get("primaryButtonHover")
+    });
+    
+    var previousPolygon;
+    
+    polygonSeries.mapPolygons.template.on("active", function (active, target) {
+      if (previousPolygon && previousPolygon != target) {
+        previousPolygon.set("active", false);
+      }
+      if (target.get("active")) {
+        polygonSeries.zoomToDataItem(target.dataItem );
+      }
+      else {
+        chart.goHome();
+      }
+      previousPolygon = target;
+    });
+    
+    // Add zoom control
+    chart.set("zoomControl", am5map.ZoomControl.new(root, {}));
+    
+    // Set clicking on "water" to zoom out
+    chart.chartContainer.get("background").events.on("click", function () {
+      chart.goHome();
+    })
+    
+    // Make stuff animate on load
+    chart.appear(1000, 100);
+    
+    });
+</script>
+{% endblock extra_scripts %}
 {% endblock content %}
