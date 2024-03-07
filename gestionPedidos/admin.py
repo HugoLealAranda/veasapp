@@ -5,7 +5,22 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import messages
 from django.utils.translation import ngettext
+from .models import Tarea
 
+
+
+class TareaAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'descripcion', 'fecha_vencimiento', 'completada')
+    list_filter = ('completada',)
+    search_fields = ('titulo', 'descripcion')
+    list_editable = ('completada',)
+    actions = ['marcar_como_completada']
+
+    def marcar_como_completada(self, request, queryset):
+        queryset.update(completada=True)
+        self.message_user(request, "Las tareas seleccionadas se han marcado como completadas.")
+
+    marcar_como_completada.short_description = "Marcar como completadas"
 
 class CustomAdminSite(AdminSite):
     site_header = 'Administracion Veas App'
@@ -110,3 +125,4 @@ custom_admin_site = CustomAdminSite(name='custom_admin')
 admin.site = custom_admin_site
 custom_admin_site.register(Articulos, ArticulosAdmin)
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(Tarea, TareaAdmin)

@@ -18,9 +18,21 @@ from django.db.models import Sum, F, FloatField
 from gestionPedidos.models import Message
 from django.contrib.auth.decorators import login_required
 from django.db import models
+from .models import Tarea
 
 
 
+@login_required
+def lista_tareas(request):
+    usuario_actual = request.user
+    tareas_pendientes = Tarea.objects.filter(completada=False).order_by('-fecha_creacion')[:5]
+    tareas_completadas = Tarea.objects.filter(completada=True).order_by('-fecha_creacion')[:5]
+    return render(request, 'home.html', {'tareas_pendientes': tareas_pendientes, 'tareas_completadas': tareas_completadas})
+
+
+
+
+@login_required
 def chat_room(request):
     messages = Message.objects.all()
     return render(request, 'home.html', {'messages': messages})
@@ -71,7 +83,13 @@ def home(request):
     # Obtener los últimos 10 mensajes ordenados por fecha de creación
     messages = Message.objects.order_by('-timestamp')[:15]
 
-    return render(request, 'home.html', {'messages': messages})
+    # Obtener solo las últimas 5 tareas pendientes y completadas
+    tareas_pendientes = Tarea.objects.filter(completada=False).order_by('-fecha_creacion')[:5]
+    tareas_completadas = Tarea.objects.filter(completada=True).order_by('-fecha_creacion')[:5]
+
+    return render(request, 'home.html', {'messages': messages, 'tareas_pendientes': tareas_pendientes, 'tareas_completadas': tareas_completadas})
+
+
 
 
 

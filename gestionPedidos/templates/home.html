@@ -2,86 +2,138 @@
 
 {% block extra_styles %}
 <style>
-.tittle-container {
-    background-color: #f0f4f8;
-    text-align: center;
-    max-width: 500px;
-    margin: 20px 10px; /* Ajuste automático horizontal y 20px de margen superior e inferior */
-}
+  .tittle-container {
+      background-color: #f0f4f8;
+      text-align: center;
+      max-width: 500px;
+      margin: 20px 0px; /* Ajuste automático horizontal y 20px de margen superior e inferior */
+      margin-bottom: 5px;
+  }
+  
+  .subtitle-container {
+      margin-top: 10px;
+  }
+  
+  .chat-container {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      height: 400px;
+      width: 700px; /* Ancho del chat */
+      padding: 10px;
+      margin-top: 10px;
+      margin-right: 20px;
+      overflow-y: auto; /* Habilitar desplazamiento vertical */
+      margin-bottom: 5px;
+  }
+  
+  .container {
+      display: inline-block;
+      vertical-align: top; /* Alinear la parte superior del contenedor */
+      margin-bottom: 5px;
+      max-height: 250px; /* Establece la altura máxima para la tabla */
+      overflow-y: auto;
+  }
+  
+  .chat-header {
+      background-color: #3f87fb; /* Cambiar color a azul */
+      border-bottom: 1px solid #ccc;
+      border-radius: 5px 5px 0 0;
+      padding: 10px;
+      text-align: center;
+      color: white; /* Cambiar color del texto a blanco */
+      margin-bottom: 5px;
+  }
+  
+  .chat-form {
+      margin-top: 10px;
+      margin-bottom: 5px;
+  }
+  
+  .chat-messages {
+      margin-top: 10px;
+  }
+  
+  .chat-message {
+      margin-bottom: 5px;
+  }
+  
+  .user {
+      font-weight: bold;
+  }
+  
+  .timestamp {
+      color: #999;
+      font-size: 0.6em;
+      margin-left: 5px;
+  }
+  
+  
+  body {
+      font-family: Arial, sans-serif;
+      max-height: 250px; /* Establece la altura máxima para la tabla */
+      overflow-y: auto;
+  }
+  
+  table {
+      width: 800px;
+      border-collapse: collapse;
+      margin-top: 5px; 
+      max-height: 250px; /* Establece la altura máxima para la tabla */
+      overflow-y: auto;
+  }
+  
+  th, td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+      max-height: 250px; /* Establece la altura máxima para la tabla */
+      overflow-y: auto;
+  }
+  
+  th {
+      background-color: #3f87fb;
+      color: white;
+      max-height: 250px; /* Establece la altura máxima para la tabla */
+      overflow-y: auto;
+  }
+  
+  .titulo {
+      font-size: 20px;
+      margin-bottom: 10px;
+      margin-top: 20px;
+      max-height: 250px; /* Establece la altura máxima para la tabla */
+      overflow-y: auto;
 
-    .subtitle-container {
-        margin-top: 10px;
-    }
-
-    .chat-container {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    height: 400px;
-    width: 650px; /* Ancho del chat */
-    padding: 10px;
-    margin-top: 10px;
-    margin-right: 150px;
-    overflow-y: auto; /* Habilitar desplazamiento vertical */
-}
-
-.container {
-    display: inline-block;
-    vertical-align: top; /* Alinear la parte superior del contenedor */
-}
-
-    .chat-header {
-        background-color: #3f87fb; /* Cambiar color a azul */
-        border-bottom: 1px solid #ccc;
-        border-radius: 5px 5px 0 0;
-        padding: 10px;
-        text-align: center;
-        color: white; /* Cambiar color del texto a blanco */
-    }
-
-    .chat-form {
-        margin-top: 10px;
-    }
-
-    .chat-messages {
-        margin-top: 10px;
-    }
-
-    .chat-message {
-        margin-bottom: 5px;
-    }
-
-    .user {
-        font-weight: bold;
-    }
-
-    .timestamp {
-        color: #999;
-        font-size: 0.8em;
-        margin-left: 5px;
-    }
-
-    #chartdiv {
-        width: 100%; /* Ancho del mapamundi */
-        height: 450px;
-        float: left; /* Hacer que el mapamundi se posicione a la derecha */
-    }
-
-
-    @media screen and (min-width: 768px) {
-        .tittle-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            
-        }
-
-        .container {
-            display: flex;
-            align-items: flex-start;
-        }
-    }
-</style>
+  }
+  
+  @media screen and (min-width: 768px) {
+      .tittle-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+  
+      .container {
+          display: flex;
+          align-items: flex-start;
+      }
+  
+      /* Estilos para las tablas */
+      .table-container {
+          display: flex;
+          flex-wrap: wrap; /* Permite que los elementos se ajusten automáticamente a la siguiente fila */
+          justify-content: space-between; /* Distribuye las tablas en el espacio disponible */
+          margin-top: 10px; /* Ajusta el margen superior */
+      }
+  
+      .table-container > * {
+          flex-basis: calc(50% - 5px); /* Establece el ancho de cada tabla */
+          margin-bottom: 10px; /* Ajusta el margen inferior */
+      }
+  }
+  </style>
+  
 {% endblock extra_styles %}
 
 {% block content %}
@@ -92,102 +144,72 @@
             <p style="font-size: larger;">Tu gestor de costos personalizado</p>
         </div>
     </div>
+      <div class="chat-container">
+          <div class="chat-header">Chat Empresas Veas</div>
 
-    <div class="container">
-        <div class="chat-container">
-            <div class="chat-header">Chat Empresas Veas</div>
+          <form class="chat-form" action="{% url 'send_message' %}" method="post">
+              {% csrf_token %}
+              <input type="text" name="content">
+              <button type="submit">Enviar</button>
+          </form>
 
-            <form class="chat-form" action="{% url 'send_message' %}" method="post">
-                {% csrf_token %}
-                <input type="text" name="content">
-                <button type="submit">Enviar</button>
-            </form>
-
-            <div class="chat-messages">
-                {% for message in messages %}
-                <div class="chat-message">
-                    <span class="user">{{ message.user.username }}:</span> {{ message.content }}
-                    <span class="timestamp">({{ message.timestamp|date:"Y-m-d H:i:s" }})</span>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="container2" style="width: 600px; height: 700px;">
-          <div id="chartdiv"></div>
-        </div>
-</div>
-
-{% block extra_scripts %}
-<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/map.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-
-<script>
-    am5.ready(function() {
-    
-    // Create root element
-    var root = am5.Root.new("chartdiv");
-    
-    // Set themes
-    root.setThemes([
-      am5themes_Animated.new(root)
-    ]);
-    
-    // Create the map chart
-    var chart = root.container.children.push(am5map.MapChart.new(root, {
-      panX: "translateX",
-      panY: "translateY",
-      projection: am5map.geoMercator()
-    }));
-    
-    // Create main polygon series for countries
-    var polygonSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
-      geoJSON: am5geodata_worldLow,
-      exclude: ["AQ"]
-    }));
-    
-    polygonSeries.mapPolygons.template.setAll({
-      tooltipText: "{name}",
-      toggleKey: "active",
-      interactive: true
-    });
-    
-    polygonSeries.mapPolygons.template.states.create("hover", {
-      fill: root.interfaceColors.get("primaryButtonHover")
-    });
-    
-    polygonSeries.mapPolygons.template.states.create("active", {
-      fill: root.interfaceColors.get("primaryButtonHover")
-    });
-    
-    var previousPolygon;
-    
-    polygonSeries.mapPolygons.template.on("active", function (active, target) {
-      if (previousPolygon && previousPolygon != target) {
-        previousPolygon.set("active", false);
-      }
-      if (target.get("active")) {
-        polygonSeries.zoomToDataItem(target.dataItem );
-      }
-      else {
-        chart.goHome();
-      }
-      previousPolygon = target;
-    });
-    
-    // Add zoom control
-    chart.set("zoomControl", am5map.ZoomControl.new(root, {}));
-    
-    // Set clicking on "water" to zoom out
-    chart.chartContainer.get("background").events.on("click", function () {
-      chart.goHome();
-    })
-    
-    // Make stuff animate on load
-    chart.appear(1000, 100);
-    
-    });
-</script>
-{% endblock extra_scripts %}
+          <div class="chat-messages">
+              {% for message in messages %}
+              <div class="chat-message">
+                  <span class="user">{{ message.user.username }}:</span> {{ message.content }}
+                  <span class="timestamp">({{ message.timestamp|date:"Y-m-d H:i:s" }})</span>
+              </div>
+              {% endfor %}
+          </div>
+      </div>
+    </div>
+    <div class="main-container">
+      <div class="titulo">Tareas Pendientes</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Fecha de Vencimiento</th>
+            <th>Completada</th>
+            <th>A Cargo</th> <!-- Nueva columna para los usuarios asignados -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for tarea in tareas_pendientes %}
+          <tr>
+            <td>{{ tarea.titulo }}</td>
+            <td>{{ tarea.descripcion }}</td>
+            <td>{{ tarea.fecha_vencimiento }}</td>
+            <td>{% if tarea.completada %}Sí{% else %}No{% endif %}</td>
+            <td>{{ tarea.asignadas.all|join:", " }}</td>
+          </tr>
+          {% endfor %} <!-- Aquí debe cerrarse el bucle 'for' -->
+        </tbody>
+      </table>
+      <div class="titulo">Tareas Completadas</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Fecha de Vencimiento</th>
+            <th>Completada</th>
+            <th>A Cargo</th> <!-- Nueva columna para los usuarios asignados -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for tarea in tareas_completadas %}
+          <tr>
+            <td>{{ tarea.titulo }}</td>
+            <td>{{ tarea.descripcion }}</td>
+            <td>{{ tarea.fecha_vencimiento }}</td>
+            <td>{% if tarea.completada %}Sí{% else %}No{% endif %}</td>
+            <td>{{ tarea.asignadas.all|join:", " }}</td>
+          </tr>
+          {% endfor %} <!-- Aquí debe cerrarse el bucle 'for' -->
+        </tbody>
+      </table>
+      
+    </div>
 {% endblock content %}

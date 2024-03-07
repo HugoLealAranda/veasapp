@@ -15,5 +15,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),  
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('send_message/', views.send_message, name='send_message'),
+    path('lista_tareas/', views.lista_tareas, name='lista_tareas'),  # Si deseas mantener esta ruta
+
 ]
 
