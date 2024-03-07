@@ -87,7 +87,14 @@ def home(request):
     tareas_pendientes = Tarea.objects.filter(completada=False).order_by('-fecha_creacion')[:5]
     tareas_completadas = Tarea.objects.filter(completada=True).order_by('-fecha_creacion')[:5]
 
+    # Modificar los nombres de usuario para que solo contengan la parte antes del '@'
+    for tarea in tareas_pendientes:
+        tarea.nombres_asignados = ", ".join([asignado.username.split("@")[0] for asignado in tarea.asignadas.all()])
+    for tarea in tareas_completadas:
+        tarea.nombres_asignados = ", ".join([asignado.username.split("@")[0] for asignado in tarea.asignadas.all()])
+
     return render(request, 'home.html', {'messages': messages, 'tareas_pendientes': tareas_pendientes, 'tareas_completadas': tareas_completadas})
+
 
 
 

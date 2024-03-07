@@ -182,9 +182,9 @@
             <td>{{ tarea.descripcion }}</td>
             <td>{{ tarea.fecha_vencimiento }}</td>
             <td>{% if tarea.completada %}Sí{% else %}No{% endif %}</td>
-            <td>{{ tarea.asignadas.all|join:", " }}</td>
+            <td>{{ tarea.nombres_asignados }}</td> <!-- Usar nombres_asignados en lugar de asignadas.all() -->
           </tr>
-          {% endfor %} <!-- Aquí debe cerrarse el bucle 'for' -->
+          {% endfor %}
         </tbody>
       </table>
       <div class="titulo">Tareas Completadas</div>
@@ -205,11 +205,12 @@
             <td>{{ tarea.descripcion }}</td>
             <td>{{ tarea.fecha_vencimiento }}</td>
             <td>{% if tarea.completada %}Sí{% else %}No{% endif %}</td>
-            <td>{{ tarea.asignadas.all|join:", " }}</td>
+            <td>{{ tarea.nombres_asignados }}</td> <!-- Usar nombres_asignados en lugar de asignadas.all() -->
           </tr>
-          {% endfor %} <!-- Aquí debe cerrarse el bucle 'for' -->
+          {% endfor %}
         </tbody>
       </table>
+      
       
     </div>
 {% endblock content %}

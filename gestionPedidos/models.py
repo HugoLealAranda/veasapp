@@ -40,10 +40,11 @@ class Message(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
+
 class Tarea(models.Model):
     titulo = models.CharField(max_length=100)
     descripcion = models.TextField()
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateTimeField(null=True)  # Cambio realizado aquí
     fecha_vencimiento = models.DateField()
     completada = models.BooleanField(default=False)
     asignadas = models.ManyToManyField(User, related_name='tareas_asignadas', blank=True)
