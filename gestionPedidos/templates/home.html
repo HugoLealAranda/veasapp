@@ -171,7 +171,6 @@
             <th>Título</th>
             <th>Descripción</th>
             <th>Fecha de Vencimiento</th>
-            <th>Completada</th>
             <th>A Cargo</th> <!-- Nueva columna para los usuarios asignados -->
           </tr>
         </thead>
@@ -181,7 +180,6 @@
             <td>{{ tarea.titulo }}</td>
             <td>{{ tarea.descripcion }}</td>
             <td>{{ tarea.fecha_vencimiento }}</td>
-            <td>{% if tarea.completada %}Sí{% else %}No{% endif %}</td>
             <td>{{ tarea.nombres_asignados }}</td> <!-- Usar nombres_asignados en lugar de asignadas.all() -->
           </tr>
           {% endfor %}
@@ -194,7 +192,6 @@
             <th>Título</th>
             <th>Descripción</th>
             <th>Fecha de Vencimiento</th>
-            <th>Completada</th>
             <th>A Cargo</th> <!-- Nueva columna para los usuarios asignados -->
           </tr>
         </thead>
@@ -204,7 +201,6 @@
             <td>{{ tarea.titulo }}</td>
             <td>{{ tarea.descripcion }}</td>
             <td>{{ tarea.fecha_vencimiento }}</td>
-            <td>{% if tarea.completada %}Sí{% else %}No{% endif %}</td>
             <td>{{ tarea.nombres_asignados }}</td> <!-- Usar nombres_asignados en lugar de asignadas.all() -->
           </tr>
           {% endfor %}
