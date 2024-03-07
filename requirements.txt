@@ -21,4 +21,5 @@ tzdata==2024.1
 wheel==0.42.0
 whitenoise==6.6.0
 gunicorn
-
+levenshtein==0.25.0 
+rapidfuzz==3.6.2

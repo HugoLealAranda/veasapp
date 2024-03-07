@@ -1,5 +1,6 @@
-
 from django.db import models
+from django.contrib.auth.models import User
+
 
 class Articulos(models.Model):
     id = models.AutoField(primary_key=True)
@@ -34,5 +35,9 @@ class Articulos(models.Model):
         verbose_name = "Articulos"
         verbose_name_plural = "Articulos"
 
+class Message(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 

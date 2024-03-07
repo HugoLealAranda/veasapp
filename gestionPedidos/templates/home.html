@@ -2,113 +2,101 @@
 
 {% block extra_styles %}
 <style>
-    #chartdiv {
-      width: 100%;
-      height: 450px;
+
+  
+    .tittle-container {
+        background-color: #f0f4f8;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        max-width: 600px;
+        margin: 20px auto;
+        overflow-y: auto; /* Habilitar desplazamiento vertical */
+    }
+
+    .subtitle-container {
+        margin-top: 20px;
+    }
+
+    .chat-container {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        height: 500px;
+        width: 400px;
+        overflow-y: auto;
+        padding: 10px;
+        margin-top: 20px;
+        margin: 20px auto; /* Centrar el chat */
+    }
+
+    .chat-header {
+        background-color: #f0f0f0;
+        border-bottom: 1px solid #ccc;
+        border-radius: 5px 5px 0 0;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .chat-form {
+        margin-top: 10px;
+    }
+
+    .chat-messages {
+        margin-top: 10px;
+    }
+
+    .chat-message {
+        margin-bottom: 5px;
+    }
+
+    .user {
+        font-weight: bold;
+    }
+
+    .timestamp {
+        color: #999;
+        font-size: 0.8em;
+        margin-left: 5px;
+    }
+
+    @media screen and (min-width: 768px) {
+        .tittle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     }
 </style>
 {% endblock extra_styles %}
 
-{% block extra_scripts %}
-<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/map.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-
-
-<script>
-    am5.ready(function() {
-    
-    // Create root element
-    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
-    var root = am5.Root.new("chartdiv");
-    
-    
-    // Set themes
-    // https://www.amcharts.com/docs/v5/concepts/themes/
-    root.setThemes([
-      am5themes_Animated.new(root)
-    ]);
-    
-    
-    // Create the map chart
-    // https://www.amcharts.com/docs/v5/charts/map-chart/
-    var chart = root.container.children.push(am5map.MapChart.new(root, {
-      panX: "translateX",
-      panY: "translateY",
-      projection: am5map.geoMercator()
-    }));
-    
-    
-    // Create main polygon series for countries
-    // https://www.amcharts.com/docs/v5/charts/map-chart/map-polygon-series/
-    var polygonSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
-      geoJSON: am5geodata_worldLow,
-      exclude: ["AQ"]
-    }));
-    
-    polygonSeries.mapPolygons.template.setAll({
-      tooltipText: "{name}",
-      toggleKey: "active",
-      interactive: true
-    });
-    
-    polygonSeries.mapPolygons.template.states.create("hover", {
-      fill: root.interfaceColors.get("primaryButtonHover")
-    });
-    
-    polygonSeries.mapPolygons.template.states.create("active", {
-      fill: root.interfaceColors.get("primaryButtonHover")
-    });
-    
-    var previousPolygon;
-    
-    polygonSeries.mapPolygons.template.on("active", function (active, target) {
-      if (previousPolygon && previousPolygon != target) {
-        previousPolygon.set("active", false);
-      }
-      if (target.get("active")) {
-        polygonSeries.zoomToDataItem(target.dataItem );
-      }
-      else {
-        chart.goHome();
-      }
-      previousPolygon = target;
-    });
-    
-    
-    // Add zoom control
-    // https://www.amcharts.com/docs/v5/charts/map-chart/map-pan-zoom/#Zoom_control
-    chart.set("zoomControl", am5map.ZoomControl.new(root, {}));
-    
-    
-    // Set clicking on "water" to zoom out
-    chart.chartContainer.get("background").events.on("click", function () {
-      chart.goHome();
-    })
-    
-    
-    // Make stuff animate on load
-    chart.appear(1000, 100);
-    
-    }); // end am5.ready()
-    </script>
-
-
-{% endblock extra_scripts %}
 
 {% block content %}
-<div class="welcome-section" style="background-color: #f0f4f8; padding: 15px; border-radius: 8px; text-align: center; margin: 0 auto; max-width: 600px;">
-  <h1 style="color: #333; font-size: 2em; margin-top: 0; font-weight: bold;">
-      Bienvenido a <span style="color: #007bff;">Veas App</span>
-  </h1>
-  <p style="font-size: 1.2em; color: #666;">
-      Tu gestor de costos personalizado
-  </p>
+<div class="main-container">
+    <div class="tittle-container">
+        <h1>Bienvenido a <span style="color: #007bff;">Veas App</span></h1>
+        <div class="subtitle-container">
+            <p style="font-size: larger;">Tu gestor de costos personalizado</p>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">Chat Empresas Veas</div>
+
+        <form class="chat-form" action="{% url 'send_message' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="content">
+            <button type="submit">Enviar</button>
+        </form>
+
+        <div class="chat-messages">
+            {% for message in messages %}
+            <div class="chat-message">
+                <span class="user">{{ message.user.username }}:</span> {{ message.content }}
+                <span class="timestamp">({{ message.timestamp|date:"Y-m-d H:i:s" }})</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
-
-
-
-<!-- Chart container -->
-<div id="chartdiv"></div>
 {% endblock content %}

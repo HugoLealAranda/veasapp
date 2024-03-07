@@ -8,12 +8,12 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('buscar/', views.buscar, name='buscar'),
-    path('home/', views.home, name='home_view'), 
-    path('', views.home_view, name='home'),
+    path('home/', views.home, name='home'), 
+    path('', views.home, name='home'),
     path('ruta/cotizacion/', cotizacion_view, name='agregar_cotizacion'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),  # Usar el nombre de la URL, no el archivo de plantilla
+    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),  
     path('login/', auth_views.LoginView.as_view(), name='login'),
-
+    path('send_message/', views.send_message, name='send_message'),
 ]
 

@@ -15,6 +15,23 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.db.models import Sum, F, FloatField
+from gestionPedidos.models import Message
+from django.contrib.auth.decorators import login_required
+from django.db import models
+
+
+
+def chat_room(request):
+    messages = Message.objects.all()
+    return render(request, 'home.html', {'messages': messages})
+
+@login_required
+def send_message(request):
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            Message.objects.create(user=request.user, content=content)
+    return redirect('home')
 
 
 
@@ -22,7 +39,6 @@ def generate_pdf(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="example.pdf"'
 
-    # Aquí puedes personalizar la generación del PDF si es necesario
 
     return response
 
@@ -42,9 +58,21 @@ def custom_login(request):
     return render(request, 'registration/login.html')
 
 
+from .models import Message
+
 @login_required
 def home(request):
-    return render(request, "home.html")
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            Message.objects.create(user=request.user, content=content)
+            return redirect('home')  # Redirecciona después de enviar un mensaje
+
+    # Obtener los últimos 10 mensajes ordenados por fecha de creación
+    messages = Message.objects.order_by('-timestamp')[:15]
+
+    return render(request, 'home.html', {'messages': messages})
+
 
 
 
@@ -59,7 +87,7 @@ def busqueda_productos(request):
 @login_required
 def buscar(request):
     if 'prd' in request.GET and request.GET['prd']:
-        producto = request.GET['prd']  # No hay necesidad de escapar la cadena de búsqueda
+        producto = request.GET['prd']  
         if len(producto) > 100:
             return HttpResponse("Texto de búsqueda demasiado largo")
         else:
@@ -126,8 +154,6 @@ def buscar(request):
                         })
 
 
-                    print(empresa)
-                    print(transaccion_mas_reciente)
 
 
 
