@@ -60,19 +60,19 @@ class ArticuloCotizacionForm(forms.ModelForm):
         ('metro', 'Metro'),
         ('rollo', 'Rollo'),
         ('tira', 'Tira'),
-
     ]
 
     unidad = forms.ChoiceField(label="Unidad", choices=UNIDAD_CHOICES)
 
     class Meta:
         model = Articulos
-        fields = ['nombre', 'cantidad',  'valor_unitario','unidad']
+        fields = ['nombre', 'cantidad', 'valor_unitario', 'unidad']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'field-xlarge'}),  
-            'cantidad': forms.NumberInput(attrs={'class': 'field-small'}),  
-            'valor_unitario': forms.NumberInput(attrs={'class': 'field-small'}),  
+            'cantidad': forms.NumberInput(),  # Removed required=False
+            'valor_unitario': forms.NumberInput(),  # Removed required=False
         }
+
 
 
 

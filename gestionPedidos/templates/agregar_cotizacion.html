@@ -142,6 +142,18 @@
         }
     </style>
 
+    <style>
+        .warning-tooltip2 {
+            position: absolute;
+            background-color: #ffffff;
+            color: #ec0e24;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ff0202;
+            z-index: 1000;
+        }
+    </style>
+
     <div class="custom-card">
         <form id="cotizacionForm" method="post">
             {% csrf_token %}
@@ -163,7 +175,7 @@
                 </div>
             </div>
             <div class="button-container">
-                <button type="submit">Guardar Articulos</button>
+                <button type="submit" id="guardarButton">Guardar Articulos</button>
             </div>
         </form>
     </div>
@@ -172,14 +184,14 @@
         let formCount = parseInt(document.getElementById('articuloFormSet').getAttribute('data-form-count'), 10);
         const addArticuloButton = document.getElementById('addArticuloButton');
         const removeArticuloButton = document.getElementById('removeArticuloButton');
-
+    
         function updateElementIndex(el, prefix, index) {
             var idRegex = new RegExp('(' + prefix + '-\\d+)');
             var replacement = prefix + '-' + index;
             if (el.id) el.id = el.id.replace(idRegex, replacement);
             if (el.name) el.name = el.name.replace(idRegex, replacement);
         }
-
+    
         addArticuloButton.addEventListener('click', () => {
             const newForm = articuloFormSet.getElementsByClassName('articuloForm')[0].cloneNode(true);
             const formRegex = RegExp(`-0-`, 'g'); // Regex para encontrar el índice base del formulario
@@ -197,7 +209,7 @@
             articuloFormSet.insertBefore(newForm, articuloFormSet.children[articuloFormSet.children.length - 1]);
             document.getElementById('id_articulo-TOTAL_FORMS').setAttribute('value', formCount);
         });
-
+    
         removeArticuloButton.addEventListener('click', () => {
             if (formCount > 1) {
                 const lastForm = articuloFormSet.getElementsByClassName('articuloForm')[formCount - 1];
@@ -206,33 +218,53 @@
                 document.getElementById('id_articulo-TOTAL_FORMS').setAttribute('value', formCount);
             }
         });
-
+    
         document.getElementById('cotizacionForm').addEventListener('submit', function(event) {
-    var fields = this.querySelectorAll('input[type="text"]');
+    var fields = this.querySelectorAll('input[type="text"], select, textarea');
+    var hasBlankFields = false;
     var hasUpperCase = false;
+
     fields.forEach(function(field) {
-        var inputValue = field.value;
-        if (/[A-Z]/.test(inputValue)) {
-            var warningElement = document.createElement('div');
-            warningElement.textContent = 'Por favor, no uses letras mayúsculas.';
-            warningElement.className = 'text-danger warning-tooltip';
-            field.insertAdjacentElement('afterend', warningElement);
+        if (field.value.trim() === '' && field.type !== 'hidden') {
+            var blankFieldWarning = document.createElement('div');
+            blankFieldWarning.textContent = 'Por favor, completa todos los campos.';
+            blankFieldWarning.className = 'text-danger warning-tooltip2';
+            field.insertAdjacentElement('afterend', blankFieldWarning);
+            hasBlankFields = true;
+            // Desaparecer el mensaje después de 3 segundos
+            setTimeout(function() {
+                blankFieldWarning.style.opacity = 0;
+                blankFieldWarning.style.transition = 'opacity 0.5s ease-out';
+                setTimeout(function() {
+                    blankFieldWarning.remove();
+                }, 500); // Esperar a que termine la transición y luego eliminar el elemento
+            }, 3000); // Esperar 3 segundos antes de iniciar el proceso de desaparición
+        }
+
+        if (/[A-Z]/.test(field.value)) {
+            var upperCaseWarning = document.createElement('div');
+            upperCaseWarning.textContent = 'Por favor, no uses letras mayúsculas.';
+            upperCaseWarning.className = 'text-danger warning-tooltip';
+            field.insertAdjacentElement('afterend', upperCaseWarning);
             hasUpperCase = true;
             // Desaparecer el mensaje después de 3 segundos
             setTimeout(function() {
-                warningElement.style.opacity = 0;
-                warningElement.style.transition = 'opacity 0.5s ease-out';
+                upperCaseWarning.style.opacity = 0;
+                upperCaseWarning.style.transition = 'opacity 0.5s ease-out';
                 setTimeout(function() {
-                    warningElement.remove();
+                    upperCaseWarning.remove();
                 }, 500); // Esperar a que termine la transición y luego eliminar el elemento
             }, 3000); // Esperar 3 segundos antes de iniciar el proceso de desaparición
         }
     });
-    if (hasUpperCase) {
+
+    if (hasBlankFields || hasUpperCase) {
         event.preventDefault();
     }
 });
     </script>
+    
+    
 
     
 </body>

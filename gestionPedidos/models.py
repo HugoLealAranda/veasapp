@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 class Articulos(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255, verbose_name="Nombre del Artículo")
-    cantidad = models.IntegerField(verbose_name="Cantidad")
+    cantidad = models.IntegerField(verbose_name="Cantidad", blank=True, null=True)
     unidad = models.CharField(max_length=20, verbose_name="Unidad")
-    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor Unitario")
+    valor_unitario = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Valor Unitario", blank=True, null=True)
     fecha = models.DateField(verbose_name="Fecha", null=True, blank=True)
     lugar = models.CharField(max_length=100, verbose_name="Lugar", null=True, blank=True)
     vendedor = models.CharField(max_length=100, verbose_name="Vendedor", null=True, blank=True)

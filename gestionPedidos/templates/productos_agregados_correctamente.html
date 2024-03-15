@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .centered {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50vh; /* Ajusta el alto de la pantalla completa */
+    }
+    
+    .message {
+        color: blue;
+        font-size: 36px; /* Tamaño de fuente más grande */
+        text-align: center; /* Alinea el texto al centro */
+        padding: 20px; /* Añade espacio interno alrededor del texto */
+        background-color: #f0f0f0; /* Color de fondo de la tarjeta */
+        border-radius: 10px; /* Añade esquinas redondeadas */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Añade una sombra */
+    }
+</style>
+
+<div class="centered">
+    <div class="message">
+        <strong>Productos Agregados Correctamente en la Base de Datos</strong>
+    </div>
+</div>
+{% endblock %}
+
+
+

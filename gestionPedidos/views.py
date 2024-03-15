@@ -14,11 +14,78 @@ from .forms import ArticuloCotizacionForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from django.db.models import Sum, F, FloatField
+from django.db.models import Sum, F, FloatField,ExpressionWrapper,DecimalField
 from gestionPedidos.models import Message
 from django.contrib.auth.decorators import login_required
 from django.db import models
 from .models import Tarea
+from datetime import datetime, timedelta
+
+
+
+
+
+
+
+
+
+
+
+from django.db.models import ExpressionWrapper, F, Sum, DecimalField
+
+from datetime import datetime, timedelta
+from django.db.models import Sum
+
+def informe_semanal(request):
+    # Obtener la fecha actual y la fecha de hace una semana
+    fecha_actual = datetime.now().date()
+    fecha_inicio = fecha_actual - timedelta(days=7)
+    
+    # Obtener las compras totales de la empresa "Veas" dentro de la última semana
+    compras_totales_veas = Articulos.objects.exclude(empresa_vendedora__iexact='veas') \
+                                             .exclude(numero_cotizacion__isnull=False) \
+                                             .filter(fecha__gte=fecha_inicio, fecha__lte=fecha_actual) \
+                                             .values('empresa_vendedora') \
+                                             .annotate(volumen_total=Sum('cantidad')) \
+                                             .order_by('-volumen_total') 
+    
+    # Obtener las ventas totales de la empresa "Veas" dentro de la última semana
+    ventas_totales_veas = Articulos.objects.filter(empresa_vendedora__iexact='veas') \
+                                             .exclude(numero_cotizacion__isnull=False) \
+                                             .filter(fecha__gte=fecha_inicio, fecha__lte=fecha_actual) \
+                                             .values('empresa_vendedora') \
+                                             .annotate(volumen_total=Sum('cantidad')) \
+                                             .order_by('-volumen_total')
+    
+    # Pasar los datos a la plantilla
+    return render(request, 'informe_semanal.html', {'compras_totales_veas': compras_totales_veas, 'ventas_totales_veas': ventas_totales_veas})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -405,7 +472,7 @@ def cotizacion_view(request):
 
                     nuevo_articulo.save()
 
-            return redirect('home')
+            return redirect('productos_agregados_correctamente')
     else:
         cotizacion_form = CotizacionForm(prefix='cotizacion')
         articulo_formset = ArticuloFormSet(prefix='articulo')
@@ -415,6 +482,7 @@ def cotizacion_view(request):
         'articulo_formset': articulo_formset
     })
 
-
+def productos_agregados_correctamente(request):
+    return render(request, 'productos_agregados_correctamente.html')
 
 
