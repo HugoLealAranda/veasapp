@@ -486,3 +486,100 @@ def productos_agregados_correctamente(request):
     return render(request, 'productos_agregados_correctamente.html')
 
 
+
+
+from django.shortcuts import render
+from .models import Articulos
+
+def generar_informe(request):
+    if request.method == 'POST':
+        fecha_inicio = request.POST.get('fecha_inicio')
+        fecha_fin = request.POST.get('fecha_fin')
+        
+        # Filtrar los artículos por el rango de fechas proporcionado y excluyendo los que tienen valores None
+        informes_ventas = Articulos.objects.filter(
+            fecha__range=[fecha_inicio, fecha_fin],
+            cantidad__isnull=False,
+            valor_unitario__isnull=False,
+            empresa_vendedora='rental veas',
+        ).exclude(numero_cotizacion__isnull=False)
+
+        informes_compras = Articulos.objects.filter(
+            fecha__range=[fecha_inicio, fecha_fin],
+            cantidad__isnull=False,
+            valor_unitario__isnull=False,
+            empresa_compradora='rental veas',
+        ).exclude(numero_cotizacion__isnull=False)
+
+
+
+
+
+
+        # Calcular la suma total de los valores de ventas
+        suma_valores_totales_ventas = sum(articulo.cantidad * articulo.valor_unitario for articulo in informes_ventas)
+
+        # Calcular la suma total de los valores de compras
+        suma_valores_totales_compras = sum(articulo.cantidad * articulo.valor_unitario for articulo in informes_compras)
+
+        # Calcular el balance
+        balance = suma_valores_totales_ventas - suma_valores_totales_compras
+
+
+        # Calcular el número de cotizaciones emitidas por la empresa vendedora "rental veas"
+
+        num_cotizaciones_emitidas = Articulos.objects.filter(
+            numero_cotizacion__isnull=False,
+            empresa_vendedora='rental veas'
+        ).count()
+
+        # Calcular el número de cotizaciones aceptadas por la empresa vendedora "rental veas"
+        num_cotizaciones_aceptadas = Articulos.objects.filter(
+            numero_cotizacion__isnull=False,
+            empresa_vendedora='rental veas',
+            aprobado='aprobado'
+        ).count()
+
+        # Calcular el número de cotizaciones rechazadas por la empresa vendedora "rental veas"
+        num_cotizaciones_rechazadas = Articulos.objects.filter(
+            numero_cotizacion__isnull=False,
+            empresa_vendedora='rental veas',
+            aprobado='rechazado'
+        ).count()
+
+
+        # Obtener las cotizaciones rechazadas con comentarios emitidas por la empresa vendedora "rental veas"
+        cotizaciones_rechazadas = Articulos.objects.filter(
+            numero_cotizacion__isnull=False,
+            empresa_vendedora='rental veas',
+            aprobado='rechazado',
+        ).exclude(comentarios='').values_list('numero_cotizacion', 'comentarios')
+
+        cotizaciones_rechazadas = cotizaciones_rechazadas.values_list('numero_cotizacion', 'comentarios')
+
+        return render(request, 'informe.html', {
+            'informes_ventas': informes_ventas,
+            'informes_compras': informes_compras,
+            'valores_totales_ventas': valores_totales_ventas,
+            'valores_totales_compras': valores_totales_compras,
+            'suma_valores_totales_ventas': suma_valores_totales_ventas,
+            'suma_valores_totales_compras': suma_valores_totales_compras,
+            'balance': balance,
+            'num_cotizaciones_emitidas': num_cotizaciones_emitidas,
+            'num_cotizaciones_aceptadas': num_cotizaciones_aceptadas,
+            'num_cotizaciones_rechazadas': num_cotizaciones_rechazadas,
+            'fecha_inicio': fecha_inicio,
+            'fecha_fin': fecha_fin,
+            'cotizaciones_rechazadas': cotizaciones_rechazadas,
+        })
+    
+    
+    return render(request, 'generar_informe.html')
+
+
+
+
+
+
+
+

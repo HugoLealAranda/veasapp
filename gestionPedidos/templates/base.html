@@ -84,18 +84,17 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mt-2 mt-lg-0">           
- 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informes</a>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{% url 'informe_semanal' %}">Informe Semanal</a>
-                                <a class="dropdown-item" href="#!">Informe Mensual</a>
+                                <a class="dropdown-item" href="{% url 'generar_informe' %}">Generar Informe</a> <!-- Agregado -->
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#!">Informe Semestral</a>
+                                <!-- Puedes agregar más opciones de informes aquí según sea necesario -->
                             </div>
                         </li>
                     </ul>
                 </div>
+                
             </div>
         </nav>
         <!-- Page content-->
