@@ -66,7 +66,24 @@ def cambiar_seccion_a_muebles(admin, request, queryset):
 def cambiar_seccion_a_mineria(admin, request, queryset):
     queryset.update(seccion='mineria')
 
+def renombrar_rental_veas(modeladmin, request, queryset):
+    queryset.update(empresa_compradora='rental veas')
+    modeladmin.message_user(request, "El campo 'empresa_compradora' se ha renombrado a 'rental veas' en los artículos seleccionados.")
 
+def renombrar_empresa_vendedora(modeladmin, request, queryset):
+    queryset.update(empresa_vendedora='rental veas')
+    modeladmin.message_user(request, "El campo 'empresa_vendedora' se ha renombrado a 'Rental Veas' en los artículos seleccionados.")
+
+def aprobar_documento(modeladmin, request, queryset):
+    queryset.update(aprobado='aprobado')
+    modeladmin.message_user(request, "se han aprobado los articulos seleccionados")
+
+def rechazar_documento(modeladmin, request, queryset):
+    queryset.update(aprobado='rechazado')
+    modeladmin.message_user(request, "se han rechazado los articulos seleccionados")
+
+renombrar_empresa_vendedora.short_description = "Renombrar empresa vendedora a Rental Veas"
+renombrar_rental_veas.short_description = "Renombrar empresa compradora a Rental Veas"
 class ArticulosAdmin(admin.ModelAdmin):
     list_display = (
         'nombre', 'cantidad', 'unidad', 'valor_unitario', 'fecha', 'lugar', 'vendedor', 'comprador',
@@ -81,14 +98,14 @@ class ArticulosAdmin(admin.ModelAdmin):
         'fecha',
         'entrega',
         'forma_pago',
-        'lugar',  # Filtro para lugar insensible a mayúsculas y minúsculas
-        'vendedor',  # Filtro para vendedor insensible a mayúsculas y minúsculas
-        'comprador',  # Filtro para comprador insensible a mayúsculas y minúsculas
-        'unidad',  # Filtro para unidad insensible a mayúsculas y minúsculas
-        'numero_factura',  # Filtro para número de factura insensible a mayúsculas y minúsculas
-        'numero_cotizacion',  # Filtro para número de cotización insensible a mayúsculas y minúsculas
-        'numero_boleta',  # Filtro para número de boleta insensible a mayúsculas y minúsculas
-        CotizacionFilter,  # Filtro combinado para cotizaciones aprobadas/rechazadas con número de cotización no nulo
+        'lugar', 
+        'vendedor',  
+        'comprador',  
+        'unidad',  
+        'numero_factura',  
+        'numero_cotizacion',  
+        'numero_boleta',  
+        CotizacionFilter, 
     )
     actions = [
         cambiar_seccion_a_ferreteria,
@@ -97,6 +114,11 @@ class ArticulosAdmin(admin.ModelAdmin):
         cambiar_seccion_a_muebles,
         cambiar_seccion_a_maestranza,
         cambiar_seccion_a_mineria,
+        renombrar_rental_veas,
+        renombrar_empresa_vendedora,
+        aprobar_documento,
+        rechazar_documento,
+
     ]
 
     list_per_page = 20
