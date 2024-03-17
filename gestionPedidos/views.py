@@ -435,13 +435,13 @@ def generar_informe(request):
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_vendedora__icontains='rental veas',
+            empresa_vendedora__icontains='veas',
             numero_boleta__isnull=False
         ) | Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_vendedora__icontains='rental veas',
+            empresa_vendedora__icontains='veas',
             numero_factura__isnull=False
         )
 
@@ -450,13 +450,13 @@ def generar_informe(request):
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_compradora__icontains='rental veas',
+            empresa_compradora__icontains='veas',
             numero_boleta__isnull=False
         ) | Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_compradora__icontains='rental veas',
+            empresa_compradora__icontains='veas',
             numero_factura__isnull=False
         )
 
