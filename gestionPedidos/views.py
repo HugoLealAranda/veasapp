@@ -496,7 +496,7 @@ def generar_informe(request):
         fecha_inicio = request.POST.get('fecha_inicio')
         fecha_fin = request.POST.get('fecha_fin')
         
-        # Filtrar los artículos por el rango de fechas proporcionado y excluyendo los que tienen valores None
+        # Obtener informes de ventas
         informes_ventas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
@@ -504,29 +504,41 @@ def generar_informe(request):
             empresa_vendedora='rental veas',
         ).exclude(numero_cotizacion__isnull=False)
 
+        # Obtener informes de compras
         informes_compras = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
             empresa_compradora='rental veas',
         ).exclude(numero_cotizacion__isnull=False)
+        
+        # Calcular total de compras para cada artículo
+        valores_totales_compras = []
+        for articulo in informes_compras:
+            total_compra = articulo.cantidad * articulo.valor_unitario
+            valores_totales_compras.append((total_compra))
 
+        # Calcular total de ventas para cada artículo
+        valores_totales_ventas = []
+        for articulo in informes_ventas:
+            total_venta = articulo.cantidad * articulo.valor_unitario
+            valores_totales_ventas.append((total_venta))
 
+        suma_valores_totales_compras = 0
+        suma_valores_totales_ventas = 0
 
+        # Calcular total de compras
+        for total_compra in valores_totales_compras:
+            suma_valores_totales_compras += total_compra
 
-
-
-        # Calcular la suma total de los valores de ventas
-        suma_valores_totales_ventas = sum(articulo.cantidad * articulo.valor_unitario for articulo in informes_ventas)
-
-        # Calcular la suma total de los valores de compras
-        suma_valores_totales_compras = sum(articulo.cantidad * articulo.valor_unitario for articulo in informes_compras)
+        # Calcular total de ventas
+        for total_venta in valores_totales_ventas:
+            suma_valores_totales_ventas += total_venta
 
         # Calcular el balance
         balance = suma_valores_totales_ventas - suma_valores_totales_compras
 
 
-        # Calcular el número de cotizaciones emitidas por la empresa vendedora "rental veas"
 
         num_cotizaciones_emitidas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
