@@ -429,18 +429,16 @@ def generar_informe(request):
         fecha_inicio = request.POST.get('fecha_inicio')
         fecha_fin = request.POST.get('fecha_fin')
 
-
-
         informes_compras = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             empresa_compradora__icontains='veas',
-            numero_cotizacion__isnull=True
+            numero_cotizacion__isnull=True,
         )
 
-        informe_venta = Articulos.objects.filter(
+        informes_ventas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             empresa_vendedora__icontains='veas',
-            numero_cotizacion__isnull=True
+            numero_cotizacion__isnull=True,
         )
 
                 
@@ -452,7 +450,7 @@ def generar_informe(request):
 
         # Calcular total de ventas para cada artículo
         valores_totales_ventas = []
-        for articulo in informe_venta:
+        for articulo in informes_ventas:
             total_venta = articulo.cantidad * articulo.valor_unitario
             valores_totales_ventas.append((total_venta))
 
@@ -477,6 +475,8 @@ def generar_informe(request):
         num_cotizaciones_emitidas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             numero_cotizacion__isnull=False,
+            numero_boleta__isnull=True,
+            numero_factura__isnull=True,            
             empresa_vendedora__icontains='veas'
         ).values('numero_cotizacion').distinct().count()
 
@@ -484,6 +484,8 @@ def generar_informe(request):
         num_cotizaciones_aceptadas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             numero_cotizacion__isnull=False,
+            numero_boleta__isnull=True,
+            numero_factura__isnull=True,
             empresa_vendedora__icontains='veas',
             aprobado='aprobado'
         ).values('numero_cotizacion').distinct().count()
@@ -492,6 +494,8 @@ def generar_informe(request):
         num_cotizaciones_rechazadas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             numero_cotizacion__isnull=False,
+            numero_boleta__isnull=True,
+            numero_factura__isnull=True,
             empresa_vendedora__icontains='veas',
             aprobado='rechazado'
         ).values('numero_cotizacion').distinct().count()
@@ -500,6 +504,8 @@ def generar_informe(request):
         cotizaciones_rechazadas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             numero_cotizacion__isnull=False,
+            numero_boleta__isnull=True,
+            numero_factura__isnull=True,
             empresa_vendedora__icontains='veas',
             aprobado='rechazado',
             comentarios__isnull=False
@@ -509,7 +515,7 @@ def generar_informe(request):
         cotizaciones_rechazadas = cotizaciones_rechazadas.values_list('numero_cotizacion', 'comentarios')
 
         return render(request, 'informe.html', {
-            'informes_ventas': informe_venta,
+            'informes_ventas': informes_ventas,
             'informes_compras': informes_compras,
             'valores_totales_ventas': valores_totales_ventas,
             'valores_totales_compras': valores_totales_compras,
