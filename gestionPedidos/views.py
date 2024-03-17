@@ -431,27 +431,34 @@ def generar_informe(request):
 
         from django.db.models import Q
 
-        # Obtener informes de ventas
         informes_ventas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_vendedora='rental veas',
-        ).filter(
-            Q(numero_boleta__isnull=False) | Q(numero_factura__isnull=False)
+            empresa_vendedora__icontains='rental veas',
+            numero_boleta__isnull=False
+        ) | Articulos.objects.filter(
+            fecha__range=[fecha_inicio, fecha_fin],
+            cantidad__isnull=False,
+            valor_unitario__isnull=False,
+            empresa_vendedora__icontains='rental veas',
+            numero_factura__isnull=False
         )
 
 
-        # Obtener informes de compras
         informes_compras = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_compradora='rental veas',
-        ).filter(
-            Q(numero_boleta__isnull=False) | Q(numero_factura__isnull=False)
+            empresa_compradora__icontains='rental veas',
+            numero_boleta__isnull=False
+        ) | Articulos.objects.filter(
+            fecha__range=[fecha_inicio, fecha_fin],
+            cantidad__isnull=False,
+            valor_unitario__isnull=False,
+            empresa_compradora__icontains='rental veas',
+            numero_factura__isnull=False
         )
-
 
 
 
@@ -484,32 +491,35 @@ def generar_informe(request):
 
 
 
+
+        # Calcular el número de cotizaciones emitidas por la empresa vendedora que contiene "veas"
         num_cotizaciones_emitidas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
-            empresa_vendedora='rental veas'
+            empresa_vendedora__icontains='veas'
         ).values('numero_cotizacion').distinct().count()
-        
 
+        # Calcular el número de cotizaciones aceptadas por la empresa vendedora que contiene "veas"
         num_cotizaciones_aceptadas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
-            empresa_vendedora='rental veas',
+            empresa_vendedora__icontains='veas',
             aprobado='aprobado'
         ).values('numero_cotizacion').distinct().count()
 
+        # Calcular el número de cotizaciones rechazadas por la empresa vendedora que contiene "veas"
         num_cotizaciones_rechazadas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
-            empresa_vendedora='rental veas',
+            empresa_vendedora__icontains='veas',
             aprobado='rechazado'
         ).values('numero_cotizacion').distinct().count()
 
-
-
+        # Obtener las cotizaciones rechazadas con comentarios emitidas por la empresa vendedora que contiene "veas"
         cotizaciones_rechazadas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
-            empresa_vendedora='rental veas',
+            empresa_vendedora__icontains='veas',
             aprobado='rechazado',
             comentarios__isnull=False
         ).values_list('numero_cotizacion', 'comentarios').distinct()
+
 
         cotizaciones_rechazadas = cotizaciones_rechazadas.values_list('numero_cotizacion', 'comentarios')
 
