@@ -430,12 +430,6 @@ def generar_informe(request):
         fecha_fin = request.POST.get('fecha_fin')
 
 
-        informes_ventas = Articulos.objects.filter(
-            fecha__range=[fecha_inicio, fecha_fin],
-            empresa_vendedora__icontains='veas',
-            numero_cotizacion__isnull=True
-        )
-
 
         informes_compras = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
@@ -443,7 +437,11 @@ def generar_informe(request):
             numero_cotizacion__isnull=True
         )
 
-
+        informes_ventas = Articulos.objects.filter(
+            fecha__range=[fecha_inicio, fecha_fin],
+            empresa_vendedora__icontains='veas',
+            numero_cotizacion__isnull=True
+        )
 
                 
         # Calcular total de compras para cada artículo
@@ -477,12 +475,14 @@ def generar_informe(request):
 
         # Calcular el número de cotizaciones emitidas por la empresa vendedora que contiene "veas"
         num_cotizaciones_emitidas = Articulos.objects.filter(
+            fecha__range=[fecha_inicio, fecha_fin],
             numero_cotizacion__isnull=False,
             empresa_vendedora__icontains='veas'
         ).values('numero_cotizacion').distinct().count()
 
         # Calcular el número de cotizaciones aceptadas por la empresa vendedora que contiene "veas"
         num_cotizaciones_aceptadas = Articulos.objects.filter(
+            fecha__range=[fecha_inicio, fecha_fin],
             numero_cotizacion__isnull=False,
             empresa_vendedora__icontains='veas',
             aprobado='aprobado'
@@ -490,6 +490,7 @@ def generar_informe(request):
 
         # Calcular el número de cotizaciones rechazadas por la empresa vendedora que contiene "veas"
         num_cotizaciones_rechazadas = Articulos.objects.filter(
+            fecha__range=[fecha_inicio, fecha_fin],
             numero_cotizacion__isnull=False,
             empresa_vendedora__icontains='veas',
             aprobado='rechazado'
@@ -497,6 +498,7 @@ def generar_informe(request):
 
         # Obtener las cotizaciones rechazadas con comentarios emitidas por la empresa vendedora que contiene "veas"
         cotizaciones_rechazadas = Articulos.objects.filter(
+            fecha__range=[fecha_inicio, fecha_fin],
             numero_cotizacion__isnull=False,
             empresa_vendedora__icontains='veas',
             aprobado='rechazado',
