@@ -432,7 +432,8 @@ def generar_informe(request):
             cantidad__isnull=False,
             valor_unitario__isnull=False,
             empresa_vendedora='rental veas',
-        ).exclude(numero_cotizacion__isnull=True)
+            numero_boleta__isnull=False,
+            numero_Factura_isnull=False)
 
         # Obtener informes de compras
         informes_compras = Articulos.objects.filter(
@@ -440,7 +441,8 @@ def generar_informe(request):
             cantidad__isnull=False,
             valor_unitario__isnull=False,
             empresa_compradora='rental veas',
-        ).exclude(numero_cotizacion__isnull=True)
+            numero_boleta__isnull=False,
+            numero_Factura_isnull=False)
         
         # Calcular total de compras para cada artículo
         valores_totales_compras = []
