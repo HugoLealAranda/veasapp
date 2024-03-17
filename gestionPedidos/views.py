@@ -439,7 +439,7 @@ def generar_informe(request):
 
         informes_ventas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
-            empresa_vendedora__icontains='veas',
+            empresa_vendedora='rental veas',
             numero_cotizacion__isnull=True,
         )
 
