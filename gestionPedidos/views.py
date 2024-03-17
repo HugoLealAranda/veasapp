@@ -436,12 +436,10 @@ def generar_informe(request):
             ).exclude(numero_cotizacion__isnull=False)
 
 
-        # Obtener informes de ventas
         informes_ventas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
-            cantidad__isnull=False,
-            valor_unitario__isnull=False,
-            empresa_vendedora='rental veas',
+            empresa_vendedora__icontains='veas',
+            numero_cotizacion__isnull=True,
             ).exclude(numero_cotizacion__isnull=False)
 
 
