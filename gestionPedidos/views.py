@@ -439,11 +439,8 @@ def generar_informe(request):
 
         informes_ventas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
-            cantidad__isnull=False,
-            valor_unitario__isnull=False,
-            empresa_vendedora__icontains='veas'
-        ).filter(
-            Q(numero_boleta__isnull=False) | Q(numero_factura__isnull=False)
+            empresa_vendedora__icontains='veas',
+            numero_cotizacion__isnull=True,
         )
 
                 
