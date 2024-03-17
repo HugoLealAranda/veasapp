@@ -8,6 +8,7 @@ import matplotlib
 matplotlib.use('Agg')
 from django.db.models import Min, Max
 import json
+from django.db.models import Count
 from django.db.models.functions import Round
 from .forms import CotizacionForm
 from .forms import ArticuloCotizacionForm
@@ -20,6 +21,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Tarea
 from django.db.models import F, Sum
 from django.db.models import Sum
+from django.db.models import Q
+
 
 
 
@@ -425,15 +428,19 @@ def generar_informe(request):
     if request.method == 'POST':
         fecha_inicio = request.POST.get('fecha_inicio')
         fecha_fin = request.POST.get('fecha_fin')
-        
+
+        from django.db.models import Q
+
         # Obtener informes de ventas
         informes_ventas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_vendedora='rental veas',
-            numero_boleta__isnull=False,
-            numero_Factura_isnull=False)
+            empresa_vendedora='rental veas'
+        ).filter(
+            Q(numero_boleta__isnull=False) | Q(numero_factura__isnull=False)
+        )
+
 
         # Obtener informes de compras
         informes_compras = Articulos.objects.filter(
@@ -441,9 +448,14 @@ def generar_informe(request):
             cantidad__isnull=False,
             valor_unitario__isnull=False,
             empresa_compradora='rental veas',
-            numero_boleta__isnull=False,
-            numero_Factura_isnull=False)
-        
+        ).filter(
+            Q(numero_boleta__isnull=False) | Q(numero_factura__isnull=False)
+        )
+
+
+
+
+                
         # Calcular total de compras para cada artículo
         valores_totales_compras = []
         for articulo in informes_compras:
@@ -475,21 +487,33 @@ def generar_informe(request):
         num_cotizaciones_emitidas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
             empresa_vendedora='rental veas'
-        ).count()
+            ).annotate(
+                num_repeticiones=Count('numero_cotizacion')
+            ).filter(
+                num_repeticiones__gt=1
+            ).count()
 
         # Calcular el número de cotizaciones aceptadas por la empresa vendedora "rental veas"
         num_cotizaciones_aceptadas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
             empresa_vendedora='rental veas',
             aprobado='aprobado'
-        ).count()
+            ).annotate(
+                num_repeticiones=Count('numero_cotizacion')
+            ).filter(
+                num_repeticiones__gt=1
+            ).count()
 
         # Calcular el número de cotizaciones rechazadas por la empresa vendedora "rental veas"
         num_cotizaciones_rechazadas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
             empresa_vendedora='rental veas',
             aprobado='rechazado'
-        ).count()
+            ).annotate(
+                num_repeticiones=Count('numero_cotizacion')
+            ).filter(
+                num_repeticiones__gt=1
+            ).count()
 
 
         # Obtener las cotizaciones rechazadas con comentarios emitidas por la empresa vendedora "rental veas"
@@ -497,7 +521,12 @@ def generar_informe(request):
             numero_cotizacion__isnull=False,
             empresa_vendedora='rental veas',
             aprobado='rechazado',
-        ).exclude(comentarios='').values_list('numero_cotizacion', 'comentarios')
+            comentarios__isnull=False,
+            ).annotate(
+                num_repeticiones=Count('numero_cotizacion')
+            ).filter(
+                num_repeticiones__gt=1
+            ).values_list('numero_cotizacion', 'comentarios')
 
         cotizaciones_rechazadas = cotizaciones_rechazadas.values_list('numero_cotizacion', 'comentarios')
 
