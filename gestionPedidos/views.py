@@ -476,7 +476,8 @@ def generar_informe(request):
             fecha__range=[fecha_inicio, fecha_fin],
             numero_cotizacion__isnull=False,
             numero_boleta__isnull=True,
-            numero_factura__isnull=True,            
+            numero_factura__isnull=True, 
+            aprobado__isnull=False,           
             empresa_vendedora__icontains='veas'
         ).values('numero_cotizacion').distinct().count()
 
@@ -486,6 +487,7 @@ def generar_informe(request):
             numero_cotizacion__isnull=False,
             numero_boleta__isnull=True,
             numero_factura__isnull=True,
+            aprobado__isnull=False,
             empresa_vendedora__icontains='veas',
             aprobado='aprobado'
         ).values('numero_cotizacion').distinct().count()
@@ -496,6 +498,7 @@ def generar_informe(request):
             numero_cotizacion__isnull=False,
             numero_boleta__isnull=True,
             numero_factura__isnull=True,
+            aprobado__isnull=False,
             empresa_vendedora__icontains='veas',
             aprobado='rechazado'
         ).values('numero_cotizacion').distinct().count()
@@ -507,6 +510,7 @@ def generar_informe(request):
             numero_boleta__isnull=True,
             numero_factura__isnull=True,
             empresa_vendedora__icontains='veas',
+            aprobado__isnull=False,
             aprobado='rechazado',
             comentarios__isnull=False
         ).values_list('numero_cotizacion', 'comentarios').distinct()
