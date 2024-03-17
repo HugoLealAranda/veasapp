@@ -433,14 +433,17 @@ def generar_informe(request):
             fecha__range=[fecha_inicio, fecha_fin],
             empresa_compradora__icontains='veas',
             numero_cotizacion__isnull=True,
-        ).exclude(numero_cotizacion__isnull=False)
+            ).exclude(numero_cotizacion__isnull=False)
 
 
+        # Obtener informes de ventas
         informes_ventas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
+            cantidad__isnull=False,
+            valor_unitario__isnull=False,
             empresa_vendedora='rental veas',
-            numero_cotizacion__isnull=True,
-        ).exclude(numero_cotizacion__isnull=False)
+            ).exclude(numero_cotizacion__isnull=False)
+
 
                 
         # Calcular total de compras para cada artículo
