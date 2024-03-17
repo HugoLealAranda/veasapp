@@ -487,47 +487,29 @@ def generar_informe(request):
         num_cotizaciones_emitidas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
             empresa_vendedora='rental veas'
-            ).annotate(
-                num_repeticiones=Count('numero_cotizacion')
-            ).filter(
-                num_repeticiones__gt=0
-            ).count()
+        ).values('numero_cotizacion').distinct().count()
         
 
-        # Calcular el número de cotizaciones aceptadas por la empresa vendedora "rental veas"
         num_cotizaciones_aceptadas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
             empresa_vendedora='rental veas',
             aprobado='aprobado'
-            ).annotate(
-                num_repeticiones=Count('numero_cotizacion')
-            ).filter(
-                num_repeticiones__gt=0
-            ).count()
+        ).values('numero_cotizacion').distinct().count()
 
-        # Calcular el número de cotizaciones rechazadas por la empresa vendedora "rental veas"
         num_cotizaciones_rechazadas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
             empresa_vendedora='rental veas',
             aprobado='rechazado'
-            ).annotate(
-                num_repeticiones=Count('numero_cotizacion')
-            ).filter(
-                num_repeticiones__gt=0
-            ).count()
+        ).values('numero_cotizacion').distinct().count()
 
 
-        # Obtener las cotizaciones rechazadas con comentarios emitidas por la empresa vendedora "rental veas"
+
         cotizaciones_rechazadas = Articulos.objects.filter(
             numero_cotizacion__isnull=False,
             empresa_vendedora='rental veas',
             aprobado='rechazado',
-            comentarios__isnull=False,
-            ).annotate(
-                num_repeticiones=Count('numero_cotizacion')
-            ).filter(
-                num_repeticiones__gt=0
-            ).values_list('numero_cotizacion', 'comentarios')
+            comentarios__isnull=False
+        ).values_list('numero_cotizacion', 'comentarios').distinct()
 
         cotizaciones_rechazadas = cotizaciones_rechazadas.values_list('numero_cotizacion', 'comentarios')
 
