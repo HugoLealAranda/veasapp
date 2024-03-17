@@ -436,7 +436,7 @@ def generar_informe(request):
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_vendedora='rental veas'
+            empresa_vendedora='rental veas',
         ).filter(
             Q(numero_boleta__isnull=False) | Q(numero_factura__isnull=False)
         )
@@ -490,8 +490,9 @@ def generar_informe(request):
             ).annotate(
                 num_repeticiones=Count('numero_cotizacion')
             ).filter(
-                num_repeticiones__gt=1
+                num_repeticiones__gt=0
             ).count()
+        
 
         # Calcular el número de cotizaciones aceptadas por la empresa vendedora "rental veas"
         num_cotizaciones_aceptadas = Articulos.objects.filter(
@@ -501,7 +502,7 @@ def generar_informe(request):
             ).annotate(
                 num_repeticiones=Count('numero_cotizacion')
             ).filter(
-                num_repeticiones__gt=1
+                num_repeticiones__gt=0
             ).count()
 
         # Calcular el número de cotizaciones rechazadas por la empresa vendedora "rental veas"
@@ -512,7 +513,7 @@ def generar_informe(request):
             ).annotate(
                 num_repeticiones=Count('numero_cotizacion')
             ).filter(
-                num_repeticiones__gt=1
+                num_repeticiones__gt=0
             ).count()
 
 
@@ -525,7 +526,7 @@ def generar_informe(request):
             ).annotate(
                 num_repeticiones=Count('numero_cotizacion')
             ).filter(
-                num_repeticiones__gt=1
+                num_repeticiones__gt=0
             ).values_list('numero_cotizacion', 'comentarios')
 
         cotizaciones_rechazadas = cotizaciones_rechazadas.values_list('numero_cotizacion', 'comentarios')
