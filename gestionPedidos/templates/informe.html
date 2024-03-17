@@ -129,10 +129,11 @@
             </tbody>
         </table>
     </div>
-    
+
     <div class="card">
         <h2 style="font-size: 20px; font-weight: bold;">Informe de Ventas</h2>
         <h1 style="font-size: 20px; font-weight: bold;">Total Ventas: {{suma_valores_totales_ventas}} clp</h1>
+
         <table>
             <thead>
                 <tr>
@@ -143,17 +144,18 @@
                 </tr>
             </thead>
             <tbody>
-                {% for articulos in informes_ventas %}
+                {% for articulo in informes_ventas %}
                 <tr>
-                    <td>{{ articulos.nombre }}</td>
-                    <td>{{ articulos.cantidad }}</td>
-                    <td>{{ articulos.valor_unitario }}</td>
-                    <td>{{ articulos.valor_total }}</td>
+                    <td>{{ articulo.nombre }}</td>
+                    <td>{{ articulo.cantidad }}</td>
+                    <td>{{ articulo.valor_unitario }}</td>
+                    <td>{{ articulo.valor_total }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
 
 
 </body>
