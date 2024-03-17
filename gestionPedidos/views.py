@@ -441,7 +441,7 @@ def generar_informe(request):
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_vendedora='rental veas'
+            empresa_vendedora__icontain='veas'
         ).filter(
             Q(numero_boleta__isnull=False) | Q(numero_factura__isnull=False)
         )
@@ -494,7 +494,7 @@ def generar_informe(request):
             numero_factura__isnull=True,
             aprobado__isnull=False,
             empresa_vendedora__icontains='veas',
-            aprobado='Aprobado'
+            aprobado='aprobado'
         ).values('numero_cotizacion').distinct().count()
 
         # Calcular el número de cotizaciones rechazadas por la empresa vendedora que contiene "veas"
@@ -505,7 +505,7 @@ def generar_informe(request):
             numero_factura__isnull=True,
             aprobado__isnull=False,
             empresa_vendedora__icontains='veas',
-            aprobado='Rechazado'
+            aprobado='rechazado'
         ).values('numero_cotizacion').distinct().count()
 
         # Obtener las cotizaciones rechazadas con comentarios emitidas por la empresa vendedora que contiene "veas"
@@ -516,7 +516,7 @@ def generar_informe(request):
             numero_factura__isnull=True,
             empresa_vendedora__icontains='veas',
             aprobado__isnull=False,
-            aprobado='Rechazado',
+            aprobado='rechazado',
             comentarios__isnull=False
         ).values_list('numero_cotizacion', 'comentarios').distinct()
 
