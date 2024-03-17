@@ -441,7 +441,7 @@ def generar_informe(request):
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_vendedora__icontain='veas'
+            empresa_vendedora__icontains='veas'
         ).filter(
             Q(numero_boleta__isnull=False) | Q(numero_factura__isnull=False)
         )
