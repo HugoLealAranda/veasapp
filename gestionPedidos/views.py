@@ -436,7 +436,7 @@ def generar_informe(request):
             cantidad__isnull=False,
             valor_unitario__isnull=False,
             empresa_vendedora__icontains='veas',
-            numero_cotizacion__isnull=False
+            numero_cotizacion__isnull=True
         )
 
 
@@ -445,7 +445,7 @@ def generar_informe(request):
             cantidad__isnull=False,
             valor_unitario__isnull=False,
             empresa_compradora__icontains='veas',
-            numero_cotizacion__isnull=False
+            numero_cotizacion__isnull=True
         )
 
 
