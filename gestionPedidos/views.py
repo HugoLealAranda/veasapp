@@ -437,7 +437,7 @@ def generar_informe(request):
             numero_cotizacion__isnull=True
         )
 
-        informes_ventas = Articulos.objects.filter(
+        informe_venta = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             empresa_vendedora__icontains='veas',
             numero_cotizacion__isnull=True
@@ -452,7 +452,7 @@ def generar_informe(request):
 
         # Calcular total de ventas para cada artículo
         valores_totales_ventas = []
-        for articulo in informes_ventas:
+        for articulo in informe_venta:
             total_venta = articulo.cantidad * articulo.valor_unitario
             valores_totales_ventas.append((total_venta))
 
@@ -509,7 +509,7 @@ def generar_informe(request):
         cotizaciones_rechazadas = cotizaciones_rechazadas.values_list('numero_cotizacion', 'comentarios')
 
         return render(request, 'informe.html', {
-            'informes_ventas': informes_ventas,
+            'informes_ventas': informe_venta,
             'informes_compras': informes_compras,
             'valores_totales_ventas': valores_totales_ventas,
             'valores_totales_compras': valores_totales_compras,
