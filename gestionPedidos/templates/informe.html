@@ -117,12 +117,12 @@
                 </tr>
             </thead>
             <tbody>
-                {% for articulo in informes_ventas %}
+                {% for articulos in informes_ventas %}
                 <tr>
-                    <td>{{ articulo.nombre }}</td>
-                    <td>{{ articulo.cantidad }}</td>
-                    <td>{{ articulo.valor_unitario }}</td>
-                    <td>{{ articulo.valor_total }}</td>
+                    <td>{{ articulos.nombre }}</td>
+                    <td>{{ articulos.cantidad }}</td>
+                    <td>{{ articulos.valor_unitario }}</td>
+                    <td>{{ articulos.valor_total }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
