@@ -52,13 +52,17 @@
                     <button class="btn btn-outline-success" type="submit">Base de Datos</button>
                 </form>  
 
+                <form action="{% url 'generar_informe' %}" method="get" class="d-flex">
+                    <button class="btn btn-outline-success" type="submit">Generar Informe</button>
+                </form>  
+
                 
                 <form action="{% url 'home' %}" method="get" class="d-flex">
                     <button class="btn btn-outline-success" type="submit">Volver al Inicio</button>
                 </form>  
 
                 <form action="{% url 'buscar' %}" method="get" class="d-flex" onsubmit="return sanitizeInput()">
-                    <input id="searchInput" class="form-control me-2" type="search" name="prd" placeholder="Buscar Estadisticas..." aria-label="Search" value="{{ query }}" required>
+                    <input id="searchInput" class="form-control me-2" type="search" name="prd" placeholder="Buscar Estadísticas..." aria-label="Search" value="{{ query }}" required>
                     <button class="btn btn-outline-success" type="submit">Buscar</button>
                 </form>
 
@@ -80,21 +84,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mt-2 mt-lg-0">           
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informes</a>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{% url 'generar_informe' %}">Generar Informe</a> <!-- Agregado -->
-                                <div class="dropdown-divider"></div>
-                                <!-- Puedes agregar más opciones de informes aquí según sea necesario -->
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                
+                </div>                
             </div>
         </nav>
         <!-- Page content-->
