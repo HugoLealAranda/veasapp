@@ -4,32 +4,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informe</title>
+    <title>Informe </title>
+
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #000; /* Cambio de color de texto a negro */
+            margin: 0;
+            padding: 0;
+        }
+        h2{ 
+            color: #136eff; /* Azul */
+            margin-top: 20px;
+            text-align: center; /* Centrar los títulos */
+        }
+        h1 {
+            color: #0e0e0e; /* Azul */
+            margin-top: 20px;
+            text-align: center; /* Centrar los títulos */
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+        }
+        .card ul {
+            padding-left: 20px;
+            margin-bottom: 10px;
+            margin-top:10px
+        }
+        .card li {
+            margin-bottom: 10px;
+            margin-top:10px
+        }
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: center; /* Centrar el contenido de las celdas */
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .button {
+      background-color: #007bffb4;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+      border-radius: 8px;
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    right: 0;
+    margin-top: 1em;
+    }
+
+    .button:hover {
+      background-color: #0057b3c6;
+    }
+    </style>
 </head>
 <body>
-    <div>
+    <div class="card">
         <h1>Informe correspondiente para las fechas entre {{ fecha_inicio }} y {{ fecha_fin }}</h1>
     </div>
-    <button onclick="printPage()">Descargar PDF o Imprimir</button>
+    <button class="button" onclick="printPage()">Descargar PDF o Imprimir</button>
 
-    <div>
-        <h2>Resumen:</h2>
-        <p>En este informe se presenta un resumen del balance financiero correspondiente al período entre {{ fecha_inicio }} y {{ fecha_fin }}.</p>
-        <p>El balance total es de <span>{{ balance }} CLP</span>. Durante este período se emitieron un total de <span>{{ num_cotizaciones_emitidas }}</span> cotizaciones, de las cuales <span>{{ num_cotizaciones_aceptadas }}</span> fueron aceptadas y <span>{{ num_cotizaciones_rechazadas }}</span> fueron rechazadas.</p>
+    <div class="card">
+        <h2 style="font-size: 20px; font-weight: bold;">Resumen:</h2>
+        <p style="font-size: 16px; font-weight: bold; margin-bottom: 10px; text-align: justify;">En este informe se presenta un resumen del balance financiero correspondiente al período entre {{ fecha_inicio }} y {{ fecha_fin }}.</p>
+        <p style="font-size: 16px; text-align: justify;">El balance total es de <span style="color: #007bff; font-weight: bold;">{{ balance }} CLP</span>. Durante este período se emitieron un total de <span style="color: #007bff; font-weight: bold;">{{ num_cotizaciones_emitidas }}</span> cotizaciones, de las cuales <span style="color: #007bff; font-weight: bold;">{{ num_cotizaciones_aceptadas }}</span> fueron aceptadas y <span style="color: #007bff; font-weight: bold;">{{ num_cotizaciones_rechazadas }}</span> fueron rechazadas.</p>
     </div>
 
-    <div>
-        <h2>Cotizaciones Rechazadas:</h2>
+    <div class="card">
+        <h2 style="font-size: 20px; font-weight: bold;">Cotizaciones Rechazadas:</h2>
         <ul>
             {% for numero_cotizacion, comentario in cotizaciones_rechazadas %}
-                <li><span>{{ numero_cotizacion }}</span> - {{ comentario }}</li>
+                <li><span style="font-weight: bold;">{{ numero_cotizacion }}</span> - {{ comentario }}</li>
             {% endfor %}
         </ul>
     </div>
 
-    <div>
-        <h2>Informe de Compras</h2>
-        <h1>Total Compras: {{ suma_valores_totales_compras }} CLP</h1>
+    <div class="card">
+        <h2 style="font-size: 20px; font-weight: bold;">Informe de Compras</h2>
+        <h1 style="font-size: 20px; font-weight: bold;">Total Compras: {{suma_valores_totales_compras}} clp</h1>
 
         <table>
             <thead>
@@ -53,9 +130,9 @@
         </table>
     </div>
 
-    <div>
-        <h2>Informe de Ventas</h2>
-        <h1>Total Ventas: {{ suma_valores_totales_ventas }} CLP</h1>
+    <div class="card">
+        <h2 style="font-size: 20px; font-weight: bold;">Informe de Ventas</h2>
+        <h1 style="font-size: 20px; font-weight: bold;">Total Ventas: {{suma_valores_totales_ventas}} clp</h1>
 
         <table>
             <thead>
@@ -78,6 +155,9 @@
             </tbody>
         </table>
     </div>
+
+
+
 </body>
 
 <script>
@@ -86,4 +166,3 @@
     }
 </script>
 {% endblock %}
-
