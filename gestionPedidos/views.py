@@ -434,7 +434,7 @@ def generar_informe(request):
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_vendedora__icontains='veas'
+            empresa_vendedora__icontains='veas',
             numero_factura__isnull=False,
         )
 
@@ -443,8 +443,8 @@ def generar_informe(request):
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
-            empresa_compradora__icontains='veas'
-            numero_factura__isnull=False
+            empresa_compradora__icontains='veas',
+            numero_factura__isnull=False,
         )
 
         # Lista de informes de ventas con sus propiedades
