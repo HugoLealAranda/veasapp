@@ -438,7 +438,7 @@ def generar_informe(request):
             empresa_vendedora='rental veas',
             numero_factura__isnull=False,
         )
-
+        print(informes_ventas)
 
         # Obtener informes de compras
         informes_compras = Articulos.objects.filter(
@@ -448,14 +448,7 @@ def generar_informe(request):
             empresa_compradora='rental veas',
             numero_factura__isnull=False
         )
-                # Obtener informes de compras
-        informes_ventas2 = Articulos.objects.filter(
-            fecha__range=[fecha_inicio, fecha_fin],
-            cantidad__isnull=False,
-            valor_unitario__isnull=False,
-            empresa_vendedora='rental veas',
-            numero_factura__isnull=False
-        )
+
 
 
                 
@@ -465,11 +458,6 @@ def generar_informe(request):
             total_compra = articulo.cantidad * articulo.valor_unitario
             valores_totales_compras.append((total_compra))
 
-        # Calcular total de compras para cada artículo
-        valores_totales_ventas2 = []
-        for articulo in informes_ventas2:
-            total_venta2 = articulo.cantidad * articulo.valor_unitario
-            valores_totales_ventas2.append((total_venta2))
 
         # Calcular total de ventas para cada artículo
         valores_totales_ventas = []
@@ -478,12 +466,8 @@ def generar_informe(request):
             valores_totales_ventas.append((total_venta))
 
         suma_valores_totales_compras = 0
-        suma_valores_totales_ventas2 = 0
         suma_valores_totales_ventas = 0
 
-        # Calcular total de compras
-        for total_ventas2 in valores_totales_ventas2:
-            suma_valores_totales_ventas2 += total_ventas2
 
 
         # Calcular total de compras
@@ -495,7 +479,7 @@ def generar_informe(request):
             suma_valores_totales_ventas += total_venta
 
         # Calcular el balance
-        balance = suma_valores_totales_ventas2 - suma_valores_totales_compras
+        balance = suma_valores_totales_ventas - suma_valores_totales_compras
 
 
 
@@ -552,7 +536,6 @@ def generar_informe(request):
             'informes_ventas': informes_ventas,
             'valores_totales_ventas': valores_totales_ventas,
             'valores_totales_compras': valores_totales_compras,
-            'valores_totales_ventas2': valores_totales_ventas2,
             'suma_valores_totales_ventas': suma_valores_totales_ventas,
             'suma_valores_totales_compras': suma_valores_totales_compras,
             'balance': balance,
