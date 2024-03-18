@@ -83,20 +83,22 @@
     }
     </style>
 </head>
+
+
 <body>
     <div class="card">
-        <h1>Informe correspondiente para las fechas entre {{ fecha_inicio }} y {{ fecha_fin }}</h1>
+        <h4>Este informe financiero correspondiente para las fechas entre {{ fecha_inicio }} y {{ fecha_fin }}</h4>
     </div>
     <button class="button" onclick="printPage()">Descargar PDF o Imprimir</button>
 
     <div class="card">
-        <h2 style="font-size: 20px; font-weight: bold;">Resumen:</h2>
+        <h2> Resumen:</h2>
         <p style="font-size: 16px; font-weight: bold; margin-bottom: 10px; text-align: justify;">En este informe se presenta un resumen del balance financiero correspondiente al período entre {{ fecha_inicio }} y {{ fecha_fin }}.</p>
         <p style="font-size: 16px; text-align: justify;">El balance total es de <span style="color: #007bff; font-weight: bold;">{{ balance }} CLP</span>. Durante este período se emitieron un total de <span style="color: #007bff; font-weight: bold;">{{ num_cotizaciones_emitidas }}</span> cotizaciones, de las cuales <span style="color: #007bff; font-weight: bold;">{{ num_cotizaciones_aceptadas }}</span> fueron aceptadas y <span style="color: #007bff; font-weight: bold;">{{ num_cotizaciones_rechazadas }}</span> fueron rechazadas.</p>
     </div>
 
     <div class="card">
-        <h2 style="font-size: 20px; font-weight: bold;">Cotizaciones Rechazadas:</h2>
+        <h2 >Cotizaciones Rechazadas:</h2>
         <ul>
             {% for numero_cotizacion, comentario in cotizaciones_rechazadas %}
                 <li><span style="font-weight: bold;">{{ numero_cotizacion }}</span> - {{ comentario }}</li>
@@ -106,54 +108,45 @@
 
 
 <div class="card">
-    <h2 style="font-size: 20px; font-weight: bold;">Informe de Compras</h2>
-    <h1 style="font-size: 20px; font-weight: bold;">Total Compras: {{ suma_valores_totales_compras }} clp</h1>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre del Artículo</th>
-                <th>Cantidad</th>
-                <th>Valor Unitario</th>
-                <th>Valor Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for articulo in informes_compras %}
-            <tr>
-                <td>{{ articulo.nombre }}</td>
-                <td>{{ articulo.cantidad }}</td>
-                <td>{{ articulo.valor_unitario }}</td>
-                <td>{{ articulo.valor_total }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+    <h2>Informes de ventas</h2>
+    <h4 style="text-align: center;">ventas totales: {{ suma_valores_totales_ventas }}</h4>
+    <table border="1">
+      <tr>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>Valor Unitario</th>
+        <th>Valor Total</th>
+      </tr>
+      {% for informe in lista_informes_ventas %}
+      <tr>
+        <td>{{ informe.0 }}</td>
+        <td>{{ informe.1 }}</td>
+        <td>{{ informe.2 }}</td>
+        <td>{{ informe.3 }}</td>
+      </tr>
+      {% endfor %}
     </table>
 </div>
 
-<div class="card"> 
-    <h2 style="font-size: 20px; font-weight: bold;">Informe de Ventas</h2>
-    <h1 style="font-size: 20px; font-weight: bold;">Total Ventas: {{ suma_valores_totales_ventas }} clp</h1>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre del Artículo</th>
-                <th>Cantidad</th>
-                <th>Valor Unitario</th>
-                <th>Valor Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for articulo in informes_ventas %}
-            <tr>
-                <td>{{ articulo.nombre }}</td>
-                <td>{{ articulo.cantidad }}</td>
-                <td>{{ articulo.valor_unitario }}</td>
-                <td>{{ articulo.valor_total }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+
+<div class="card">
+    <h2>Informes de compras</h2>
+    <h4 style="text-align: center;">compras totales: {{ suma_valores_totales_compras }}</h4>
+    <table border="1">
+      <tr>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>Valor Unitario</th>
+        <th>Valor Total</th>
+      </tr>
+      {% for informe in lista_informes_compras %}
+      <tr>
+        <td>{{ informe.0 }}</td>
+        <td>{{ informe.1 }}</td>
+        <td>{{ informe.2 }}</td>
+        <td>{{ informe.3 }}</td>
+      </tr>
+      {% endfor %}
     </table>
 </div>
 

@@ -429,7 +429,6 @@ def generar_informe(request):
         fecha_inicio = request.POST.get('fecha_inicio')
         fecha_fin = request.POST.get('fecha_fin')
 
-
         # Obtener informes de ventas
         informes_ventas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
@@ -438,7 +437,6 @@ def generar_informe(request):
             empresa_vendedora='rental veas',
             numero_factura__isnull=False,
         )
-        print(informes_ventas)
 
         # Obtener informes de compras
         informes_compras = Articulos.objects.filter(
@@ -449,37 +447,23 @@ def generar_informe(request):
             numero_factura__isnull=False
         )
 
+        # Lista de informes de ventas con sus propiedades
+        lista_informes_ventas = [[informe.nombre, informe.cantidad, informe.valor_unitario, informe.cantidad * informe.valor_unitario] for informe in informes_ventas]
 
-
-                
-        # Calcular total de compras para cada artículo
-        valores_totales_compras = []
-        for articulo in informes_compras:
-            total_compra = articulo.cantidad * articulo.valor_unitario
-            valores_totales_compras.append((total_compra))
-
-
-        # Calcular total de ventas para cada artículo
-        valores_totales_ventas = []
-        for articulo in informes_ventas:
-            total_venta = articulo.cantidad * articulo.valor_unitario
-            valores_totales_ventas.append((total_venta))
-
-        suma_valores_totales_compras = 0
-        suma_valores_totales_ventas = 0
-
+        # Lista de informes de compras con sus propiedades
+        lista_informes_compras = [[informe.nombre, informe.cantidad, informe.valor_unitario, informe.cantidad * informe.valor_unitario] for informe in informes_compras]
 
 
         # Calcular total de compras
-        for total_compra in valores_totales_compras:
-            suma_valores_totales_compras += total_compra
+        suma_valores_totales_compras = sum(informe[3] for informe in lista_informes_compras)
 
         # Calcular total de ventas
-        for total_venta in valores_totales_ventas:
-            suma_valores_totales_ventas += total_venta
+        suma_valores_totales_ventas = sum(informe[3] for informe in lista_informes_ventas)
+
 
         # Calcular el balance
         balance = suma_valores_totales_ventas - suma_valores_totales_compras
+
 
 
 
@@ -532,10 +516,8 @@ def generar_informe(request):
         cotizaciones_rechazadas = cotizaciones_rechazadas.values_list('numero_cotizacion', 'comentarios')
 
         return render(request, 'informe.html', {
-            'informes_compras': informes_compras,
-            'informes_ventas': informes_ventas,
-            'valores_totales_ventas': valores_totales_ventas,
-            'valores_totales_compras': valores_totales_compras,
+            'lista_informes_compras': lista_informes_compras,
+            'lista_informes_ventas': lista_informes_ventas,
             'suma_valores_totales_ventas': suma_valores_totales_ventas,
             'suma_valores_totales_compras': suma_valores_totales_compras,
             'balance': balance,
