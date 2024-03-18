@@ -429,12 +429,18 @@ def generar_informe(request):
         fecha_inicio = request.POST.get('fecha_inicio')
         fecha_fin = request.POST.get('fecha_fin')
 
+        from django.db.models import Q
+
+        # Obtener informes de ventas
         informes_ventas = Articulos.objects.filter(
             fecha__range=[fecha_inicio, fecha_fin],
             cantidad__isnull=False,
             valor_unitario__isnull=False,
             empresa_vendedora='rental veas',
-        ).exclude(numero_cotizacion__isnull=False)
+        ).filter(
+            Q(numero_boleta__isnull=False) | Q(numero_factura__isnull=False)
+        )
+
 
         # Obtener informes de compras
         informes_compras = Articulos.objects.filter(
@@ -442,7 +448,9 @@ def generar_informe(request):
             cantidad__isnull=False,
             valor_unitario__isnull=False,
             empresa_compradora='rental veas',
-        ).exclude(numero_cotizacion__isnull=False)
+        ).filter(
+            Q(numero_boleta__isnull=False) | Q(numero_factura__isnull=False)
+        )
 
 
                 
