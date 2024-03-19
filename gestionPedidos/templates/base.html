@@ -41,6 +41,7 @@
             <div class="container-fluid">
 
 
+                    
 
                 <form action="{% url 'agregar_cotizacion' %}" method="get" class="d-flex">
                     <button class="btn btn-outline-success" type="submit">Agregar Articulos</button>
@@ -67,7 +68,10 @@
                 </form>
 
 
-                
+                <nav>
+                    <img src="{% static 'images/logo6.png' %}" alt="Logo de mi proyecto" style="width: 180px; margin-right: 10px">
+                    <!-- Otros elementos de navegación -->
+                </nav>
                 
                 <div class="d-flex align-items-center">
                     <div class="me-3">
@@ -125,21 +129,21 @@
 }
     /* Estilo de los botones en su estado normal */
     .btn-outline-success {
-        border-color: #3f87fb; /* Color de borde azul para los botones */
+        border-color: #007bff; /* Color de borde azul para los botones */
         color: #29292b; /* Color de texto azul para coincidir con el borde */
     }
 /* Estilo al hacer clic en los botones */
 .btn-outline-success:active {
-    background-color: #3f87fb !important; /* Color de fondo azul al hacer clic */
+    background-color: #007bff !important; /* Color de fondo azul al hacer clic */
     color: white !important; /* Color de texto blanco para mayor contraste */
-    border-color: #3f87fb !important; /* Color de borde azul al hacer clic */
+    border-color: #007bff !important; /* Color de borde azul al hacer clic */
 }
 
     /* Estilo al pasar el mouse sobre los botones y enlaces de la barra de navegación */
     .btn-outline-success:hover, .nav-link:hover, .dropdown-item:hover {
-        background-color: #3f87fb; /* Color de relleno azul al pasar el mouse */
+        background-color: #007bff; /* Color de relleno azul al pasar el mouse */
         color: white; /* Color de texto blanco para mayor contraste */
-        border-color: #3f87fb; /* Asegurar que el color del borde sea azul también al pasar el mouse */
+        border-color: #007bff; /* Asegurar que el color del borde sea azul también al pasar el mouse */
     }
 /* Agrega este CSS a tu archivo de estilos */
 

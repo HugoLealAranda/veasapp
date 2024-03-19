@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %} <!-- Asegúrate de que esta línea esté presente -->
 
 {% block content %}
 <style>
@@ -63,13 +64,17 @@
 
 <div class="login-container">
     <form class="login-form" method="post">
-        <h2>Login</h2>
+        <nav>
+            <img src="{% static 'images/logo5.png' %}" alt="Logo de mi proyecto" style="width: 150px; margin-left: 80px; margin-bottom: 20px;margin-top: 10px">
+            <!-- Otros elementos de navegación -->
+        </nav>
+        <h2>Bienvenido a VeasAPP</h2>
         {% csrf_token %}
-        <label for="username">Username:</label>
+        <label for="username">Usuario:</label>
         <input type="text" id="username" name="username">
-        <label for="password">Password:</label>
+        <label for="password">Contraseña:</label>
         <input type="password" id="password" name="password">
-        <button type="submit">Login</button>
+        <button type="submit">Ingresar</button>
     </form>
 </div>
 {% endblock %}
