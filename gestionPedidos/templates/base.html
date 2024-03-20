@@ -41,13 +41,14 @@
             <div class="container-fluid">
 
 
-                    
+                <nav>
+                    <img src="{% static 'images/logo6.png' %}" alt="Logo de mi proyecto" style="width: 180px; margin-right: 10px; margin-botton: 10px">
+                    <!-- Otros elementos de navegación -->
+                </nav>     
 
                 <form action="{% url 'agregar_cotizacion' %}" method="get" class="d-flex">
                     <button class="btn btn-outline-success" type="submit">Agregar Articulos</button>
                 </form>  
-
-
 
                 <form action="{% url 'admin:index' %}" method="get" class="d-flex">
                     <button class="btn btn-outline-success" type="submit">Base de Datos</button>
@@ -68,10 +69,7 @@
                 </form>
 
 
-                <nav>
-                    <img src="{% static 'images/logo6.png' %}" alt="Logo de mi proyecto" style="width: 180px; margin-right: 10px">
-                    <!-- Otros elementos de navegación -->
-                </nav>
+
                 
                 <div class="d-flex align-items-center">
                     <div class="me-3">
