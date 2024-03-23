@@ -212,14 +212,14 @@ def buscar(request):
                                                     .order_by('-total_comprado')
                 
                 compras_totales_veas = Articulos.objects.exclude(empresa_vendedora__iexact='Rental Veas') \
-                                                        .exclude(numero_cotizacion__isnull=True) \
+                                                        .exclude(numero_cotizacion__isnull=False) \
                                                         .filter(nombre__icontains=producto) \
                                                         .values('empresa_vendedora') \
                                                         .annotate(volumen_total=Sum('cantidad')) \
                                                         .order_by('-volumen_total') 
                 
                 ventas_totales_veas = Articulos.objects.filter(empresa_vendedora__iexact='Rental Veas') \
-                                                        .exclude(numero_cotizacion__isnull=True) \
+                                                        .exclude(numero_cotizacion__isnull=False) \
                                                         .filter(nombre__icontains=producto) \
                                                         .values('empresa_vendedora') \
                                                         .annotate(volumen_total=Sum('cantidad')) \

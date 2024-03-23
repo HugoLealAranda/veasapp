@@ -50,55 +50,59 @@
                 <div class="metrica-titulo">Utilidad en %</div>
             <div class="metrica-valor">{{ metricas1.utilidad_porcentual|floatformat:2 }} %</div>
         </div>
+
+        <div class="container2">
+            <div class="chart-card card" id="pie-chart-card">
+                <canvas id="myPieChart"></canvas>
+            </div>
+        </div>
     </div>  
     {% endif %}
 
 
+</div>
+
+<div class="container">
+    <div class="chart-card card" id="bar-chart-card">
+        <canvas id="graficoBarras"></canvas>
+    </div>
+</div>
+
+<div class="container">
+    <div class="chart-card card" id="line-chart-card">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
 
 
-        <div class="chart-card card" id="bar-chart-card">
-            <canvas id="graficoBarras"></canvas>
-        </div>
-    
+<div class="container">
+    <div class="chart-card card" id="line-chart-card">
+        <canvas id="graficoBarras2"></canvas>
+    </div>
+</div>
 
-        <div class="chart-card card" id="line-chart-card">
-            <canvas id="myChart"></canvas>
-        </div>
-
-
-        <div class="chart-card card" id="pie-chart-card">
-            <canvas id="myPieChart"></canvas>
-        </div>
-    
-
-        <div class="chart-card card" id="line-chart-card">
-            <canvas id="graficoBarras2"></canvas>
-        </div>
-    
+<div class="container">
         <div class="reactive-element">
             <span class="stock-label">Stock Teórico:</span>
             <div class="stock-value-container">
                 <span class="stock-value">{{ stock_teorico }}</span>
             </div>
         </div>              
-
-
-
-
-<div class="reactive-element">
-    <span class="stock-label tiempos-espera-titulo">Tiempos de Espera:</span>
-    <div class="stock-value-container tiempos-espera-container">
-        <ul class="tiempos-espera">
-            {% for resultado in resultados %}
-                <li>
-                    <strong class="nombre-empresa">{{ resultado.empresa_vendedora }}</strong>: <span class="resultado">{{ resultado.entrega }}</span>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
 </div>
 
-    
+<div class="container">
+
+        <span class="stock-label tiempos-espera-titulo">Tiempos de Espera:</span>
+        <div class="stock-value-container tiempos-espera-container">
+            <ul class="tiempos-espera">
+                {% for resultado in resultados %}
+                    <li>
+                        <strong class="nombre-empresa">{{ resultado.empresa_vendedora }}</strong>: <span class="resultado">{{ resultado.entrega }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+
+</div>  
 
 <div class="container">
     <div class="search-container">
@@ -276,6 +280,19 @@
   margin-bottom: 20px; /* Ajusta el valor del margen según sea necesario */
   margin-top: 20px;
 }
+
+.container2 {
+  display: flex;
+  flex-direction: column; /* Los elementos se apilan verticalmente */
+  flex-wrap: nowrap; /* Evita que se envuelvan en múltiples líneas */
+  position: relative;
+  width: 300px; /* Ancho deseado */
+  height: 300px; /* Alto deseado */
+  margin-bottom: 20px; /* Ajusta el valor del margen según sea necesario */
+  margin-top: 20px;
+}
+
+
 
 
 .chart-card {
@@ -576,8 +593,6 @@
         );
     });
 </script>
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const etiquetasPieChart = JSON.parse('{{ etiquetas_pie|safe }}');
