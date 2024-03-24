@@ -16,31 +16,31 @@
     <div class="metrica1-container">
         <div class="metrica1-card">
             <div class="metrica-titulo">Último valor de Venta por Rental Veas</div>
-            <div class="metrica-valor">{{ metricas1.valor_unitario_venta_rental_veas | default:'No disponible' }}</div>
+            <div class="metrica-valor">${{ metricas1.valor_unitario_venta_rental_veas | default:'No disponible' }}</div>
         </div>
         <div class="metrica1-card">
             <div class="metrica-titulo">Último valor de Compra por Rental Veas</div>
-            <div class="metrica-valor">{{ metricas1.valor_unitario_compra_rental_veas | default:'No disponible' }}</div>
+            <div class="metrica-valor">${{ metricas1.valor_unitario_compra_rental_veas | default:'No disponible' }}</div>
         </div>
         <div class="metrica1-card">
             <div class="metrica-titulo">Último valor Cotizado desde Rental Veas a clientes</div>
-            <div class="metrica-valor">{{ metricas1.valor_unitario_cotizado_rental_veas | default:'No disponible' }}</div>
+            <div class="metrica-valor">${{ metricas1.valor_unitario_cotizado_rental_veas | default:'No disponible' }}</div>
         </div>
         <div class="metrica1-card">
             <div class="metrica-titulo">Último valor Cotizado desde Proveedores a Rental Veas</div>
-            <div class="metrica-valor">{{ metricas1.valor_unitario_cotizado_proveedores | default:'No disponible' }}</div>
+            <div class="metrica-valor">${{ metricas1.valor_unitario_cotizado_proveedores | default:'No disponible' }}</div>
         </div>
 
         <!-- Tarjeta de métrica para el promedio de Rental Veas -->
         <div class="metrica1-card">
             <div class="metrica-titulo">Precio Promedio de Ventas de Rental Veas</div>
-            <div class="metrica-valor">{{ metricas1.promedio_venta_valor_unitario | default:'No disponible' }}</div>
+            <div class="metrica-valor">${{ metricas1.promedio_venta_valor_unitario | default:'No disponible' }}</div>
         </div>
         
         <!-- Tarjeta de métrica para el promedio de otros -->
         <div class="metrica1-card">
             <div class="metrica-titulo">Precio Promedio de Compra de Rental Veas</div>
-            <div class="metrica-valor">{{ metricas1.promedio_compra_valor_unitario | default:'No disponible' }}</div>
+            <div class="metrica-valor">${{ metricas1.promedio_compra_valor_unitario | default:'No disponible' }}</div>
         </div>
     
         <!-- Tarjeta de métrica para la utilidad  -->
