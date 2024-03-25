@@ -12,49 +12,110 @@
     {% if metricas1 %}
 
 <div class="container">
-
-    <div class="metrica1-container">
-        <div class="metrica1-card">
-            <div class="metrica-titulo">Último valor de Venta por Rental Veas</div>
-            <div class="metrica-valor">${{ metricas1.valor_unitario_venta_rental_veas | default:'No disponible' }}</div>
-        </div>
-        <div class="metrica1-card">
-            <div class="metrica-titulo">Último valor de Compra por Rental Veas</div>
-            <div class="metrica-valor">${{ metricas1.valor_unitario_compra_rental_veas | default:'No disponible' }}</div>
-        </div>
-        <div class="metrica1-card">
-            <div class="metrica-titulo">Último valor Cotizado desde Rental Veas a clientes</div>
-            <div class="metrica-valor">${{ metricas1.valor_unitario_cotizado_rental_veas | default:'No disponible' }}</div>
-        </div>
-        <div class="metrica1-card">
-            <div class="metrica-titulo">Último valor Cotizado desde Proveedores a Rental Veas</div>
-            <div class="metrica-valor">${{ metricas1.valor_unitario_cotizado_proveedores | default:'No disponible' }}</div>
-        </div>
-
-        <!-- Tarjeta de métrica para el promedio de Rental Veas -->
-        <div class="metrica1-card">
-            <div class="metrica-titulo">Precio Promedio de Ventas de Rental Veas</div>
-            <div class="metrica-valor">${{ metricas1.promedio_venta_valor_unitario | default:'No disponible' }}</div>
-        </div>
-        
-        <!-- Tarjeta de métrica para el promedio de otros -->
-        <div class="metrica1-card">
-            <div class="metrica-titulo">Precio Promedio de Compra de Rental Veas</div>
-            <div class="metrica-valor">${{ metricas1.promedio_compra_valor_unitario | default:'No disponible' }}</div>
-        </div>
+    <div class="metrica1-card">
+        <div class="metrica-titulo">Último valor de Venta por Rental Veas</div>
+        {% if metricas1.valor_unitario_venta_rental_veas != 'No disponible' %}
+            {% if metricas1.valor_unitario_venta_rental_veas %}
+                <div class="metrica-valor">${{ metricas1.valor_unitario_venta_rental_veas }}</div>
+            {% else %}
+                <div class="metrica-valor">No disponible</div>
+            {% endif %}
+        {% else %}
+            <div class="metrica-valor">No disponible</div>
+        {% endif %}
+    </div>
+    <div class="metrica1-card">
+        <div class="metrica-titulo">Último valor de Compra por Rental Veas</div>
+        {% if metricas1.valor_unitario_compra_rental_veas != 'No disponible' %}
+            {% if metricas1.valor_unitario_compra_rental_veas %}
+                <div class="metrica-valor">${{ metricas1.valor_unitario_compra_rental_veas }}</div>
+            {% else %}
+                <div class="metrica-valor">No disponible</div>
+            {% endif %}
+        {% else %}
+            <div class="metrica-valor">No disponible</div>
+        {% endif %}
+    </div>
+    <div class="metrica1-card">
+        <div class="metrica-titulo">Último valor Cotizado desde Rental Veas a clientes</div>
+        {% if metricas1.valor_unitario_cotizado_rental_veas != 'No disponible' %}
+            {% if metricas1.valor_unitario_cotizado_rental_veas %}
+                <div class="metrica-valor">${{ metricas1.valor_unitario_cotizado_rental_veas }}</div>
+            {% else %}
+                <div class="metrica-valor">No disponible</div>
+            {% endif %}
+        {% else %}
+            <div class="metrica-valor">No disponible</div>
+        {% endif %}
+    </div>
+    <div class="metrica1-card">
+        <div class="metrica-titulo">Último valor Cotizado desde Proveedores a Rental Veas</div>
+        {% if metricas1.valor_unitario_cotizado_proveedores != 'No disponible' %}
+            {% if metricas1.valor_unitario_cotizado_proveedores %}
+                <div class="metrica-valor">${{ metricas1.valor_unitario_cotizado_proveedores }}</div>
+            {% else %}
+                <div class="metrica-valor">No disponible</div>
+            {% endif %}
+        {% else %}
+            <div class="metrica-valor">No disponible</div>
+        {% endif %}
+    </div>
     
-        <!-- Tarjeta de métrica para la utilidad  -->
-    
-        <div class="metrica1-card">
-            <div class="metrica-titulo">Utilidad del producto en la Ultima Compraventa</div>
-            <div class="metrica-valor">${{ metricas1.utilidad_ultima_compraventa|floatformat:2 }}</div>
-        </div>
-        <div class="metrica1-card">
-            <div class="metrica-titulo">Utilidad promedio historica del producto</div>
-            <div class="metrica-valor">${{ metricas1.utilidad_promedio_historica|floatformat:2 }}</div>
-        </div>
+    <!-- Tarjeta de métrica para el promedio de Rental Veas -->
+    <div class="metrica1-card">
+        <div class="metrica-titulo">Precio Promedio de Ventas de Rental Veas</div>
+        {% if metricas1.promedio_venta_valor_unitario != 'No disponible' %}
+            {% if metricas1.promedio_venta_valor_unitario %}
+                <div class="metrica-valor">${{ metricas1.promedio_venta_valor_unitario }}</div>
+            {% else %}
+                <div class="metrica-valor">No disponible</div>
+            {% endif %}
+        {% else %}
+            <div class="metrica-valor">No disponible</div>
+        {% endif %}
+    </div>
 
-    </div>       
+    <!-- Tarjeta de métrica para el promedio de otros -->
+    <div class="metrica1-card">
+        <div class="metrica-titulo">Precio Promedio de Compra de Rental Veas</div>
+        {% if metricas1.promedio_compra_valor_unitario != 'No disponible' %}
+            {% if metricas1.promedio_compra_valor_unitario %}
+                <div class="metrica-valor">${{ metricas1.promedio_compra_valor_unitario }}</div>
+            {% else %}
+                <div class="metrica-valor">No disponible</div>
+            {% endif %}
+        {% else %}
+            <div class="metrica-valor">No disponible</div>
+        {% endif %}
+    </div>
+
+    
+<!-- Tarjeta de métrica para la utilidad  -->
+    <div class="metrica1-card">
+        <div class="metrica-titulo">Utilidad del producto en la Ultima Compraventa</div>
+        {% if metricas1.utilidad_ultima_compraventa != 'No disponible' %}
+            {% if metricas1.utilidad_ultima_compraventa %}
+                <div class="metrica-valor">${{ metricas1.utilidad_ultima_compraventa|floatformat:2 }}</div>
+            {% else %}
+                <div class="metrica-valor">No disponible</div>
+            {% endif %}
+        {% else %}
+            <div class="metrica-valor">No disponible</div>
+        {% endif %}
+        </div>
+        <div class="metrica1-card">
+            <div class="metrica-titulo">Utilidad promedio del producto</div>
+            {% if metricas1.utilidad_promedio_historica != 'No disponible' %}
+                {% if metricas1.utilidad_promedio_historica %}
+                    <div class="metrica-valor">${{ metricas1.utilidad_promedio_historica|floatformat:2 }}</div>
+                {% else %}
+                    <div class="metrica-valor">No disponible</div>
+                {% endif %}
+            {% else %}
+                <div class="metrica-valor">No disponible</div>
+            {% endif %}
+        </div>
+</div>       
     
     
 

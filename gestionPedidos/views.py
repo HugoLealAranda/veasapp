@@ -185,8 +185,8 @@ def buscar(request):
 
 
 
-                volumen_ventas_por_empresa = Articulos.objects.exclude(empresa_vendedora__iexact='Rental Veas') \
-                                            .exclude(numero_cotizacion__isnull=True) \
+                volumen_ventas_por_empresa = Articulos.objects.exclude(empresa_vendedora__iexact='rental veas') \
+                                            .filter(numero_cotizacion__isnull=True) \
                                             .filter(nombre__icontains=producto) \
                                             .values('empresa_vendedora') \
                                             .annotate(volumen_total=Sum('cantidad')) \
@@ -194,8 +194,8 @@ def buscar(request):
 
 
 
-                valor_ventas_por_empresa = articulos.exclude(empresa_vendedora__iexact='Rental Veas') \
-                                                    .exclude(numero_cotizacion__isnull=True) \
+                valor_ventas_por_empresa = articulos.exclude(empresa_vendedora__iexact='rental veas') \
+                                                    .filter(numero_cotizacion__isnull=True) \
                                                     .annotate(valor_total=F('cantidad') * F('valor_unitario')) \
                                                     .values('empresa_vendedora') \
                                                     .annotate(valor_total_sum=Sum('valor_total', output_field=FloatField())) \
@@ -204,7 +204,7 @@ def buscar(request):
 
 
 
-                rendimiento_compradores = articulos.exclude(numero_cotizacion__isnull=True) \
+                rendimiento_compradores = articulos.filter(numero_cotizacion__isnull=True) \
                                                     .filter(nombre__icontains=producto) \
                                                     .values('comprador') \
                                                     .annotate(total_comprado=Sum('cantidad'), 
@@ -212,14 +212,14 @@ def buscar(request):
                                                     .order_by('-total_comprado')
                 
                 compras_totales_veas = Articulos.objects.exclude(empresa_vendedora__iexact='Rental Veas') \
-                                                        .exclude(numero_cotizacion__isnull=False) \
+                                                        .filter(numero_cotizacion__isnull=True) \
                                                         .filter(nombre__icontains=producto) \
                                                         .values('empresa_vendedora') \
                                                         .annotate(volumen_total=Sum('cantidad')) \
                                                         .order_by('-volumen_total') 
                 
                 ventas_totales_veas = Articulos.objects.filter(empresa_vendedora__iexact='Rental Veas') \
-                                                        .exclude(numero_cotizacion__isnull=False) \
+                                                        .filter(numero_cotizacion__isnull=True) \
                                                         .filter(nombre__icontains=producto) \
                                                         .values('empresa_vendedora') \
                                                         .annotate(volumen_total=Sum('cantidad')) \
@@ -238,24 +238,32 @@ def buscar(request):
 
 
                 ultimo_valor_venta_rental_veas = articulos.filter(numero_cotizacion__isnull=True).filter(empresa_vendedora__iexact='rental veas').order_by('-fecha').first()
-                ultimo_valor_compra_rental_veas = articulos.filter(numero_cotizacion__isnull=True).filter(empresa_compradora__iexact='rental veas').order_by('-fecha').first()
-                valor_unitario_venta_rental_veas = ultimo_valor_venta_rental_veas.valor_unitario
-                valor_unitario_compra_rental_veas = ultimo_valor_compra_rental_veas.valor_unitario
+                valor_unitario_venta_rental_veas = ultimo_valor_venta_rental_veas.valor_unitario if ultimo_valor_venta_rental_veas else 0
 
+                ultimo_valor_compra_rental_veas = articulos.filter(numero_cotizacion__isnull=True).filter(empresa_compradora__iexact='rental veas').order_by('-fecha').first()
+                valor_unitario_compra_rental_veas = ultimo_valor_compra_rental_veas.valor_unitario if ultimo_valor_compra_rental_veas else 0
 
                 ultimo_valor_cotizado_rental_veas = articulos.exclude(numero_cotizacion__isnull=True).filter(empresa_vendedora__iexact='rental veas').order_by('-fecha').first()
+                valor_unitario_cotizado_rental_veas = ultimo_valor_cotizado_rental_veas.valor_unitario if ultimo_valor_cotizado_rental_veas else 0
+
                 ultimo_valor_cotizado_proveedores = articulos.exclude(numero_cotizacion__isnull=True).exclude(empresa_vendedora__iexact='rental veas').order_by('-fecha').first()
-                valor_unitario_cotizado_rental_veas = ultimo_valor_cotizado_rental_veas.valor_unitario
-                valor_unitario_cotizado_proveedores = ultimo_valor_cotizado_proveedores.valor_unitario
+                valor_unitario_cotizado_proveedores = ultimo_valor_cotizado_proveedores.valor_unitario if ultimo_valor_cotizado_proveedores else 0
+
                 
                 articulos_venta_rental_veas = articulos.filter(numero_cotizacion__isnull=True, empresa_vendedora__iexact='rental veas')
                 promedio_venta_valor_unitario = articulos_venta_rental_veas.aggregate(promedio=Avg('valor_unitario'))['promedio']
-                promedio_venta_valor_unitario = round(promedio_venta_valor_unitario, 2)
+                if promedio_venta_valor_unitario is not None:
+                    promedio_venta_valor_unitario = round(promedio_venta_valor_unitario, 2)
+                else:
+                    promedio_venta_valor_unitario = 0  # o algún otro valor predeterminado
 
-                
                 articulos_compra_rental_veas = articulos.filter(numero_cotizacion__isnull=True, empresa_compradora__iexact='rental veas')
                 promedio_compra_valor_unitario = articulos_compra_rental_veas.aggregate(promedio=Avg('valor_unitario'))['promedio']
-                promedio_compra_valor_unitario = round(promedio_compra_valor_unitario, 2)
+                if promedio_compra_valor_unitario is not None:
+                    promedio_compra_valor_unitario = round(promedio_compra_valor_unitario, 2)
+                else:
+                    promedio_compra_valor_unitario = 0  # o algún otro valor predeterminado
+
 
 
 
