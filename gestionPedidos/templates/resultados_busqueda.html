@@ -575,95 +575,123 @@
 
 
 
-
-
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const fechasRentalVeas = JSON.parse('{{ fechas_rental_veas|safe }}');
-        const valoresUnitariosRentalVeas = JSON.parse('{{ valores_unitarios_rental_veas|safe }}');
-        const fechasOtros = JSON.parse('{{ fechas_otros|safe }}');
-        const valoresUnitariosOtros = JSON.parse('{{ valores_unitarios_otros|safe }}');
-    
-        const datosRentalVeas = fechasRentalVeas.map((fecha, index) => ({
-            x: fecha,
-            y: valoresUnitariosRentalVeas[index]
-        }));
-    
-        const datosOtros = fechasOtros.map((fecha, index) => ({
-            x: fecha,
-            y: valoresUnitariosOtros[index]
-        }));
-    
-        const config = {
-            type: 'line',
-            data: {
-                datasets: [{
-                    label: 'Rental Veas',
-                    data: datosRentalVeas,
-                    fill: false,
-                    borderColor: 'rgb(255, 99, 132)',
-                    tension: 0.05,
-                    pointRadius: 7
-                    
-                }, {
-                    label: 'Proveedores',
-                    data: datosOtros,
-                    fill: false,
-                    borderColor: 'rgb(54, 162, 235)',
-                    tension: 0.05,
-                    pointRadius: 7
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        type: 'time',
-                        time: {
-                            unit: 'month',
-                            tooltipFormat: 'yyyy-MM-dd'
-                        },
-                        distribution: 'linear'
-                    }
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechasCompraRentalVeas = JSON.parse('{{ fechas_compra_rental_veas|safe }}');
+            const valoresUnitariosCompraRentalVeas = JSON.parse('{{ valores_unitarios_compra_rental_veas|safe }}');
+            const fechasVentaRentalVeas = JSON.parse('{{ fechas_venta_rental_veas|safe }}');
+            const valoresUnitariosVentaRentalVeas = JSON.parse('{{ valores_unitarios_venta_rental_veas|safe }}');
+            const fechasCotizacionRentalVeas = JSON.parse('{{ fechas_cotizacion_rental_veas|safe }}');
+            const valoresUnitariosCotizacionRentalVeas = JSON.parse('{{ valores_unitarios_cotizacion_rental_veas|safe }}');
+            const fechasCotizacionProveedores = JSON.parse('{{ fechas_cotizacion_proveedores|safe }}');
+            const valoresUnitariosCotizacionProveedores = JSON.parse('{{ valores_unitarios_cotizacion_proveedores|safe }}');
+
+            const datosCompraRentalVeas = fechasCompraRentalVeas.map((fecha, index) => ({
+                x: fecha,
+                y: valoresUnitariosCompraRentalVeas[index]
+            }));
+
+            const datosVentaRentalVeas = fechasVentaRentalVeas.map((fecha, index) => ({
+                x: fecha,
+                y: valoresUnitariosVentaRentalVeas[index]
+            }));
+
+            const datosCotizacionRentalVeas = fechasCotizacionRentalVeas.map((fecha, index) => ({
+                x: fecha,
+                y: valoresUnitariosCotizacionRentalVeas[index]
+            }));
+
+            const datosCotizacionProveedores = fechasCotizacionProveedores.map((fecha, index) => ({
+                x: fecha,
+                y: valoresUnitariosCotizacionProveedores[index]
+            }));
+
+            const config = {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Compra Rental Veas',
+                        data: datosCompraRentalVeas,
+                        fill: false,
+                        borderColor: 'rgb(255, 99, 132)',
+                        tension: 0.05,
+                        pointRadius: 7
+                            
+                    }, {
+                        label: 'Venta Rental Veas',
+                        data: datosVentaRentalVeas,
+                        fill: false,
+                        borderColor: 'rgb(54, 162, 235)',
+                        tension: 0.05,
+                        pointRadius: 7
+                    }, {
+                        label: 'Cotización a Clientes Rental Veas',
+                        data: datosCotizacionRentalVeas,
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.05,
+                        pointRadius: 7
+                    }, {
+                        label: 'Cotización de Proveedores',
+                        data: datosCotizacionProveedores,
+                        fill: false,
+                        borderColor: 'rgb(153, 102, 255)',
+                        tension: 0.05,
+                        pointRadius: 7
+                    }]
                 },
-                plugins: {
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'month',
+                                tooltipFormat: 'yyyy-MM-dd'
+                            },
+                            distribution: 'linear'
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y;
+                                    return label;
                                 }
-                                label += context.parsed.y;
-                                return label;
+                            }
+                        },
+                        // Agrega esta sección para incluir el título
+                        title: {
+                            display: true,
+                            text: 'Evolución de Precios',
+                            font: {
+                                size: 18
                             }
                         }
                     },
-                    // Agrega esta sección para incluir el título
-                    title: {
-                        display: true,
-                        text: 'Evolución de Precios',
-                        font: {
-                            size: 18
-                        }
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
                     }
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
                 }
-            }
-        };
-    
-        var myChart = new Chart(
-            document.getElementById('myChart'),
-            config
-        );
-    });
+            };
+
+            var myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+        });
 </script>
+
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const etiquetasPieChart = JSON.parse('{{ etiquetas_pie|safe }}');
@@ -812,89 +840,84 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Se asume que las variables se pasan correctamente desde el backend
-        var fechas_rental_veas = JSON.parse('{{ fechas_rental_veas|safe }}');
-        var valores_unitarios_rental_veas = JSON.parse('{{ valores_unitarios_rental_veas|safe }}');
-        var fechas_otros = JSON.parse('{{ fechas_otros|safe }}');
-        var valores_unitarios_otros = JSON.parse('{{ valores_unitarios_otros|safe }}');
-
-        var ctx = document.getElementById('graficoBarras2').getContext('2d');
-
-        // Filtrar todas las fechas desde el último año mes a mes
-        var today = new Date();
-        var oneYearAgo = new Date();
-        oneYearAgo.setFullYear(today.getFullYear() - 1);
-
-        var filteredFechasRentalVeas = fechas_rental_veas.filter(function(fecha) {
-            return new Date(fecha) >= oneYearAgo;
-        });
-
-        var filteredFechasOtros = fechas_otros.filter(function(fecha) {
-            return new Date(fecha) >= oneYearAgo;
-        });
-
-        var chart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: filteredFechasRentalVeas.concat(filteredFechasOtros),
-        datasets: [
-            {
-                label: 'Valores Rental Veas',
-                data: valores_unitarios_rental_veas,
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
-                borderWidth: 2,
-                barThickness: 20 // Ajusta este valor según tus preferencias
-            },
-            {
-                label: 'Valores Otros',
-                data: valores_unitarios_otros,
-                backgroundColor: 'rgb(54, 162, 235)',
-                borderColor: 'rgb(54, 162, 235)',
-                borderWidth: 2,
-                barThickness: 20 // Ajusta este valor según tus preferencias
-            }
-        ]
-    },
-    options: {
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                type: 'time',
-                time: {
-                    unit: 'month',
-                    displayFormats: {
-                        month: 'MMM yyyy'
+document.addEventListener('DOMContentLoaded', function() {
+    var ctx = document.getElementById('graficoBarras').getContext('2d');
+    var graficoBarras = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Compra Rental Veas', 'Venta Rental Veas', 'Cotización a Clientes Rental Veas', 'Cotización de Proveedores'],
+            datasets: [{
+                label: 'Ranking Últimos Precios por Proveedor',
+                // Aquí debes proporcionar los valores correspondientes para cada conjunto de datos.
+                data: [
+                    valoresUnitariosCompraRentalVeas.reduce((a, b) => a + b, 0), // Suma de los valores de compra de Rental Veas
+                    valoresUnitariosVentaRentalVeas.reduce((a, b) => a + b, 0), // Suma de los valores de venta de Rental Veas
+                    valoresUnitariosCotizacionRentalVeas.reduce((a, b) => a + b, 0), // Suma de los valores de cotización a clientes de Rental Veas
+                    valoresUnitariosCotizacionProveedores.reduce((a, b) => a + b, 0) // Suma de los valores de cotización de proveedores
+                ],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    gridLines: {
+                        display: false
                     }
                 },
-                grid: {
-                    display: true
+                y: {
+                    beginAtZero: true,
+                    gridLines: {
+                        display: true
+                    }
                 }
             },
-            y: {
-                beginAtZero: true,
-                grid: {
-                    display: true
-                }
-            }
-        },
-        plugins: {
             legend: {
-                display: true,
-                position: 'top'
+                display: false
             },
-            tooltip: {
+            tooltips: {
                 mode: 'index',
                 intersect: false
             },
             animation: {
-                duration: 2000 
+                duration: 2000
+            },
+            plugins: {
+                annotation: {
+                    annotations: [{
+                        type: 'line',
+                        mode: 'vertical',
+                        scaleID: 'x',
+                        value: empresas[minValueIndex],
+                        borderColor: 'red',
+                        borderWidth: 3,
+                        label: {
+                            enabled: true,
+                            content: 'Mejor precio',
+                            position: 'top',
+                            backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                            yAdjust: -6,
+                        }
+                    }]
+                }
             }
         }
-    }
-});
     });
+});
+
 </script>
 
 <script>

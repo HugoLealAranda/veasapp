@@ -305,7 +305,26 @@ def buscar(request):
                              }
                 
 
-                
+                                # Obtener los datos para cuando Rental Veas es comprador
+                articulos_compra_rental_veas = articulos.filter(numero_factura__isnull=True, empresa_compradora__iexact='rental veas').exclude(fecha__isnull=True)
+                fechas_compra_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_compra_rental_veas]
+                valores_unitarios_compra_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_compra_rental_veas]
+
+                # Obtener los datos para cuando Rental Veas es vendedor
+                articulos_venta_rental_veas = articulos.filter(numero_factura__isnull=True, empresa_vendedora__iexact='rental veas').exclude(fecha__isnull=True)
+                fechas_venta_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_venta_rental_veas]
+                valores_unitarios_venta_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_venta_rental_veas]
+
+                # Obtener los datos para cuando Rental Veas cotiza a sus clientes
+                articulos_cotizacion_rental_veas = articulos.exclude(numero_cotizacion__isnull=True).filter(empresa_vendedora__iexact='rental veas').exclude(fecha__isnull=True)
+                fechas_cotizacion_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_cotizacion_rental_veas]
+                valores_unitarios_cotizacion_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_cotizacion_rental_veas]
+
+                # Obtener los datos para cuando los proveedores cotizan a Rental Veas
+                articulos_cotizacion_proveedores = articulos.exclude(numero_cotizacion__isnull=True).exclude(empresa_vendedora__iexact='rental veas').exclude(fecha__isnull=True)
+                fechas_cotizacion_proveedores = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_cotizacion_proveedores]
+                valores_unitarios_cotizacion_proveedores = [float(articulo.valor_unitario) for articulo in articulos_cotizacion_proveedores]
+
 
                 #preparar los datos para el grafico de lineas
                 fechas_rental_veas = []
@@ -340,39 +359,42 @@ def buscar(request):
 
 
                 context = {
-                    'empresas': json.dumps(empresas),
-                    'valores': json.dumps([float(valor) for valor in valores_float]),
-                    'fechas_rental_veas': json.dumps([articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_rental_veas]),
-                    'valores_unitarios_rental_veas': json.dumps([float(articulo.valor_unitario) for articulo in articulos_rental_veas]),
-                    'fechas_otros': json.dumps([articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_otros]),
-                    'valores_unitarios_otros': json.dumps([float(articulo.valor_unitario) for articulo in articulos_otros]),
-                    'valores_pie_chart': json.dumps(valores_float), 
-                    'etiquetas_pie': json.dumps(etiquetas_pie),
-                    'valor_ventas_por_empresa': valor_ventas_por_empresa,
-                    'volumen_ventas_por_empresa': volumen_ventas_por_empresa,
+                    'fechas_compra_rental_veas': json.dumps([articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_compra_rental_veas]),
+                    'valores_unitarios_compra_rental_veas': json.dumps([float(articulo.valor_unitario) for articulo in articulos_compra_rental_veas]),
+                    'fechas_venta_rental_veas': json.dumps([articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_venta_rental_veas]),
+                    'valores_unitarios_venta_rental_veas': json.dumps([float(articulo.valor_unitario) for articulo in articulos_venta_rental_veas]),
+                    'fechas_cotizacion_rental_veas': json.dumps([articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_cotizacion_rental_veas]),
+                    'valores_unitarios_cotizacion_rental_veas': json.dumps([float(articulo.valor_unitario) for articulo in articulos_cotizacion_rental_veas]),
+                    'fechas_cotizacion_proveedores': json.dumps([articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_cotizacion_proveedores]),
+                    'valores_unitarios_cotizacion_proveedores': json.dumps([float(articulo.valor_unitario) for articulo in articulos_cotizacion_proveedores])
                 }
 
 
 
-                return render(request, "resultados_busqueda.html", {
-                "articulos": articulos, 
-                "query": producto, 
-                "metricas1": metricas1,
-                "metricas2": metricas2,
-                "metricas3": metricas3,
-                "metricas4": metricas4,
-                "empresas": json.dumps(empresas),
-                "valores": json.dumps(valores_float),
-                "fechas_rental_veas": json.dumps(fechas_rental_veas),
-                "valores_unitarios_rental_veas": json.dumps(valores_unitarios_rental_veas),
-                "fechas_otros": json.dumps(fechas_otros),
-                "valores_unitarios_otros": json.dumps(valores_unitarios_otros),
-                "valores_pie_chart": json.dumps(valores_pie_chart),
-                "etiquetas_pie": json.dumps(etiquetas_pie),
-                "stock_teorico": stock_teorico,
-                "resultados": resultados
 
+                return render(request, "resultados_busqueda.html", {
+                    "articulos": articulos, 
+                    "query": producto, 
+                    "metricas1": metricas1,
+                    "metricas2": metricas2,
+                    "metricas3": metricas3,
+                    "metricas4": metricas4,
+                    "empresas": json.dumps(empresas),
+                    "valores": json.dumps(valores_float),
+                    "fechas_compra_rental_veas": json.dumps(fechas_compra_rental_veas),
+                    "valores_unitarios_compra_rental_veas": json.dumps(valores_unitarios_compra_rental_veas),
+                    "fechas_venta_rental_veas": json.dumps(fechas_venta_rental_veas),
+                    "valores_unitarios_venta_rental_veas": json.dumps(valores_unitarios_venta_rental_veas),
+                    "fechas_cotizacion_rental_veas": json.dumps(fechas_cotizacion_rental_veas),
+                    "valores_unitarios_cotizacion_rental_veas": json.dumps(valores_unitarios_cotizacion_rental_veas),
+                    "fechas_cotizacion_proveedores": json.dumps(fechas_cotizacion_proveedores),
+                    "valores_unitarios_cotizacion_proveedores": json.dumps(valores_unitarios_cotizacion_proveedores),
+                    "valores_pie_chart": json.dumps(valores_pie_chart),
+                    "etiquetas_pie": json.dumps(etiquetas_pie),
+                    "stock_teorico": stock_teorico,
+                    "resultados": resultados
                 })
+
             else:
                 return HttpResponse("No se encontraron artículos")
     else:
