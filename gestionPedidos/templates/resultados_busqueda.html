@@ -146,7 +146,7 @@
 
 <div class="container">
     <div class="chart-card card" id="line-chart-card">
-        <canvas id="graficoBarras2"></canvas>
+        <canvas id="graficodebarras2"></canvas>
     </div>
 </div>
 
@@ -832,99 +832,98 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
 </script>
+
+
 <script id="empresas-data" type="application/json">{{ empresas_json }}</script>
 <script id="valores-data" type="application/json">{{ valores_json }}</script>
 
 
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var ctx = document.getElementById('graficoBarras').getContext('2d');
-    var graficoBarras = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Compra Rental Veas', 'Venta Rental Veas', 'Cotización a Clientes Rental Veas', 'Cotización de Proveedores'],
-            datasets: [{
-                label: 'Ranking Últimos Precios por Proveedor',
-                // Aquí debes proporcionar los valores correspondientes para cada conjunto de datos.
-                data: [
-                    valoresUnitariosCompraRentalVeas.reduce((a, b) => a + b, 0), // Suma de los valores de compra de Rental Veas
-                    valoresUnitariosVentaRentalVeas.reduce((a, b) => a + b, 0), // Suma de los valores de venta de Rental Veas
-                    valoresUnitariosCotizacionRentalVeas.reduce((a, b) => a + b, 0), // Suma de los valores de cotización a clientes de Rental Veas
-                    valoresUnitariosCotizacionProveedores.reduce((a, b) => a + b, 0) // Suma de los valores de cotización de proveedores
-                ],
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)'
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)'
-                ],
-                borderWidth: 2
-            }]
-        },
-        options: {
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    gridLines: {
-                        display: false
+    document.addEventListener('DOMContentLoaded', function() {
+        const fechasCompraRentalVeas = JSON.parse('{{ fechas_compra_rental_veas|safe }}');
+        const valoresUnitariosCompraRentalVeas = JSON.parse('{{ valores_unitarios_compra_rental_veas|safe }}');
+        const fechasVentaRentalVeas = JSON.parse('{{ fechas_venta_rental_veas|safe }}');
+        const valoresUnitariosVentaRentalVeas = JSON.parse('{{ valores_unitarios_venta_rental_veas|safe }}');
+        const fechasCotizacionRentalVeas = JSON.parse('{{ fechas_cotizacion_rental_veas|safe }}');
+        const valoresUnitariosCotizacionRentalVeas = JSON.parse('{{ valores_unitarios_cotizacion_rental_veas|safe }}');
+        const fechasCotizacionProveedores = JSON.parse('{{ fechas_cotizacion_proveedores|safe }}');
+        const valoresUnitariosCotizacionProveedores = JSON.parse('{{ valores_unitarios_cotizacion_proveedores|safe }}');
+    
+        const config = {
+            type: 'bar',
+            data: {
+                labels: fechasCompraRentalVeas, // Usamos las mismas fechas para las etiquetas en el eje X
+                datasets: [{
+                    label: 'Compras de Rental Veas',
+                    data: valoresUnitariosCompraRentalVeas,
+                    backgroundColor: 'rgb(255, 99, 132)',
+                }, {
+                    label: 'Ventas de Rental Veas',
+                    data: valoresUnitariosVentaRentalVeas,
+                    backgroundColor: 'rgb(54, 162, 235)',
+                }, {
+                    label: 'Cotizaciones a Clientes',
+                    data: valoresUnitariosCotizacionRentalVeas,
+                    backgroundColor: 'rgb(140, 230, 20)',
+                }, {
+                    label: 'Cotizaciones de Proveedores',
+                    data: valoresUnitariosCotizacionProveedores,
+                    backgroundColor: 'rgb(153, 102, 255)',
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'month',
+                            tooltipFormat: 'yyyy-MM-dd'
+                        },
+                        distribution: 'linear'
+                    },
+                    y: {
+                        beginAtZero: true // Aseguramos que el eje Y comience en 0
                     }
                 },
-                y: {
-                    beginAtZero: true,
-                    gridLines: {
-                        display: true
-                    }
-                }
-            },
-            legend: {
-                display: false
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false
-            },
-            animation: {
-                duration: 2000
-            },
-            plugins: {
-                annotation: {
-                    annotations: [{
-                        type: 'line',
-                        mode: 'vertical',
-                        scaleID: 'x',
-                        value: empresas[minValueIndex],
-                        borderColor: 'red',
-                        borderWidth: 3,
-                        label: {
-                            enabled: true,
-                            content: 'Mejor precio',
-                            position: 'top',
-                            backgroundColor: 'rgba(255, 99, 132, 0.8)',
-                            yAdjust: -6,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.parsed.y;
+                                return label;
+                            }
                         }
-                    }]
+                    },
+                    // Agrega esta sección para incluir el título
+                    title: {
+                        display: true,
+                        text: 'Evolución de Precios',
+                        font: {
+                            size: 18
+                        }
+                    }
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
                 }
             }
-        }
+        };
+    
+        var myChart = new Chart(
+            document.getElementById('graficodebarras2'),
+            config
+        );
     });
-});
-
-</script>
-
-<script>
-    function printPage() {
-        window.print();
-    }
-</script>
+    </script>
 
 
 
