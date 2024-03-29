@@ -672,7 +672,7 @@
                             display: true,
                             text: 'Evolución de Precios',
                             font: {
-                                size: 18
+                                size: 24
                             }
                         }
                     },
@@ -838,92 +838,126 @@ document.addEventListener('DOMContentLoaded', function() {
 <script id="empresas-data" type="application/json">{{ empresas_json }}</script>
 <script id="valores-data" type="application/json">{{ valores_json }}</script>
 
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const fechasCompraRentalVeas = JSON.parse('{{ fechas_compra_rental_veas|safe }}');
-        const valoresUnitariosCompraRentalVeas = JSON.parse('{{ valores_unitarios_compra_rental_veas|safe }}');
-        const fechasVentaRentalVeas = JSON.parse('{{ fechas_venta_rental_veas|safe }}');
-        const valoresUnitariosVentaRentalVeas = JSON.parse('{{ valores_unitarios_venta_rental_veas|safe }}');
-        const fechasCotizacionRentalVeas = JSON.parse('{{ fechas_cotizacion_rental_veas|safe }}');
-        const valoresUnitariosCotizacionRentalVeas = JSON.parse('{{ valores_unitarios_cotizacion_rental_veas|safe }}');
-        const fechasCotizacionProveedores = JSON.parse('{{ fechas_cotizacion_proveedores|safe }}');
-        const valoresUnitariosCotizacionProveedores = JSON.parse('{{ valores_unitarios_cotizacion_proveedores|safe }}');
-    
-        const config = {
-            type: 'bar',
-            data: {
-                labels: fechasCompraRentalVeas, // Usamos las mismas fechas para las etiquetas en el eje X
-                datasets: [{
-                    label: 'Compras de Rental Veas',
-                    data: valoresUnitariosCompraRentalVeas,
-                    backgroundColor: 'rgb(255, 99, 132)',
-                }, {
-                    label: 'Ventas de Rental Veas',
-                    data: valoresUnitariosVentaRentalVeas,
-                    backgroundColor: 'rgb(54, 162, 235)',
-                }, {
-                    label: 'Cotizaciones a Clientes',
-                    data: valoresUnitariosCotizacionRentalVeas,
-                    backgroundColor: 'rgb(140, 230, 20)',
-                }, {
-                    label: 'Cotizaciones de Proveedores',
-                    data: valoresUnitariosCotizacionProveedores,
-                    backgroundColor: 'rgb(153, 102, 255)',
-                }]
+document.addEventListener('DOMContentLoaded', function() {
+    const fechasCompraRentalVeas = JSON.parse('{{ fechas_compra_rental_veas|safe }}');
+    const valoresUnitariosCompraRentalVeas = JSON.parse('{{ valores_unitarios_compra_rental_veas|safe }}');
+    const fechasVentaRentalVeas = JSON.parse('{{ fechas_venta_rental_veas|safe }}');
+    const valoresUnitariosVentaRentalVeas = JSON.parse('{{ valores_unitarios_venta_rental_veas|safe }}');
+    const fechasCotizacionRentalVeas = JSON.parse('{{ fechas_cotizacion_rental_veas|safe }}');
+    const valoresUnitariosCotizacionRentalVeas = JSON.parse('{{ valores_unitarios_cotizacion_rental_veas|safe }}');
+    const fechasCotizacionProveedores = JSON.parse('{{ fechas_cotizacion_proveedores|safe }}');
+    const valoresUnitariosCotizacionProveedores = JSON.parse('{{ valores_unitarios_cotizacion_proveedores|safe }}');
+
+    const datosCompraRentalVeas = fechasCompraRentalVeas.map((fecha, index) => ({
+        x: fecha,
+        y: valoresUnitariosCompraRentalVeas[index]
+    }));
+
+    const datosVentaRentalVeas = fechasVentaRentalVeas.map((fecha, index) => ({
+        x: fecha,
+        y: valoresUnitariosVentaRentalVeas[index]
+    }));
+
+    const datosCotizacionRentalVeas = fechasCotizacionRentalVeas.map((fecha, index) => ({
+        x: fecha,
+        y: valoresUnitariosCotizacionRentalVeas[index]
+    }));
+
+    const datosCotizacionProveedores = fechasCotizacionProveedores.map((fecha, index) => ({
+        x: fecha,
+        y: valoresUnitariosCotizacionProveedores[index]
+    }));
+
+    const config = {
+    type: 'bar',
+    data: {
+        labels: fechasCompraRentalVeas, // Usamos las mismas fechas para las etiquetas en el eje X
+        datasets: [{
+            label: 'Compras de Rental Veas',
+            data: datosCompraRentalVeas,
+            backgroundColor: 'rgb(255, 99, 132)',
+            barThickness: 20, // Ajustar el ancho de la barra
+            borderWidth: 1, // Establece el ancho del borde de la barra
+
+        }, {
+            label: 'Ventas de Rental Veas',
+            data: datosVentaRentalVeas,
+            backgroundColor: 'rgb(54, 162, 235)',
+            barThickness: 10, // Ajustar el ancho de la barra
+            borderWidth: 1, // Establece el ancho del borde de la barra
+
+        }, {
+            label: 'Cotizaciones a Clientes',
+            data: datosCotizacionRentalVeas,
+            backgroundColor: 'rgb(140, 230, 20)',
+            barThickness: 20, // Ajustar el ancho de la barra
+            borderWidth: 1, // Establece el ancho del borde de la barra
+
+        }, {
+            label: 'Cotizaciones de Proveedores',
+            data: datosCotizacionProveedores,
+            backgroundColor: 'rgb(153, 102, 255)',
+            barThickness: 20, // Ajustar el ancho de la barra
+            borderWidth: 1, // Establece el ancho del borde de la barra
+
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'month',
+                    tooltipFormat: 'yyyy-MM-dd'
+                },
+                distribution: 'linear'
             },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        type: 'time',
-                        time: {
-                            unit: 'month',
-                            tooltipFormat: 'yyyy-MM-dd'
-                        },
-                        distribution: 'linear'
-                    },
-                    y: {
-                        beginAtZero: true // Aseguramos que el eje Y comience en 0
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                label += context.parsed.y;
-                                return label;
-                            }
+            y: {
+                beginAtZero: true // Aseguramos que el eje Y comience en 0
+            }
+        },
+        plugins: {
+            tooltip: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
                         }
-                    },
-                    // Agrega esta sección para incluir el título
-                    title: {
-                        display: true,
-                        text: 'Evolución de Precios',
-                        font: {
-                            size: 18
-                        }
+                        label += context.parsed.y;
+                        return label;
                     }
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
+                }
+            },
+            // Agrega esta sección para incluir el título
+            title: {
+                display: true,
+                text: 'Evolución de Precios',
+                font: {
+                    size: 24
                 }
             }
-        };
-    
-        var myChart = new Chart(
-            document.getElementById('graficodebarras2'),
-            config
-        );
-    });
-    </script>
+        },
+    }
+};
+
+    var myChart = new Chart(
+        document.getElementById('graficodebarras2'),
+        config
+    );
+});
+</script>
+
+
+<script>
+    function printPage() {
+        window.print();
+    }
+</script>
 
 
 
