@@ -306,24 +306,29 @@ def buscar(request):
                 
 
                 # Obtener los datos para cuando Rental Veas es comprador
-                articulos_compra_rental_veas = articulos.filter(numero_cotizacion__isnull=True).filter(empresa_compradora='rental veas').exclude(fecha__isnull=True)
+                articulos_compra_rental_veas = articulos.filter(empresa_compradora='rental veas').exclude(fecha__isnull=True)
                 fechas_compra_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_compra_rental_veas]
                 valores_unitarios_compra_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_compra_rental_veas]
+                numeros_documentos_compra_rental_veas = [articulo.numero_cotizacion or articulo.numero_factura or articulo.numero_boleta for articulo in articulos_compra_rental_veas]
 
                 # Obtener los datos para cuando Rental Veas es vendedor
-                articulos_venta_rental_veas = articulos.filter(numero_cotizacion__isnull=True).filter(empresa_vendedora='rental veas').exclude(fecha__isnull=True)
+                articulos_venta_rental_veas = articulos.filter(empresa_vendedora='rental veas').exclude(fecha__isnull=True)
                 fechas_venta_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_venta_rental_veas]
                 valores_unitarios_venta_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_venta_rental_veas]
+                numeros_documentos_venta_rental_veas = [articulo.numero_cotizacion or articulo.numero_factura or articulo.numero_boleta for articulo in articulos_venta_rental_veas]
 
                 # Obtener los datos para cuando Rental Veas cotiza a sus clientes
                 articulos_cotizacion_rental_veas = articulos.exclude(numero_cotizacion__isnull=True).filter(empresa_vendedora='rental veas').exclude(fecha__isnull=True)
                 fechas_cotizacion_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_cotizacion_rental_veas]
                 valores_unitarios_cotizacion_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_cotizacion_rental_veas]
+                numeros_documentos_cotizacion_rental_veas = [articulo.numero_cotizacion or articulo.numero_factura or articulo.numero_boleta for articulo in articulos_cotizacion_rental_veas]
 
                 # Obtener los datos para cuando los proveedores cotizan a Rental Veas
                 articulos_cotizacion_proveedores = articulos.exclude(numero_cotizacion__isnull=True).filter(empresa_compradora='rental veas').exclude(fecha__isnull=True)
                 fechas_cotizacion_proveedores = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_cotizacion_proveedores]
                 valores_unitarios_cotizacion_proveedores = [float(articulo.valor_unitario) for articulo in articulos_cotizacion_proveedores]
+                numeros_documentos_cotizacion_proveedores = [articulo.numero_cotizacion or articulo.numero_factura or articulo.numero_boleta for articulo in articulos_cotizacion_proveedores]
+
 
 
                 #preparar los datos para el grafico de lineas
@@ -373,13 +378,18 @@ def buscar(request):
                     "valores_unitarios_venta_rental_veas": json.dumps(valores_unitarios_venta_rental_veas),
                     "fechas_cotizacion_rental_veas": json.dumps(fechas_cotizacion_rental_veas),
                     "valores_unitarios_cotizacion_rental_veas": json.dumps(valores_unitarios_cotizacion_rental_veas),
+                    "numeros_documentos_compra_rental_veas": json.dumps(numeros_documentos_compra_rental_veas),  # Agrega los números de documentos para compras Rental Veas
+                    "numeros_documentos_venta_rental_veas": json.dumps(numeros_documentos_venta_rental_veas),  # Agrega los números de documentos para ventas Rental Veas
+                    "numeros_documentos_cotizacion_rental_veas": json.dumps(numeros_documentos_cotizacion_rental_veas),  # Agrega los números de documentos para cotizaciones Rental Veas
                     "fechas_cotizacion_proveedores": json.dumps(fechas_cotizacion_proveedores),
                     "valores_unitarios_cotizacion_proveedores": json.dumps(valores_unitarios_cotizacion_proveedores),
+                    "numeros_documentos_cotizacion_proveedores": json.dumps(numeros_documentos_cotizacion_proveedores),  # Agrega los números de documentos para cotizaciones de proveedores
                     "valores_pie_chart": json.dumps(valores_pie_chart),
                     "etiquetas_pie": json.dumps(etiquetas_pie),
                     "stock_teorico": stock_teorico,
                     "resultados": resultados
                 })
+
 
             else:
                 return HttpResponse("No se encontraron artículos")

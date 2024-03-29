@@ -585,26 +585,35 @@
             const valoresUnitariosCotizacionRentalVeas = JSON.parse('{{ valores_unitarios_cotizacion_rental_veas|safe }}');
             const fechasCotizacionProveedores = JSON.parse('{{ fechas_cotizacion_proveedores|safe }}');
             const valoresUnitariosCotizacionProveedores = JSON.parse('{{ valores_unitarios_cotizacion_proveedores|safe }}');
-
+            const numerosDocumentosCompraRentalVeas = JSON.parse('{{ numeros_documentos_compra_rental_veas|safe }}');
+            const numerosDocumentosVentaRentalVeas = JSON.parse('{{ numeros_documentos_venta_rental_veas|safe }}');
+            const numerosDocumentosCotizacionRentalVeas = JSON.parse('{{ numeros_documentos_cotizacion_rental_veas|safe }}');
+            const numerosDocumentosCotizacionProveedores = JSON.parse('{{ numeros_documentos_cotizacion_proveedores|safe }}');
+            
             const datosCompraRentalVeas = fechasCompraRentalVeas.map((fecha, index) => ({
                 x: fecha,
-                y: valoresUnitariosCompraRentalVeas[index]
+                y: valoresUnitariosCompraRentalVeas[index],
+                label: numerosDocumentosCompraRentalVeas[index]
             }));
 
             const datosVentaRentalVeas = fechasVentaRentalVeas.map((fecha, index) => ({
                 x: fecha,
-                y: valoresUnitariosVentaRentalVeas[index]
+                y: valoresUnitariosVentaRentalVeas[index],
+                label: numerosDocumentosVentaRentalVeas[index]
             }));
 
             const datosCotizacionRentalVeas = fechasCotizacionRentalVeas.map((fecha, index) => ({
                 x: fecha,
-                y: valoresUnitariosCotizacionRentalVeas[index]
+                y: valoresUnitariosCotizacionRentalVeas[index],
+                label: numerosDocumentosCotizacionRentalVeas[index]
             }));
 
             const datosCotizacionProveedores = fechasCotizacionProveedores.map((fecha, index) => ({
                 x: fecha,
-                y: valoresUnitariosCotizacionProveedores[index]
+                y: valoresUnitariosCotizacionProveedores[index],
+                label: numerosDocumentosCotizacionProveedores[index]
             }));
+
 
             const config = {
                 type: 'line',
@@ -616,7 +625,6 @@
                         borderColor: 'rgb(255, 99, 132)',
                         tension: 0.05,
                         pointRadius: 7
-                            
                     }, {
                         label: 'Ventas de Rental Veas',
                         data: datosVentaRentalVeas,
@@ -667,7 +675,6 @@
                                 }
                             }
                         },
-                        // Agrega esta sección para incluir el título
                         title: {
                             display: true,
                             text: 'Evolución de Precios',
@@ -679,6 +686,16 @@
                     hover: {
                         mode: 'nearest',
                         intersect: true
+                    },
+                    // Agrega la función onClick aquí
+                    onClick: function(event, elements) {
+                        if (elements.length > 0) {
+                            const datasetIndex = elements[0].datasetIndex;
+                            const index = elements[0].index;
+                            const datasetLabel = config.data.datasets[datasetIndex].label;
+                            const label = config.data.datasets[datasetIndex].data[index].label;
+                            alert(`${datasetLabel}: ${label}`);
+                        }
                     }
                 }
             };
@@ -848,102 +865,114 @@ document.addEventListener('DOMContentLoaded', function() {
     const valoresUnitariosCotizacionRentalVeas = JSON.parse('{{ valores_unitarios_cotizacion_rental_veas|safe }}');
     const fechasCotizacionProveedores = JSON.parse('{{ fechas_cotizacion_proveedores|safe }}');
     const valoresUnitariosCotizacionProveedores = JSON.parse('{{ valores_unitarios_cotizacion_proveedores|safe }}');
+    const numerosDocumentosCompraRentalVeas = JSON.parse('{{ numeros_documentos_compra_rental_veas|safe }}');
+    const numerosDocumentosVentaRentalVeas = JSON.parse('{{ numeros_documentos_venta_rental_veas|safe }}');
+    const numerosDocumentosCotizacionRentalVeas = JSON.parse('{{ numeros_documentos_cotizacion_rental_veas|safe }}');
+    const numerosDocumentosCotizacionProveedores = JSON.parse('{{ numeros_documentos_cotizacion_proveedores|safe }}');
 
     const datosCompraRentalVeas = fechasCompraRentalVeas.map((fecha, index) => ({
         x: fecha,
-        y: valoresUnitariosCompraRentalVeas[index]
+        y: valoresUnitariosCompraRentalVeas[index],
+        label: numerosDocumentosCompraRentalVeas[index]
     }));
 
     const datosVentaRentalVeas = fechasVentaRentalVeas.map((fecha, index) => ({
         x: fecha,
-        y: valoresUnitariosVentaRentalVeas[index]
+        y: valoresUnitariosVentaRentalVeas[index],
+        label: numerosDocumentosVentaRentalVeas[index]
     }));
 
     const datosCotizacionRentalVeas = fechasCotizacionRentalVeas.map((fecha, index) => ({
         x: fecha,
-        y: valoresUnitariosCotizacionRentalVeas[index]
+        y: valoresUnitariosCotizacionRentalVeas[index],
+        label: numerosDocumentosCotizacionRentalVeas[index]
     }));
 
     const datosCotizacionProveedores = fechasCotizacionProveedores.map((fecha, index) => ({
         x: fecha,
-        y: valoresUnitariosCotizacionProveedores[index]
+        y: valoresUnitariosCotizacionProveedores[index],
+        label: numerosDocumentosCotizacionProveedores[index]
     }));
 
     const config = {
-    type: 'bar',
-    data: {
-        labels: fechasCompraRentalVeas, // Usamos las mismas fechas para las etiquetas en el eje X
-        datasets: [{
-            label: 'Compras de Rental Veas',
-            data: datosCompraRentalVeas,
-            backgroundColor: 'rgb(255, 99, 132)',
-            barThickness: 20, // Ajustar el ancho de la barra
-            borderWidth: 1, // Establece el ancho del borde de la barra
-
-        }, {
-            label: 'Ventas de Rental Veas',
-            data: datosVentaRentalVeas,
-            backgroundColor: 'rgb(54, 162, 235)',
-            barThickness: 10, // Ajustar el ancho de la barra
-            borderWidth: 1, // Establece el ancho del borde de la barra
-
-        }, {
-            label: 'Cotizaciones a Clientes',
-            data: datosCotizacionRentalVeas,
-            backgroundColor: 'rgb(140, 230, 20)',
-            barThickness: 20, // Ajustar el ancho de la barra
-            borderWidth: 1, // Establece el ancho del borde de la barra
-
-        }, {
-            label: 'Cotizaciones de Proveedores',
-            data: datosCotizacionProveedores,
-            backgroundColor: 'rgb(153, 102, 255)',
-            barThickness: 20, // Ajustar el ancho de la barra
-            borderWidth: 1, // Establece el ancho del borde de la barra
-
-        }]
-    },
-    options: {
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                type: 'time',
-                time: {
-                    unit: 'month',
-                    tooltipFormat: 'yyyy-MM-dd'
-                },
-                distribution: 'linear'
-            },
-            y: {
-                beginAtZero: true // Aseguramos que el eje Y comience en 0
-            }
+        type: 'bar',
+        data: {
+            labels: fechasCompraRentalVeas,
+            datasets: [{
+                label: 'Compras de Rental Veas',
+                data: datosCompraRentalVeas,
+                backgroundColor: 'rgb(255, 99, 132)',
+                barThickness: 20,
+                borderWidth: 1,
+            }, {
+                label: 'Ventas de Rental Veas',
+                data: datosVentaRentalVeas,
+                backgroundColor: 'rgb(54, 162, 235)',
+                barThickness: 10,
+                borderWidth: 1,
+            }, {
+                label: 'Cotizaciones a Clientes',
+                data: datosCotizacionRentalVeas,
+                backgroundColor: 'rgb(140, 230, 20)',
+                barThickness: 20,
+                borderWidth: 1,
+            }, {
+                label: 'Cotizaciones de Proveedores',
+                data: datosCotizacionProveedores,
+                backgroundColor: 'rgb(153, 102, 255)',
+                barThickness: 20,
+                borderWidth: 1,
+            }]
         },
-        plugins: {
-            tooltip: {
-                mode: 'index',
-                intersect: false,
-                callbacks: {
-                    label: function(context) {
-                        let label = context.dataset.label || '';
-                        if (label) {
-                            label += ': ';
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'month',
+                        tooltipFormat: 'yyyy-MM-dd'
+                    },
+                    distribution: 'linear'
+                },
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += context.parsed.y;
+                            return label;
                         }
-                        label += context.parsed.y;
-                        return label;
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Evolución de Precios',
+                    font: {
+                        size: 24
                     }
                 }
             },
-            // Agrega esta sección para incluir el título
-            title: {
-                display: true,
-                text: 'Evolución de Precios',
-                font: {
-                    size: 24
+            onClick: function(event, elements) {
+                if (elements.length > 0) {
+                    const datasetIndex = elements[0].datasetIndex;
+                    const index = elements[0].index;
+                    const datasetLabel = config.data.datasets[datasetIndex].label;
+                    const label = config.data.datasets[datasetIndex].data[index].label;
+                    alert(`${datasetLabel}: ${label}`);
                 }
             }
-        },
-    }
-};
+        }
+    };
 
     var myChart = new Chart(
         document.getElementById('graficodebarras2'),
@@ -951,6 +980,8 @@ document.addEventListener('DOMContentLoaded', function() {
     );
 });
 </script>
+
+
 
 
 <script>
