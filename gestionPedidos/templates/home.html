@@ -106,8 +106,19 @@
       overflow-y: auto;
 
   }
-  
-  @media screen and (min-width: 768px) {
+  .tittle-container,
+.chat-container {
+    width: 100%; /* Cambiamos el ancho a 100% para adaptarse al ancho de la pantalla */
+    margin-left: auto; /* Alineamos al centro */
+    margin-right: auto; /* Alineamos al centro */
+}
+  @media screen and (min-width: 600px) {
+
+        .tittle-container,
+        .chat-container {
+            width: 500px; /* Ancho fijo para pantallas grandes */
+        }
+    }
       .tittle-container {
           display: flex;
           flex-direction: column;
@@ -131,7 +142,7 @@
           flex-basis: calc(50% - 5px); /* Establece el ancho de cada tabla */
           margin-bottom: 10px; /* Ajusta el margen inferior */
       }
-  }
+
   </style>
   
 {% endblock extra_styles %}

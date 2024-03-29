@@ -151,27 +151,26 @@
 </div>
 
 <div class="container">
-        <div class="reactive-element">
-            <span class="stock-label">Stock Teórico:</span>
-            <div class="stock-value-container">
-                <span class="stock-value">{{ stock_teorico }}</span>
-            </div>
-        </div>              
+    <div class="stock-element">
+        <span class="stock-label">Stock Teórico:</span>
+        <div class="stock-value-container">
+            <span class="stock-value">{{ stock_teorico }}</span>
+        </div>
+    </div>              
 </div>
 
 <div class="container">
-
-        <span class="stock-label tiempos-espera-titulo">Tiempos de Espera:</span>
-        <div class="stock-value-container tiempos-espera-container">
-            <ul class="tiempos-espera">
-                {% for resultado in resultados %}
-                    <li>
-                        <strong class="nombre-empresa">{{ resultado.empresa_vendedora }}</strong>: <span class="resultado">{{ resultado.entrega }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
-
-</div>  
+    <span class="stock-label tiempos-espera-titulo">Tiempos de Espera:</span>
+    <div class="stock-value-container tiempos-espera-container">
+        <ul class="tiempos-espera">
+            {% for resultado in resultados %}
+            <li>
+                <strong class="nombre-empresa">{{ resultado.empresa_vendedora }}</strong>: <span class="resultado">{{ resultado.entrega }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
 <div class="container">
     <div class="search-container">
@@ -284,6 +283,47 @@
     margin-bottom: 30px;
 
 }
+.container8 {
+        font-family: Arial, sans-serif;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .tiempos-espera-titulo {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .stock-value-container {
+        margin-top: 10px;
+    }
+
+    .tiempos-espera-container {
+        padding-left: 20px;
+    }
+
+    .tiempos-espera {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .tiempos-espera li {
+        margin-bottom: 5px;
+    }
+
+    .nombre-empresa {
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .resultado {
+        color: #555;
+    }
 .button {
       background-color: #007bffb4;
       border: none;
