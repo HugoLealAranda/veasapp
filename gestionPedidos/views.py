@@ -305,13 +305,13 @@ def buscar(request):
                              }
                 
 
-                                # Obtener los datos para cuando Rental Veas es comprador
-                articulos_compra_rental_veas = articulos.filter(numero_factura__isnull=True).filter(empresa_compradora='rental veas').exclude(fecha__isnull=True)
+                # Obtener los datos para cuando Rental Veas es comprador
+                articulos_compra_rental_veas = articulos.filter(numero_cotizacion__isnull=True).filter(empresa_compradora='rental veas').exclude(fecha__isnull=True)
                 fechas_compra_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_compra_rental_veas]
                 valores_unitarios_compra_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_compra_rental_veas]
 
                 # Obtener los datos para cuando Rental Veas es vendedor
-                articulos_venta_rental_veas = articulos.filter(numero_factura__isnull=True).filter(empresa_vendedora='rental veas').exclude(fecha__isnull=True)
+                articulos_venta_rental_veas = articulos.filter(numero_cotizacion__isnull=True).filter(empresa_vendedora='rental veas').exclude(fecha__isnull=True)
                 fechas_venta_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_venta_rental_veas]
                 valores_unitarios_venta_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_venta_rental_veas]
 
