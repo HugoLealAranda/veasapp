@@ -265,15 +265,15 @@
 
 
 <style>
-/* Aplica margen superior a las tarjetas, excepto para la primera */
 .metrica1-container .metrica1-card:not(:first-child) {
-    margin-top: 30px; /* Ajusta el valor del margen superior según sea necesario */
+    margin-top: 30px; 
     margin-bottom: 30px;
 }
+
 .metrica1-container .metrica1-card .metrica-titulo {
     font-weight: bold;
 }
-/* Aplica margen superior al contenedor de métricas */
+
 .metrica1-container {
     margin-top: 20px; /* Ajusta el valor del margen superior según sea necesario */
     display: flex;
@@ -281,71 +281,73 @@
     flex-wrap: wrap;
     gap: 10px; /* Espacio entre tarjetas */
     margin-bottom: 30px;
-
 }
+
 .container8 {
-        font-family: Arial, sans-serif;
-        border: 1px solid #ccc;
-        padding: 20px;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-        max-width: 600px;
-        margin: 0 auto;
-    }
+    font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    max-width: 600px;
+    margin: 0 auto;
+}
 
-    .tiempos-espera-titulo {
-        font-size: 20px;
-        font-weight: bold;
-        color: #333;
-    }
+.tiempos-espera-titulo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
 
-    .stock-value-container {
-        margin-top: 10px;
-    }
+.stock-value-container {
+    margin-top: 10px;
+}
 
-    .tiempos-espera-container {
-        padding-left: 20px;
-    }
+.tiempos-espera-container {
+    padding-left: 20px;
+}
 
-    .tiempos-espera {
-        list-style-type: none;
-        padding: 0;
-    }
+.tiempos-espera {
+    list-style-type: none;
+    padding: 0;
+}
 
-    .tiempos-espera li {
-        margin-bottom: 5px;
-    }
+.tiempos-espera li {
+    margin-bottom: 5px;
+}
 
-    .nombre-empresa {
-        font-weight: bold;
-        color: #007bff;
-    }
+.nombre-empresa {
+    font-weight: bold;
+    color: #007bff;
+}
 
     .resultado {
         color: #555;
-    }
+}
+
 .button {
-      background-color: #007bffb4;
-      border: none;
-      color: white;
-      padding: 15px 32px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      margin: 4px 2px;
-      transition-duration: 0.4s;
-      cursor: pointer;
-      border-radius: 8px;
-      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-      position: absolute;
+    background-color: #007bffb4;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    position: absolute;
     right: 0;
     margin-top: 1em;
-    }
+}
 
-    .button:hover {
-      background-color: #0057b3c6;
-    }
+.button:hover {
+    background-color: #0057b3c6;
+}
+
 .metrica1-card {
     background: #fff;
     border-left: 4px solid #440af1; /* Cambia el color según la categoría de la métrica */
@@ -356,7 +358,6 @@
     padding: 20px; /* Puedes ajustar el padding para ahorrar espacio */
     min-height: 120px; /* Ajusta la altura mínima según sea necesario */
     min-width: 150px
-    
 }
 
 .tiempos-espera-container {
@@ -376,13 +377,11 @@
     font-size: 12px; /* Tamaño del resultado */
 }
 
-
 .container {
   display: flex;
   flex-wrap: wrap;
   position: relative;
   margin-bottom: 30px;
-
 }
 
 .container > * {
@@ -402,108 +401,104 @@
   margin-bottom: 20px; /* Ajusta el margen inferior según sea necesario */
 }
 
-
-
-
-
 .chart-card {
   flex: 1 1 100%; /* Cada tarjeta ocupa todo el ancho de su contenedor */
   margin-bottom: 10px; /* Añade un margen inferior entre las tarjetas */
   margin-top: 30px;
 }
 
-/* Media query para ajustar el diseño cuando la pantalla sea más pequeña */
-@media (max-width: 768px) {
 
-.container{
-    flex-basis: 100%; /* Cuando la pantalla sea más pequeña, cada tarjeta ocupará el 100% del ancho */
-    width: 300px;
-    height: 300px;
-}
-  .chart-card {
+
+/* Media query para ajustar el diseño cuando la pantalla sea más pequeña */
+@media (max-width: 600px) {
+
+    .container {
+        height: auto;
+    }
+
+    .chart-card {
+        height: auto;
+    }
+    
+.chart-card {
     flex-basis: 100%; /* Cuando la pantalla sea más pequeña, cada tarjeta ocupará el 100% del ancho */
   }
-  .button {
+.button {
         position: static;
         margin-top: 1em; /* Ajusta este valor según sea necesario */
     }
 }
 
 .search-container {
-        top: 0;
-        left: 0;
-        z-index: 1; /* Asegura que el contenedor de búsqueda esté sobre los contenedores de métricas */
-        width: 100%; /* Ajusta el ancho del contenedor de búsqueda para que ocupe toda la anchura del contenedor principal */
-        padding: 10px; /* Ajusta el relleno según sea necesario */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade sombra si lo deseas */
-        margin-top: 10px;
-        margin-bottom: 10px;
-        background: #fff;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Asegura que el contenedor de búsqueda esté sobre los contenedores de métricas */
+    width: 100%; /* Ajusta el ancho del contenedor de búsqueda para que ocupe toda la anchura del contenedor principal */
+    padding: 10px; /* Ajusta el relleno según sea necesario */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade sombra si lo deseas */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background: #fff;
     border-radius: 30px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-    }
+.search-container h2 {
+    margin: 0;
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 20px;
+    margin-top: 10px
+}
 
-    .search-container h2 {
-        margin: 0;
-        font-size: 1.5em;
-        color: #333;
-        margin-bottom: 20px;
-        margin-top: 10px
+.metrica-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
 
-    }
+.metrica-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    flex: 1 1 calc(20% - 20px);
+    text-align: center;
+}
+.reactive-element {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 
-    .metrica-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        margin-bottom: 20px;
-    }
+.stock-label {
+    font-size: 24px; /* Ajusta el tamaño del título según sea necesario */
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 20px;
+}
 
-    .metrica-card {
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 15px;
-        flex: 1 1 calc(20% - 20px);
-        text-align: center;
+.stock-value-container {
+    font-size: 36px; /* Ajusta el tamaño del número según sea necesario */
+    color: #007bff;
+    line-height: 1;
+}
 
-    }
-    .reactive-element {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
+.metrica-titulo {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+}
 
-    }
-
-    .stock-label {
-        font-size: 24px; /* Ajusta el tamaño del título según sea necesario */
-        font-weight: bold;
-        color: #333;
-        display: block;
-        margin-bottom: 20px;
-    }
-
-    .stock-value-container {
-        font-size: 36px; /* Ajusta el tamaño del número según sea necesario */
-        color: #007bff;
-        line-height: 1;
-    }
-
-    .metrica-titulo {
-        font-size: 1.2em;
-        color: #333;
-        margin-bottom: 10px;
-    }
-
-    .tiempos-espera-titulo {
+.tiempos-espera-titulo {
     font-size: 24px; /* Tamaño del título */
     color: black; /* Color del texto */
 }
-
 
 .nombre-empresa {
     font-size: 22px; /* Tamaño del nombre de la empresa */
@@ -515,41 +510,38 @@
     text-decoration: underline red; /* Subrayado con color rojo */
 }
 
+.metrica-valor {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #4e73df;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+    
+.cuadro-stock {
+    width: 200px;
+    height: 200px;
+    background-color: #4e73df;
+    border: 5px solid #fff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #fff;
+    text-align: center;
+}
 
+.numero-stock {
+    margin-top: 10px; 
+}
 
-    .metrica-valor {
-        font-size: 1.5em;
-        font-weight: bold;
-        color: #4e73df;
-        margin-top: 10px;
-        margin-bottom: 30px;
-
-    }
-    .cuadro-stock {
-                width: 200px;
-                height: 200px;
-                background-color: #4e73df;
-                border: 5px solid #fff;
-                border-radius: 10px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                font-size: 24px;
-                color: #fff;
-                text-align: center;
-            }
-
-    .numero-stock {
-                margin-top: 10px; 
-            }
-
-
-    .charts-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
+.charts-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
 
 
 .card {
@@ -561,7 +553,6 @@
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
-
 }
 
 .card .numero-stock {
@@ -571,11 +562,10 @@
 .numero-stock {
     font-size: 24px;
 }
-    canvas {
-        width: 100%;
-        height: auto;
-    }
-
+.canvas {
+    width: 100%;
+    height: auto;
+}
 
 </style>
 
