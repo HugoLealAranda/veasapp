@@ -408,12 +408,18 @@
 
 
 @media (max-width: 600px) {
-    
+        
     .chart-card {
-        height: auto;
+        height: 600px; /* Aumenta la altura del gráfico en dispositivos móviles */
     }
 }
-
+@media (max-width: 600px) {
+    #myChart, #graficodebarras2 {
+        /* Ajusta el grosor de las barras según sea necesario */
+        /* El valor predeterminado es 2 */
+        border-width: 3px; /* Por ejemplo, puedes probar con un grosor de 3px */
+    }
+}
 .button {
         position: static;
         margin-top: 1em; /* Ajusta este valor según sea necesario */
