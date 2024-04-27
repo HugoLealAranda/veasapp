@@ -13,7 +13,7 @@
     <title>{% block title %}{% endblock title %}</title>
     <!-- Favicon-->
     {% load static %}
-    <link rel="icon" type="image/x-icon" href="{% static 'gestionPedidos/assets/favicon.ico' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'gestionPedidos/icono.ico' %}" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="{% static 'gestionPedidos/css/styles.css' %}" rel="stylesheet" />
     {% block extra_head %}
@@ -21,6 +21,7 @@
     {% block extra_styles %}
     {% endblock extra_styles %}
 </head>
+
 <style>
     /* Ajuste para eliminar el espacio en el margen superior */
     .navbar {
