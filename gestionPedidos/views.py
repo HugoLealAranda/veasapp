@@ -580,3 +580,4 @@ def generar_informe(request):
 
 
 
+#creado por hugo francisco leal aranda
