@@ -1,7 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Configuracion(models.Model):
+    nombre_empresa_nucleo = models.CharField(max_length=255, blank=True, null=True)
+    logo_empresa = models.ImageField(upload_to='logos/', blank=True, null=True)
+    contacto_empresa = models.EmailField(blank=True, null=True)
 
+    @classmethod
+    def get_instance(cls):
+        return cls.objects.get_or_create(id=1)[0]
+
+    def __str__(self):
+        return f"Configuración para {self.nombre_empresa_nucleo}"
+    
 class Articulos(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255, verbose_name="Nombre del Artículo")
