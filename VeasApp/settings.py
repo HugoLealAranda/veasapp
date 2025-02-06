@@ -26,20 +26,11 @@ ALLOWED_HOSTS = ['*']
 
 
 DATABASES = {
-<<<<<<< HEAD
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-=======
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
->>>>>>> 04034b2 (se agrego autocompletar vinculado a la DB para mejorar orden general del ingreso de datos, tambien se mejoro aspecto de la vista buscar estadisticas)
 
 
 

@@ -9,6 +9,12 @@
     <!-- Favicon-->
     {% load static %}
     <link rel="icon" type="image/x-icon" href="{% static 'gestionPedidos/assets/favicon.ico' %}" />
+    <!-- jQuery primero -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Bootstrap después -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="{% static 'gestionPedidos/css/styles.css' %}" rel="stylesheet" />
     {% block extra_head %}
