@@ -1,10 +1,5 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
-
-    
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -13,7 +8,7 @@
     <title>{% block title %}{% endblock title %}</title>
     <!-- Favicon-->
     {% load static %}
-    <link rel="icon" type="image/x-icon" href="{% static 'gestionPedidos/icono.ico' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'gestionPedidos/assets/favicon.ico' %}" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="{% static 'gestionPedidos/css/styles.css' %}" rel="stylesheet" />
     {% block extra_head %}
@@ -21,153 +16,165 @@
     {% block extra_styles %}
     {% endblock extra_styles %}
 </head>
-
 <style>
     /* Ajuste para eliminar el espacio en el margen superior */
     .navbar {
-        margin-top: 1px ;
+        margin-top: 1px;
     }
-</style>
-<body>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <!-- Page content wrapper-->
-    
-    
-    <div id="page-content-wrapper">
-        <!-- Top navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom {% if not show_navbar %}d-none{% endif %}">
-
-            <div class="container-fluid">
-
-
-                <nav>
-                    <img src="{% static 'images/logo6.png' %}" alt="Logo de mi proyecto" style="width: 180px; margin-right: 10px">
-                    <!-- Otros elementos de navegación -->
-                </nav>     
-
-                <form action="{% url 'agregar_cotizacion' %}" method="get" class="d-flex">
-                    <button class="btn btn-outline-success" type="submit">Agregar Articulos</button>
-                </form>  
-
-                <form action="{% url 'admin:index' %}" method="get" class="d-flex">
-                    <button class="btn btn-outline-success" type="submit">Base de Datos</button>
-                </form>  
-
-                <form action="{% url 'generar_informe' %}" method="get" class="d-flex">
-                    <button class="btn btn-outline-success" type="submit">Generar Informe</button>
-                </form>  
-
-                
-                <form action="{% url 'home' %}" method="get" class="d-flex">
-                    <button class="btn btn-outline-success" type="submit">Volver al Inicio</button>
-                </form>  
-
-                <form action="{% url 'buscar' %}" method="get" class="d-flex" onsubmit="return sanitizeInput()">
-                    <input id="searchInput" class="form-control me-2" type="search" name="prd" placeholder="Buscar Estadísticas..." aria-label="Search" value="{{ query }}" required>
-                    <button class="btn btn-outline-success" type="submit">Buscar</button>
-                </form>
-
-
-
-                
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <div class="dropdown">
-                            <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                Bienvenido {{ user.username | upper }}
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <!-- Formulario para cerrar sesión con el método POST -->
-                                <form action="{% url 'logout' %}" method="post" style="display: inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="dropdown-item">Cerrar sesión</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>                
-            </div>
-        </nav>
-        <!-- Page content-->
-        <div class="container-fluid">
-            {% block content %}
-            {% endblock content %}
-            
-            {% block extra_scripts %}
-            {% endblock extra_scripts %}
-        </div>
-    </div>
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="{% static 'gestionPedidos/js/scripts.js' %}"></script>
-    <script>
-        function sanitizeInput() {
-            var inputField = document.getElementById('searchInput');
-            // Realiza la sanitización del valor del input, por ejemplo, reemplazando comillas dobles con entidades HTML o escapando caracteres
-            inputField.value = inputField.value.replace(/"/g, "&quot;");
-            return true; // Retorna true para continuar con la sumisión del formulario
-        }
-        </script>
-{% block javascript %}
-{% endblock %}
-</body>
-
-<style>
     /* Aumentar el espaciado entre los formularios de la barra de navegación */
     .navbar .d-flex {
-        margin-right: 20px; /* Ajusta este valor según sea necesario */
+        margin-right: 20px;
     }
+    /* Ajuste del input de búsqueda */
     #searchInput {
-  flex: 1; /* Hace que el input ocupe todo el espacio restante */
-  height: 40px; /* Ajusta la altura del input según sea necesario */
-  width: 300px; /* Fija el ancho del input */
-  margin-right: 10px; /* Añade un margen derecho para separar el input del botón */
-}
-    /* Estilo de los botones en su estado normal */
+        flex: 1;
+        height: 40px;
+        width: 300px; 
+        margin-right: 10px; 
+    }
+    /* Botones con outline y su estado hover/active */
     .btn-outline-success {
-        border-color: #007bff; /* Color de borde azul para los botones */
-        color: #29292b; /* Color de texto azul para coincidir con el borde */
+        border-color: #007bff;
+        color: #29292b;
     }
-/* Estilo al hacer clic en los botones */
-.btn-outline-success:active {
-    background-color: #007bff !important; /* Color de fondo azul al hacer clic */
-    color: white !important; /* Color de texto blanco para mayor contraste */
-    border-color: #007bff !important; /* Color de borde azul al hacer clic */
-}
-
-    /* Estilo al pasar el mouse sobre los botones y enlaces de la barra de navegación */
-    .btn-outline-success:hover, .nav-link:hover, .dropdown-item:hover {
-        background-color: #007bff; /* Color de relleno azul al pasar el mouse */
-        color: white; /* Color de texto blanco para mayor contraste */
-        border-color: #007bff; /* Asegurar que el color del borde sea azul también al pasar el mouse */
+    .btn-outline-success:hover,
+    .nav-link:hover,
+    .dropdown-item:hover {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
     }
-/* Agrega este CSS a tu archivo de estilos */
-
-/* Estilos para el contenedor de los botones */
-.container-fluid {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 0;
-}
-
-/* Estilos para cada formulario de botón */
-.container-fluid form {
-  flex: 1 1 80%; /* Establece que cada formulario ocupe el 50% del contenedor, es decir, 2 elementos por fila */
-}
-
-/* Media query para ajustar el diseño cuando la pantalla sea más pequeña */
-@media (max-width: 768px) {
-  .container-fluid form {
-    flex-basis: 50%; /* Cuando la pantalla sea más pequeña, cada formulario ocupará el 100% del ancho */
-  }
-}
-    /* Aumentar el espaciado entre los elementos de la lista de navegación */
+    .btn-outline-success:active {
+        background-color: #007bff !important;
+        color: white !important;
+        border-color: #007bff !important;
+    }
+    /* Ajuste de layout en contenedor principal (barra de navegación) */
+    .container-fluid {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 0;
+    }
+    .container-fluid form {
+        flex: 1 1 auto; 
+    }
+    /* Ajuste de la separación entre elementos de menú */
     .navbar-nav .nav-item {
-        margin-right: 15px; /* Ajusta este valor según sea necesario */
+        margin-right: 15px;
     }
-</style>
+  </style>
+</head>
 
+<body>
+  <!-- Contenedor principal de la página -->
+  <div id="page-content-wrapper">
+    <!-- Top navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom {% if not show_navbar %}d-none{% endif %}">
+      <div class="container-fluid">
+        <!-- LOGO -->
+        <nav>
+          <img src="{% static 'images/logo6.png' %}"
+               alt="Logo de mi proyecto"
+               style="width: 180px; margin-right: 10px">
+        </nav>
+
+        <!-- Botón: Agregar Artículos -->
+        <form action="{% url 'agregar_cotizacion' %}" method="get" class="d-flex">
+          <button class="btn btn-outline-success" type="submit">Agregar Articulos</button>
+        </form>
+
+        <!-- Botón: Base de Datos (admin) -->
+        <form action="{% url 'admin:index' %}" method="get" class="d-flex">
+          <button class="btn btn-outline-success" type="submit">Base de Datos</button>
+        </form>
+
+        <!-- Botón: Generar Informe -->
+        <form action="{% url 'generar_informe' %}" method="get" class="d-flex">
+          <button class="btn btn-outline-success" type="submit">Generar Informe</button>
+        </form>
+
+        <!-- Botón: Volver al Inicio -->
+        <form action="{% url 'home' %}" method="get" class="d-flex">
+          <button class="btn btn-outline-success" type="submit">Volver al Inicio</button>
+        </form>
+
+        <!-- Formulario de búsqueda -->
+        <form action="{% url 'buscar' %}" method="get" class="d-flex" onsubmit="return sanitizeInput()">
+          <input 
+            id="searchInput" 
+            class="form-control me-2" 
+            type="search" 
+            name="prd" 
+            placeholder="Buscar Estadísticas..." 
+            aria-label="Search" 
+            value="{{ query }}" 
+            required
+          >
+          <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+
+        <!-- Dropdown de usuario / cerrar sesión -->
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <div class="dropdown">
+              <button 
+                class="btn btn-outline-success dropdown-toggle" 
+                type="button" 
+                id="dropdownMenuButton" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false"
+              >
+                Bienvenido {{ user.username|upper }}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <!-- Formulario para cerrar sesión con método POST -->
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item">Cerrar sesión</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div> 
+        <!-- Fin dropdown usuario -->               
+      </div> <!-- /container-fluid -->
+    </nav>
+    <!-- /Top navigation -->
+
+    <!-- Contenido de la página -->
+    <div class="container-fluid">
+      {% block content %}
+      {% endblock content %}
+
+      {% block extra_scripts %}
+      {% endblock extra_scripts %}
+    </div>
+  </div>
+
+  <!-- Sanitizar input de búsqueda antes del submit -->
+  <script>
+    function sanitizeInput() {
+      var inputField = document.getElementById('searchInput');
+      inputField.value = inputField.value.replace(/"/g, "&quot;");
+      return true; 
+    }
+  </script>
+
+  <!-- Autocomplete para la barra de búsqueda -->
+  <script>
+    $(document).ready(function() {
+      $("#searchInput").autocomplete({
+        source: "{% url 'buscar_articulos_nombres' %}",
+        minLength: 2,
+        select: function(event, ui) {
+          console.log("Barra de búsqueda - seleccionado:", ui.item.value);
+          // Si quieres, puedes asignar el valor seleccionado:
+          // $("#searchInput").val(ui.item.value);
+        }
+      });
+    });
+  </script>
+
+  {% block javascript %}{% endblock javascript %}
+</body>
 </html>

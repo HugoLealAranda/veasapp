@@ -1,66 +1,76 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <style>
-        /* Estilos específicos para el formulario de generación de informes */
+<style>
+    /* Estilos específicos para el formulario de generación de informes */
+    .generar-informe-container {
+        max-width: 600px;            /* Ancho máximo del contenedor */
+        margin: 60px auto;           /* Centra horizontalmente y separa de la navbar */
+        background-color: #f8f9fa;   /* Color de fondo */
+        padding: 20px;               /* Espaciado interno */
+        border-radius: 8px;          /* Borde redondeado */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    }
 
+    .generar-informe-container h1 {
+        color: #007bff;   /* Color del título */
+        margin-bottom: 20px;
+        text-align: center; /* Centra el título */
+    }
+
+    .generar-informe-form {
+        display: flex;
+        flex-direction: column; /* Apila los elementos verticalmente */
+        gap: 15px;              /* Espacio entre cada label/input/botón */
+    }
+
+    .generar-informe-form label {
+        color: #007bff;       /* Color del texto de la etiqueta */
+        font-weight: 600;     /* Hace la etiqueta más llamativa */
+        margin-bottom: 0px;   /* Quita margen inferior, pues lo controlamos con gap */
+    }
+
+    .generar-informe-form input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .generar-informe-form button[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+
+    .generar-informe-form button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    /* Responsive: Ajuste en pantallas pequeñas */
+    @media (max-width: 576px) {
         .generar-informe-container {
-            max-width: 600px; /* Ancho máximo del contenedor */
-            margin: 40px auto; /* Centrar horizontalmente */
-            background-color: #f8f9fa; /* Color de fondo */
-            padding: 20px; /* Espaciado interno */
-            border-radius: 8px; /* Borde redondeado */
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Sombra */
+            margin: 40px 10px; /* Quita espacios laterales */
         }
+    }
+</style>
 
-        .generar-informe-container h1 {
-            color: #007bff; /* Color del título */
-            margin-bottom: 20px; /* Espaciado inferior */
-            margin-top:50px
-        }
+<div class="generar-informe-container">
+    <h1>Rango de Fechas</h1>
+    <form class="generar-informe-form" method="post">
+        {% csrf_token %}
+        <label for="fecha_inicio">Fecha de inicio:</label>
+        <input type="date" id="fecha_inicio" name="fecha_inicio" required />
 
-        .generar-informe-form label {
-            display: block; /* Mostrar etiquetas en bloque */
-            margin-bottom: 10px; /* Espaciado inferior */
-            color: #007bff; /* Color del texto de la etiqueta */
-        }
+        <label for="fecha_fin">Fecha de fin:</label>
+        <input type="date" id="fecha_fin" name="fecha_fin" required />
 
-        .generar-informe-form input[type="date"] {
-            width: 100%; /* Ancho completo */
-            padding: 10px; /* Espaciado interno */
-            margin-bottom: 15px; /* Espaciado inferior */
-            border: 1px solid #ccc; /* Borde */
-            border-radius: 5px; /* Borde redondeado */
-        }
-
-        .generar-informe-form button[type="submit"] {
-            background-color: #007bff; /* Color de fondo */
-            color: #fff; /* Color del texto */
-            padding: 10px 20px; /* Espaciado interno */
-            border: none; /* Eliminar borde */
-            border-radius: 5px; /* Borde redondeado */
-            cursor: pointer; /* Cursor de puntero */
-            display: block; /* Mostrar como bloque */
-            width: 100%; /* Ancho completo */
-            margin-top: 10px; /* Espaciado superior */
-        }
-
-        .generar-informe-form button[type="submit"]:hover {
-            background-color: #0056b3; /* Cambiar color de fondo al pasar el ratón */
-        }
-    </style>
-
-    <div class="generar-informe-container">
-        <h1>Rango de Fechas</h1>
-        <form class="generar-informe-form" method="post">
-            {% csrf_token %}
-            <label for="fecha_inicio">Fecha de inicio:</label>
-            <input type="date" id="fecha_inicio" name="fecha_inicio" required>
-            <label for="fecha_fin">Fecha de fin:</label>
-            <input type="date" id="fecha_fin" name="fecha_fin" required>
-            <button type="submit">Generar Informe</button>
-        </form>
-    </div>
+        <button type="submit">Generar Informe</button>
+    </form>
+</div>
 {% endblock %}
-
-

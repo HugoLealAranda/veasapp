@@ -2,224 +2,234 @@
 
 {% block extra_styles %}
 <style>
+  /* ========== Estilos Generales ========== */
+  body {
+      font-family: Arial, sans-serif;
+  }
+
+  .main-container {
+      width: 90%;             /* Ajusta el ancho general de la sección */
+      max-width: 1000px;      /* Máximo de 1000px */
+      margin: 20px auto;      /* Centrado horizontal */
+  }
+
+  /* ========== Sección de Título ========== */
   .tittle-container {
       background-color: #f0f4f8;
       text-align: center;
-      width: 500px;
-      margin: 20px 0px; /* Ajuste automático horizontal y 20px de margen superior e inferior */
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .tittle-container h1 {
       margin-bottom: 5px;
   }
-  
-  .subtitle-container {
-      margin-top: 10px;
+
+  .tittle-container span {
+      color: #007bff;  /* Azul principal */
   }
-  
+
+  .subtitle-container p {
+      font-size: larger;
+      margin: 0;
+  }
+
+  /* ========== Sección de Chat ========== */
   .chat-container {
       border: 1px solid #ccc;
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       height: 400px;
-      width: 500px; /* Ancho del chat */
+      width: 100%;            /* Ancho completo en pantallas pequeñas */
+      max-width: 500px;       /* Para pantallas grandes */
       padding: 10px;
-      margin-top: 10px;
-      margin-right: 20px;
-      overflow-y: auto; /* Habilitar desplazamiento vertical */
-      margin-bottom: 5px;
+      margin: 20px auto 10px; /* Centrado horizontal, margen sup. e inf. */
+      overflow-y: auto;       /* Scroll vertical */
+      position: relative;
   }
-  
-  .container {
-      display: inline-block;
-      vertical-align: top; /* Alinear la parte superior del contenedor */
-      margin-bottom: 5px;
-      max-height: 250px; /* Establece la altura máxima para la tabla */
-      overflow-y: auto;
-  }
-  
+
   .chat-header {
-      background-color: #007bff; /* Cambiar color a azul */
-      border-bottom: 1px solid #ccc;
-      border-radius: 5px 5px 0 0;
+      background-color: #007bff;
+      color: white;
       padding: 10px;
-      text-align: center;
-      color: white; /* Cambiar color del texto a blanco */
-      margin-bottom: 5px;
+      border-radius: 5px 5px 0 0;
+      margin: -10px -10px 10px -10px; /* Ajustar para solaparse con el contenedor */
   }
-  
+
   .chat-form {
-      margin-top: 10px;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 8px;
   }
-  
+
+  .chat-form input[type="text"] {
+      flex: 1;                /* Ocupa espacio restante */
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      padding: 8px;
+  }
+
+  .chat-form button {
+      border: none;
+      border-radius: 4px;
+      background-color: #28a745; /* Verde */
+      color: #fff;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  }
+  .chat-form button:hover {
+      background-color: #218838; /* Verde más oscuro */
+  }
+
   .chat-messages {
       margin-top: 10px;
+      max-height: 300px;
+      overflow-y: auto;
   }
-  
+
   .chat-message {
       margin-bottom: 5px;
   }
-  
-  .user {
+
+  .chat-message .user {
       font-weight: bold;
+      color: #007bff;
   }
-  
+
   .timestamp {
       color: #999;
-      font-size: 0.6em;
+      font-size: 0.75em;
       margin-left: 5px;
   }
-  
-  
-  body {
-      font-family: Arial, sans-serif;
-      max-height: 250px; /* Establece la altura máxima para la tabla */
-      overflow-y: auto;
+
+  /* ========== Sección de Tareas ========== */
+  .titulo {
+      font-size: 20px;
+      margin: 20px 0 10px 0;
+      font-weight: bold;
   }
-  
+
   table {
-      width: 800px;
-      border-collapse: collapse;
-      margin-top: 5px; 
-      max-height: 250px; /* Establece la altura máxima para la tabla */
-      overflow-y: auto;
+      width: 100%;               /* Ajusta al 100% del contenedor */
+      border-collapse: collapse; /* Quita doble borde */
+      margin-bottom: 20px;
   }
-  
+
   th, td {
       border: 1px solid #dddddd;
       text-align: left;
       padding: 8px;
-      max-height: 250px; /* Establece la altura máxima para la tabla */
-      overflow-y: auto;
   }
-  
+
   th {
       background-color: #007bff;
       color: white;
-      max-height: 250px; /* Establece la altura máxima para la tabla */
-      overflow-y: auto;
   }
-  
-  .titulo {
-      font-size: 20px;
-      margin-bottom: 10px;
-      margin-top: 20px;
-      max-height: 250px; /* Establece la altura máxima para la tabla */
-      overflow-y: auto;
 
+  /* Contenedor flexible para tablas (opcional si deseas más tablas juntas) */
+  .table-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
   }
-  .tittle-container,
-.chat-container {
-    width: 100%; /* Cambiamos el ancho a 100% para adaptarse al ancho de la pantalla */
-    margin-left: auto; /* Alineamos al centro */
-    margin-right: auto; /* Alineamos al centro */
-}
-  @media screen and (min-width: 600px) {
 
-        .tittle-container,
-        .chat-container {
-            width: 500px; /* Ancho fijo para pantallas grandes */
-        }
-    }
-      .tittle-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-      }
-  
-      .container {
-          display: flex;
-          align-items: flex-start;
-      }
-  
-      /* Estilos para las tablas */
-      .table-container {
-          display: flex;
-          flex-wrap: wrap; /* Permite que los elementos se ajusten automáticamente a la siguiente fila */
-          justify-content: space-between; /* Distribuye las tablas en el espacio disponible */
-          margin-top: 10px; /* Ajusta el margen superior */
-      }
-  
-      .table-container > * {
-          flex-basis: calc(50% - 5px); /* Establece el ancho de cada tabla */
-          margin-bottom: 10px; /* Ajusta el margen inferior */
-      }
+  .table-container > table {
+      flex: 1 1 400px; /* Ajusta el ancho mínimo */
+  }
 
-  </style>
-  
+  /* ========== Responsividad ========== */
+  @media screen and (max-width: 600px) {
+      .chat-container {
+          max-width: 100%;
+          margin: 10px auto;
+      }
+  }
+
+</style>
 {% endblock extra_styles %}
 
 {% block content %}
 <div class="main-container">
+    <!-- Título de la página -->
     <div class="tittle-container">
-        <h1>Bienvenido a <span style="color: #007bff;">Veas App</span></h1>
+        <h1>Bienvenido a <span>Veas App</span></h1>
         <div class="subtitle-container">
-            <p style="font-size: larger;">Tu gestor de costos personalizado</p>
+            <p>Tu gestor de costos personalizado</p>
         </div>
     </div>
-      <div class="chat-container">
-          <div class="chat-header">Chat Empresas Veas</div>
 
-          <form class="chat-form" action="{% url 'send_message' %}" method="post">
-              {% csrf_token %}
-              <input type="text" name="content">
-              <button type="submit">Enviar</button>
-          </form>
+    <!-- Sección de chat -->
+    <div class="chat-container">
+        <div class="chat-header">Chat Empresas Veas</div>
 
-          <div class="chat-messages">
-              {% for message in messages %}
-              <div class="chat-message">
-                  <span class="user">{{ message.user.username }}:</span> {{ message.content }}
-                  <span class="timestamp">({{ message.timestamp|date:"Y-m-d H:i:s" }})</span>
-              </div>
-              {% endfor %}
-          </div>
-      </div>
+        <form class="chat-form" action="{% url 'send_message' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="content" placeholder="Escribe tu mensaje..." />
+            <button type="submit">Enviar</button>
+        </form>
+
+        <div class="chat-messages">
+            {% for message in messages %}
+            <div class="chat-message">
+                <span class="user">{{ message.user.username }}</span>:
+                {{ message.content }}
+                <span class="timestamp">({{ message.timestamp|date:"Y-m-d H:i:s" }})</span>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-    <div class="main-container">
-      <div class="titulo">Tareas Pendientes</div>
-      <table>
+</div>
+
+<div class="main-container">
+    <!-- Tareas Pendientes -->
+    <div class="titulo">Tareas Pendientes</div>
+    <table>
         <thead>
-          <tr>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Fecha de Vencimiento</th>
-            <th>Estado</th>
-            <th>A Cargo</th> <!-- Nueva columna para los usuarios asignados -->
-          </tr>
+            <tr>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Fecha de Vencimiento</th>
+                <th>Estado</th>
+                <th>A Cargo</th>
+            </tr>
         </thead>
         <tbody>
-          {% for tarea in tareas_pendientes %}
-          <tr>
-            <td>{{ tarea.titulo }}</td>
-            <td>{{ tarea.descripcion }}</td>
-            <td>{{ tarea.fecha_vencimiento }}</td>
-            <td>{{ tarea.estado }}</td>
-            <td>{{ tarea.nombres_asignados }}</td> <!-- Usar nombres_asignados en lugar de asignadas.all() -->
-          </tr>
-          {% endfor %}
+            {% for tarea in tareas_pendientes %}
+            <tr>
+                <td>{{ tarea.titulo }}</td>
+                <td>{{ tarea.descripcion }}</td>
+                <td>{{ tarea.fecha_vencimiento }}</td>
+                <td>{{ tarea.estado }}</td>
+                <td>{{ tarea.nombres_asignados }}</td>
+            </tr>
+            {% endfor %}
         </tbody>
-      </table>
-      <div class="titulo">Tareas Completadas</div>
-      <table>
+    </table>
+
+    <!-- Tareas Completadas -->
+    <div class="titulo">Tareas Completadas</div>
+    <table>
         <thead>
-          <tr>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Fecha de Vencimiento</th>
-            <th>A Cargo</th> <!-- Nueva columna para los usuarios asignados -->
-          </tr>
+            <tr>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Fecha de Vencimiento</th>
+                <th>A Cargo</th>
+            </tr>
         </thead>
         <tbody>
-          {% for tarea in tareas_completadas %}
-          <tr>
-            <td>{{ tarea.titulo }}</td>
-            <td>{{ tarea.descripcion }}</td>
-            <td>{{ tarea.fecha_vencimiento }}</td>
-            <td>{{ tarea.nombres_asignados }}</td> <!-- Usar nombres_asignados en lugar de asignadas.all() -->
-          </tr>
-          {% endfor %}
+            {% for tarea in tareas_completadas %}
+            <tr>
+                <td>{{ tarea.titulo }}</td>
+                <td>{{ tarea.descripcion }}</td>
+                <td>{{ tarea.fecha_vencimiento }}</td>
+                <td>{{ tarea.nombres_asignados }}</td>
+            </tr>
+            {% endfor %}
         </tbody>
-      </table>
-      
-      
-    </div>
+    </table>
+</div>
 {% endblock content %}

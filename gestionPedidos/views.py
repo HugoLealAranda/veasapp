@@ -575,6 +575,87 @@ def generar_informe(request):
 
 
 
+from django.http import JsonResponse
+from django.db.models import Q
+from .models import Articulos  # Asegúrate de importar tu modelo
+
+def buscar_articulos_nombres(request):
+    term = request.GET.get('term', '')
+    resultados = Articulos.objects.filter(nombre__icontains=term)\
+                                  .values_list('nombre', flat=True)\
+                                  .distinct()[:20]
+    return JsonResponse(list(resultados), safe=False)
+
+
+# views.py
+
+from django.http import JsonResponse
+from django.db.models import Q
+from .models import Articulos
+
+def buscar_lugares(request):
+    term = request.GET.get('term', '')
+    resultados = Articulos.objects.filter(lugar__icontains=term) \
+                                  .values_list('lugar', flat=True) \
+                                  .distinct()[:20]
+    return JsonResponse(list(resultados), safe=False)
+
+def buscar_vendedores(request):
+    term = request.GET.get('term', '')
+    resultados = Articulos.objects.filter(vendedor__icontains=term) \
+                                  .values_list('vendedor', flat=True) \
+                                  .distinct()[:20]
+    return JsonResponse(list(resultados), safe=False)
+
+def buscar_compradores(request):
+    term = request.GET.get('term', '')
+    resultados = Articulos.objects.filter(comprador__icontains=term) \
+                                  .values_list('comprador', flat=True) \
+                                  .distinct()[:20]
+    return JsonResponse(list(resultados), safe=False)
+
+def buscar_empresas_compradoras(request):
+    term = request.GET.get('term', '')
+    resultados = Articulos.objects.filter(empresa_compradora__icontains=term) \
+                                  .values_list('empresa_compradora', flat=True) \
+                                  .distinct()[:20]
+    return JsonResponse(list(resultados), safe=False)
+
+def buscar_empresas_vendedoras(request):
+    term = request.GET.get('term', '')
+    resultados = Articulos.objects.filter(empresa_vendedora__icontains=term) \
+                                  .values_list('empresa_vendedora', flat=True) \
+                                  .distinct()[:20]
+    return JsonResponse(list(resultados), safe=False)
+
+def buscar_formas_pago(request):
+    term = request.GET.get('term', '')
+    resultados = Articulos.objects.filter(forma_pago__icontains=term) \
+                                  .values_list('forma_pago', flat=True) \
+                                  .distinct()[:20]
+    return JsonResponse(list(resultados), safe=False)
+
+def buscar_entregas(request):
+    term = request.GET.get('term', '')
+    resultados = Articulos.objects.filter(entrega__icontains=term) \
+                                  .values_list('entrega', flat=True) \
+                                  .distinct()[:20]
+    return JsonResponse(list(resultados), safe=False)
+
+def buscar_secciones(request):
+    term = request.GET.get('term', '')
+    resultados = Articulos.objects.filter(seccion__icontains=term) \
+                                  .values_list('seccion', flat=True) \
+                                  .distinct()[:20]
+    return JsonResponse(list(resultados), safe=False)
+
+def buscar_correos_vendedor(request):
+    term = request.GET.get('term', '')
+    resultados = Articulos.objects.filter(correo_vendedor__icontains=term) \
+                                  .values_list('correo_vendedor', flat=True) \
+                                  .distinct()[:20]
+    return JsonResponse(list(resultados), safe=False)
+
 
 
 
