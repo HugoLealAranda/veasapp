@@ -111,27 +111,47 @@ def busqueda_productos(request):
 
 
 
+import html
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from collections import Counter
+from .models import Articulos
+from django.forms import formset_factory
+from django.db.models import Avg, Min, Max, Count, Sum, F, FloatField
+from django.db.models.functions import Round
+import matplotlib
+matplotlib.use('Agg')
+import json
+from .forms import CotizacionForm, ArticuloCotizacionForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.db.models import Q
+from gestionPedidos.models import Message
+from .models import Tarea
+
+# ... Otras views ...
+
 @login_required
 def buscar(request):
     if 'prd' in request.GET and request.GET['prd']:
-        producto = request.GET['prd']  
+        # Obtener el parámetro de búsqueda
+        producto = request.GET['prd']
+        # Decodificar entidades HTML para que "1&quot;o" se convierta en '1"o'
+        producto = html.unescape(producto)
+        
         if len(producto) > 100:
             return HttpResponse("Texto de búsqueda demasiado largo")
         else:
+            # Realiza la búsqueda usando el valor decodificado
             articulos = Articulos.objects.filter(nombre__icontains=producto).order_by('fecha')
             if articulos.exists():
-                
-
-                
                 empresas_valores = articulos.exclude(empresa_vendedora__iexact='rental veas') \
                                             .values('empresa_vendedora') \
-                                            .annotate(valor_unitario_min=Min('valor_unitario')) \
+                                            .annotate(valor_unitario_min=Min('valor_unitario'))
 
                 ultimo_articulo_otros = articulos.exclude(empresa_vendedora__iexact='rental veas').order_by('-fecha').first()
-
-
                 ultimo_valor_otros = ultimo_articulo_otros.valor_unitario if ultimo_articulo_otros else 0
-
 
                 promedio_rental_veas = articulos.filter(
                     empresa_vendedora__iexact='Rental Veas'
@@ -139,22 +159,12 @@ def buscar(request):
                     promedio_rental_veas=Round(Avg('valor_unitario'), 2)
                 )['promedio_rental_veas']
 
-
-
-
                 promedio_otros = articulos.exclude(empresa_vendedora__iexact='Rental Veas') \
                                 .aggregate(promedio_otros=Round(Avg('valor_unitario'), 2))['promedio_otros']
-
-
 
                 empresas_con_producto = Articulos.objects.filter(
                     nombre__icontains=producto
                 ).values('empresa_vendedora').distinct()
-
-
-
-
-
 
                 transacciones_recientes = Articulos.objects.filter(
                     empresa_vendedora__in=empresas_con_producto
@@ -164,26 +174,20 @@ def buscar(request):
                         ultima_transaccion=Max('fecha')
                     )
 
-                # Obtener los detalles de la transacción más reciente para cada empresa vendedora
                 resultados = []
                 for transaccion in transacciones_recientes:
                     empresa = transaccion['empresa_vendedora']
                     transaccion_mas_reciente = Articulos.objects.filter(
                         empresa_vendedora=empresa,
                         fecha=transaccion['ultima_transaccion'],
-                        entrega__isnull=False,  # Asegurar que la entrega no sea nula
-                        nombre__icontains=producto  # Verificar si la transacción es para el artículo buscado
+                        entrega__isnull=False,
+                        nombre__icontains=producto
                     ).first()
                     if transaccion_mas_reciente:
                         resultados.append({
                             'empresa_vendedora': empresa,
                             'entrega': transaccion_mas_reciente.entrega
                         })
-
-
-
-
-
 
                 volumen_ventas_por_empresa = Articulos.objects.exclude(empresa_vendedora__iexact='rental veas') \
                                             .filter(numero_cotizacion__isnull=True) \
@@ -192,8 +196,6 @@ def buscar(request):
                                             .annotate(volumen_total=Sum('cantidad')) \
                                             .order_by('-volumen_total')
 
-
-
                 valor_ventas_por_empresa = articulos.exclude(empresa_vendedora__iexact='rental veas') \
                                                     .filter(numero_cotizacion__isnull=True) \
                                                     .annotate(valor_total=F('cantidad') * F('valor_unitario')) \
@@ -201,14 +203,11 @@ def buscar(request):
                                                     .annotate(valor_total_sum=Sum('valor_total', output_field=FloatField())) \
                                                     .order_by('-valor_total_sum')
 
-
-
-
                 rendimiento_compradores = articulos.filter(numero_cotizacion__isnull=True) \
                                                     .filter(nombre__icontains=producto) \
                                                     .values('comprador') \
                                                     .annotate(total_comprado=Sum('cantidad'), 
-                                                            valor_total_comprado=Sum(F('cantidad') * F('valor_unitario'))) \
+                                                              valor_total_comprado=Sum(F('cantidad') * F('valor_unitario'))) \
                                                     .order_by('-total_comprado')
                 
                 compras_totales_veas = Articulos.objects.exclude(empresa_vendedora__iexact='Rental Veas') \
@@ -216,7 +215,7 @@ def buscar(request):
                                                         .filter(nombre__icontains=producto) \
                                                         .values('empresa_vendedora') \
                                                         .annotate(volumen_total=Sum('cantidad')) \
-                                                        .order_by('-volumen_total') 
+                                                        .order_by('-volumen_total')
                 
                 ventas_totales_veas = Articulos.objects.filter(empresa_vendedora__iexact='Rental Veas') \
                                                         .filter(numero_cotizacion__isnull=True) \
@@ -225,17 +224,9 @@ def buscar(request):
                                                         .annotate(volumen_total=Sum('cantidad')) \
                                                         .order_by('-volumen_total')
 
-
                 total_compras_veas = sum(item['volumen_total'] for item in compras_totales_veas)
-
-                
                 total_ventas_veas = sum(item['volumen_total'] for item in ventas_totales_veas)
-
-
-
-                stock_teorico=total_compras_veas-total_ventas_veas
-
-
+                stock_teorico = total_compras_veas - total_ventas_veas
 
                 ultimo_valor_venta_rental_veas = articulos.filter(numero_cotizacion__isnull=True).filter(empresa_vendedora='rental veas').order_by('-fecha').first()
                 valor_unitario_venta_rental_veas = ultimo_valor_venta_rental_veas.valor_unitario if ultimo_valor_venta_rental_veas else 0
@@ -249,32 +240,17 @@ def buscar(request):
                 ultimo_valor_cotizado_proveedores = articulos.exclude(numero_cotizacion__isnull=True).filter(empresa_vendedora='rental veas').order_by('-fecha').first()
                 valor_unitario_cotizado_proveedores = ultimo_valor_cotizado_proveedores.valor_unitario if ultimo_valor_cotizado_proveedores else 0
 
-                
                 articulos_venta_rental_veas = articulos.filter(numero_cotizacion__isnull=True, empresa_vendedora__iexact='rental veas')
                 promedio_venta_valor_unitario = articulos_venta_rental_veas.aggregate(promedio=Avg('valor_unitario'))['promedio']
-                if promedio_venta_valor_unitario is not None:
-                    promedio_venta_valor_unitario = round(promedio_venta_valor_unitario, 2)
-                else:
-                    promedio_venta_valor_unitario = 0  # o algún otro valor predeterminado
+                promedio_venta_valor_unitario = round(promedio_venta_valor_unitario, 2) if promedio_venta_valor_unitario is not None else 0
 
                 articulos_compra_rental_veas = articulos.filter(numero_cotizacion__isnull=True, empresa_compradora__iexact='rental veas')
                 promedio_compra_valor_unitario = articulos_compra_rental_veas.aggregate(promedio=Avg('valor_unitario'))['promedio']
-                if promedio_compra_valor_unitario is not None:
-                    promedio_compra_valor_unitario = round(promedio_compra_valor_unitario, 2)
-                else:
-                    promedio_compra_valor_unitario = 0  # o algún otro valor predeterminado
+                promedio_compra_valor_unitario = round(promedio_compra_valor_unitario, 2) if promedio_compra_valor_unitario is not None else 0
 
-
-
-
-                
                 utilidad_ultima_compraventa = valor_unitario_venta_rental_veas - valor_unitario_compra_rental_veas
                 utilidad_promedio_historica = promedio_venta_valor_unitario - promedio_compra_valor_unitario
 
-                
-                
-                
-                
                 metricas1 = {
                     'valor_unitario_venta_rental_veas': valor_unitario_venta_rental_veas,
                     'valor_unitario_compra_rental_veas': valor_unitario_compra_rental_veas,
@@ -286,52 +262,40 @@ def buscar(request):
                     'rendimiento_compradores': rendimiento_compradores,
                     'utilidad_ultima_compraventa': utilidad_ultima_compraventa,
                     'utilidad_promedio_historica': utilidad_promedio_historica,
-                    }
-                
-
-
+                }
 
                 metricas2 = {
-                    'valor_ventas_por_empresa': valor_ventas_por_empresa,            
-                             }
+                    'valor_ventas_por_empresa': valor_ventas_por_empresa,
+                }
                 
                 metricas4 = {
                     'volumen_ventas_por_empresa': volumen_ventas_por_empresa,
-                             }
+                }
                 
-
                 metricas3 = {
                     'rendimiento_compradores': rendimiento_compradores,
-                             }
+                }
                 
-
-                # Obtener los datos para cuando Rental Veas es comprador
-                articulos_compra_rental_veas = articulos.filter(empresa_compradora='rental veas').exclude(numero_cotizacion__isnull=False).exclude(fecha__isnull=True)
+                articulos_compra_rental_veas = articulos.filter(empresa_compradora='rental veas').exclude(numero_cotizacion__isnull=True).exclude(fecha__isnull=True)
                 fechas_compra_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_compra_rental_veas]
                 valores_unitarios_compra_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_compra_rental_veas]
                 numeros_documentos_compra_rental_veas = [articulo.numero_cotizacion or articulo.numero_factura or articulo.numero_boleta for articulo in articulos_compra_rental_veas]
 
-                # Obtener los datos para cuando Rental Veas es vendedor
-                articulos_venta_rental_veas = articulos.filter(empresa_vendedora='rental veas').exclude(numero_cotizacion__isnull=False).exclude(fecha__isnull=True)
+                articulos_venta_rental_veas = articulos.filter(empresa_vendedora='rental veas').exclude(numero_cotizacion__isnull=True).exclude(fecha__isnull=True)
                 fechas_venta_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_venta_rental_veas]
                 valores_unitarios_venta_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_venta_rental_veas]
                 numeros_documentos_venta_rental_veas = [articulo.numero_cotizacion or articulo.numero_factura or articulo.numero_boleta for articulo in articulos_venta_rental_veas]
 
-                # Obtener los datos para cuando Rental Veas cotiza a sus clientes
                 articulos_cotizacion_rental_veas = articulos.exclude(numero_cotizacion__isnull=True).filter(empresa_vendedora='rental veas').exclude(fecha__isnull=True)
                 fechas_cotizacion_rental_veas = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_cotizacion_rental_veas]
                 valores_unitarios_cotizacion_rental_veas = [float(articulo.valor_unitario) for articulo in articulos_cotizacion_rental_veas]
                 numeros_documentos_cotizacion_rental_veas = [articulo.numero_cotizacion or articulo.numero_factura or articulo.numero_boleta for articulo in articulos_cotizacion_rental_veas]
 
-                # Obtener los datos para cuando los proveedores cotizan a Rental Veas
                 articulos_cotizacion_proveedores = articulos.exclude(numero_cotizacion__isnull=True).filter(empresa_compradora='rental veas').exclude(fecha__isnull=True)
                 fechas_cotizacion_proveedores = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_cotizacion_proveedores]
                 valores_unitarios_cotizacion_proveedores = [float(articulo.valor_unitario) for articulo in articulos_cotizacion_proveedores]
                 numeros_documentos_cotizacion_proveedores = [articulo.numero_cotizacion or articulo.numero_factura or articulo.numero_boleta for articulo in articulos_cotizacion_proveedores]
 
-
-
-                #preparar los datos para el grafico de lineas
                 fechas_rental_veas = []
                 valores_unitarios_rental_veas = []
                 articulos_rental_veas = articulos.filter(empresa_vendedora='rental veas').exclude(fecha__isnull=True)
@@ -345,23 +309,16 @@ def buscar(request):
 
                 if articulos_otros:
                     fechas_otros = [articulo.fecha.strftime('%Y-%m-%d') for articulo in articulos_otros]
-                    valores_unitarios_otros = [float(articulo.valor_unitario) for articulo in articulos_otros] 
-            
+                    valores_unitarios_otros = [float(articulo.valor_unitario) for articulo in articulos_otros]
 
-
-                # Preparar los datos para el gráfico de torta
                 lugares = [articulo.lugar for articulo in articulos if articulo.lugar]
                 conteo_lugares = Counter(lugares)
                 etiquetas_pie = list(conteo_lugares.keys())
                 valores_pie_chart = list(conteo_lugares.values())
 
-
-                # preparasr los datos para el grafico de barra
                 empresas = [empresa['empresa_vendedora'] for empresa in empresas_valores]
                 valores = [empresa['valor_unitario_min'] for empresa in empresas_valores]
-                valores_float = [float(valor) for valor in valores] 
-
-
+                valores_float = [float(valor) for valor in valores]
 
                 return render(request, "resultados_busqueda.html", {
                     "articulos": articulos, 
@@ -378,23 +335,23 @@ def buscar(request):
                     "valores_unitarios_venta_rental_veas": json.dumps(valores_unitarios_venta_rental_veas),
                     "fechas_cotizacion_rental_veas": json.dumps(fechas_cotizacion_rental_veas),
                     "valores_unitarios_cotizacion_rental_veas": json.dumps(valores_unitarios_cotizacion_rental_veas),
-                    "numeros_documentos_compra_rental_veas": json.dumps(numeros_documentos_compra_rental_veas),  # Agrega los números de documentos para compras Rental Veas
-                    "numeros_documentos_venta_rental_veas": json.dumps(numeros_documentos_venta_rental_veas),  # Agrega los números de documentos para ventas Rental Veas
-                    "numeros_documentos_cotizacion_rental_veas": json.dumps(numeros_documentos_cotizacion_rental_veas),  # Agrega los números de documentos para cotizaciones Rental Veas
+                    "numeros_documentos_compra_rental_veas": json.dumps(numeros_documentos_compra_rental_veas),
+                    "numeros_documentos_venta_rental_veas": json.dumps(numeros_documentos_venta_rental_veas),
+                    "numeros_documentos_cotizacion_rental_veas": json.dumps(numeros_documentos_cotizacion_rental_veas),
                     "fechas_cotizacion_proveedores": json.dumps(fechas_cotizacion_proveedores),
                     "valores_unitarios_cotizacion_proveedores": json.dumps(valores_unitarios_cotizacion_proveedores),
-                    "numeros_documentos_cotizacion_proveedores": json.dumps(numeros_documentos_cotizacion_proveedores),  # Agrega los números de documentos para cotizaciones de proveedores
+                    "numeros_documentos_cotizacion_proveedores": json.dumps(numeros_documentos_cotizacion_proveedores),
                     "valores_pie_chart": json.dumps(valores_pie_chart),
                     "etiquetas_pie": json.dumps(etiquetas_pie),
                     "stock_teorico": stock_teorico,
                     "resultados": resultados
                 })
 
-
             else:
                 return HttpResponse("No se encontraron artículos")
     else:
         return HttpResponse("No has introducido nada")
+
 
 
 
