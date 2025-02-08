@@ -1,187 +1,163 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_styles %}
+<style>
+  /* (Tus estilos se mantienen igual) */
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
+  .custom-container {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+  }
+  .custom-card {
+      box-shadow: 0 10px 6px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 1000px;
+  }
+  .custom-card h3 {
+      font-weight: 600;
+      text-align: center;
+  }
+  .card-body {
+      padding: 20px;
+  }
+  .btn-primary {
+      background-color: #4e62cc;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      color: white;
+      cursor: pointer;
+      font-family: 'Open Sans', sans-serif;
+  }
+  .btn-primary:hover,
+  .btn-primary:focus {
+      background-color: #3957d4;
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(57, 87, 212, 0.5);
+  }
+  .form-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+  }
+  .form-label {
+      flex-basis: 20%;
+      text-align: right;
+      margin-right: 1rem;
+      font-family: 'Open Sans', sans-serif;
+  }
+  .form-control {
+      flex-grow: 1;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border: 1px solid #ced4da;
+      font-family: 'Open Sans', sans-serif;
+  }
+  .button-container {
+      top: 20px;
+      right: 20px;
+  }
+  .warning-tooltip {
+      position: absolute;
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #f5c6cb;
+      z-index: 1000;
+  }
+</style>
+{% endblock extra_styles %}
+
 {% block content %}
-<head>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
-
-        .custom-container {
-            display: flex;
-            min-height: 100vh;
-            background-color: #f5f5f5;
-        }
-        .custom-card {
-            box-shadow: 0 10px 6px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            padding: 10px;
-            margin: 0px;
-            width: 72%;
-        }
-        .custom-card h3 {
-            font-weight: 600;
-            text-align: center;
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .btn-primary {
-            background-color: #4e62cc;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
-            color: white;
-            cursor: pointer;
-            font-family: 'Open Sans', sans-serif;
-        }
-        .btn-primary:hover,
-        .btn-primary:focus {
-            background-color: #3957d4;
-            outline: none;
-            box-shadow: 0 0 0 0.2rem rgba(57, 87, 212, 0.5);
-        }
-        .form-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        .form-label {
-            flex-basis: 20%;
-            text-align: right;
-            margin-right: 1rem;
-            font-family: 'Open Sans', sans-serif;
-        }
-        .form-control {
-            flex-grow: 1;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ced4da;
-            font-family: 'Open Sans', sans-serif;
-        }
-        .button-container {
-            top: 20px;
-            right: 20px;
-        }
-        .warning-tooltip {
-            position: absolute;
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 5px;
-            border-radius: 4px;
-            border: 1px solid #f5c6cb;
-            z-index: 1000;
-        }
-    </style>
-</head>
-
-<body>
-    <!-- jQuery y jQuery UI para Autocomplete -->
-    <script 
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-...tu-hash..."
-        crossorigin="anonymous">
-    </script>
-    <link 
-        rel="stylesheet"
-        href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
-    <script
-        src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
-        integrity="sha256-...tu-hash..."
-        crossorigin="anonymous">
-    </script>
-
-    <div class="custom-container">
-        <div class="custom-card">
-            <div class="card-body">
-                <h3>Agregar Producto Simple</h3>
-                <form id="productForm" method="post" class="needs-validation" novalidate>
-                    {% csrf_token %}
-                    {% if messages %}
-                        <ul class="messages">
-                            {% for message in messages %}
-                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-
-                    <div class="row">
-                        {% for field in form %}
-                        <div class="form-group col-md-6">
-                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                            {{ field }}
-                            {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                            {% endif %}
-                            {% for error in field.errors %}
-                                <div class="invalid-feedback">
-                                    {{ error }}
-                                </div>
-                            {% endfor %}
-                            <div id="{{ field.id_for_label }}_warning" 
-                                 class="text-danger warning-tooltip" 
-                                 style="display: none;">
-                                Por favor, No uses letras mayúsculas.
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="button-container">
-                        <button type="submit" class="btn-primary">Guardar Articulo</button>
-                    </div>
-                </form>
+<div class="custom-container">
+  <div class="custom-card">
+    <div class="card-body">
+      <h3>Agregar Producto Simple</h3>
+      <form id="productForm" method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <div class="row">
+          {% for field in form %}
+          <div class="form-group col-md-6">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            <div id="{{ field.id_for_label }}_warning" class="text-danger warning-tooltip" style="display: none;">
+              Por favor, No uses letras mayúsculas.
             </div>
+          </div>
+          {% endfor %}
         </div>
+        <div class="button-container">
+          <button type="submit" class="btn-primary">Guardar Articulo</button>
+        </div>
+      </form>
     </div>
+  </div>
+</div>
+{% endblock %}
 
-    <!-- Script para configurar el autocompletado y la validación -->
-    <script>
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                // 1) Autocomplete del campo "id_nombre"
-                $(document).ready(function(){
-                    // Verifica en el HTML si el ID final es #id_nombre
-                    $("#id_nombre").autocomplete({
-                        source: "{% url 'buscar_articulos_nombres' %}",
-                        minLength: 2,
-                        // Solo para debug, para ver qué datos vienen:
-                        select: function(event, ui) {
-                            console.log("Seleccionado:", ui.item.value);
-                        }
-                    })
-                    .data('ui-autocomplete')._renderItem = function(ul, item){
-                        return $("<li></li>")
-                            .data("item.autocomplete", item)
-                            .append("<div>" + item.label + "</div>")
-                            .appendTo(ul);
-                    };
-                });
+{% block extra_scripts %}
+<script type="text/javascript">
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Usamos myJQ en lugar de $ (la instancia ya se definió en base.html)
+      myJQ("#id_nombre").autocomplete({
+        source: "{% url 'buscar_articulos_nombres' %}",
+        minLength: 2,
+        select: function(event, ui) {
+          console.log("Seleccionado:", ui.item.value);
+        }
+      }).data('ui-autocomplete')._renderItem = function(ul, item) {
+        return myJQ("<li></li>")
+          .data("item.autocomplete", item)
+          .append("<div>" + item.label + "</div>")
+          .appendTo(ul);
+      };
 
-                // 2) Validación para mayúsculas y required
-                var forms = document.getElementsByClassName('needs-validation');
-                Array.prototype.forEach.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        } else {
-                            var fields = form.querySelectorAll('input[type="text"], textarea');
-                            for (var i = 0; i < fields.length; i++) {
-                                var inputValue = fields[i].value;
-                                if (/[A-Z]/.test(inputValue)) {
-                                    var warningElement = document.getElementById(fields[i].id + '_warning');
-                                    warningElement.style.display = 'block';
-                                    var rect = fields[i].getBoundingClientRect();
-                                    warningElement.style.top = (rect.top - warningElement.offsetHeight) + 'px';
-                                    warningElement.style.left = rect.left + 'px';
-                                    event.preventDefault();
-                                    return;
-                                }
-                            }
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-    </script>
-</body>
+      // Validación: evitar uso de mayúsculas
+      var forms = document.getElementsByClassName('needs-validation');
+      Array.prototype.forEach.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          } else {
+            var fields = form.querySelectorAll('input[type="text"], textarea');
+            for (var i = 0; i < fields.length; i++) {
+              if (/[A-Z]/.test(fields[i].value)) {
+                var warningElement = document.getElementById(fields[i].id + '_warning');
+                warningElement.style.display = 'block';
+                var rect = fields[i].getBoundingClientRect();
+                warningElement.style.top = (rect.top - warningElement.offsetHeight) + 'px';
+                warningElement.style.left = rect.left + 'px';
+                event.preventDefault();
+                return;
+              }
+            }
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
 {% endblock %}

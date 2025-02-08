@@ -1,407 +1,304 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
+{% block extra_styles %}
 <style>
-    /* Fuente y estilos generales */
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
 
-    /* Ajuste general del contenedor */
-    .custom-card {
-        box-shadow: 0 10px 6px rgba(0, 0, 0, 0.1);
-        background-color: #fff; 
-        border-radius: 8px;
-        padding: 20px;
-        margin: 20px auto; 
-        max-width: 1000px; /* Ajusta el ancho máximo */
-    }
+  .custom-card {
+      box-shadow: 0 10px 6px rgba(0, 0, 0, 0.1);
+      background-color: #fff; 
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 1000px;
+  }
 
-    .custom-card h2, 
-    .custom-card h3 {
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 600;
-        margin-bottom: 15px;
-    }
+  .custom-card h2, 
+  .custom-card h3 {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      margin-bottom: 15px;
+  }
 
-    /* Contenedor principal del formulario */
-    #cotizacionForm {
-        display: flex;
-        flex-wrap: wrap; 
-        gap: 20px; /* Espacio entre bloques */
-    }
+  /* Contenedor principal del formulario */
+  #cotizacionForm {
+      display: flex;
+      flex-wrap: wrap; 
+      gap: 20px;
+  }
 
-    /* Bloque de datos del documento */
-    #cotizacionFormFields {
-        flex: 1 1 300px; 
-        min-width: 280px;
-    }
+  /* Bloque de datos del documento */
+  #cotizacionFormFields {
+      flex: 1 1 300px;
+      min-width: 280px;
+  }
 
-    /* Bloque de artículos */
-    #articuloFormSet {
-        flex: 2 1 400px; 
-        min-width: 300px;
-    }
+  /* Bloque de artículos */
+  #articuloFormSet {
+      flex: 2 1 400px;
+      min-width: 300px;
+  }
 
-    /* Cada "fila" de artículo dentro del formset */
-    .articuloForm {
-        display: flex;
-        flex-direction: column;
-        background-color: #f9f9f9;
-        border-radius: 6px;
-        padding: 10px;
-        margin-bottom: 15px;
-    }
+  /* Cada formulario de artículo */
+  .articuloForm {
+      display: flex;
+      flex-direction: column;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 15px;
+  }
 
-    .articuloForm p {
-        margin: 0 0 10px 0;
-    }
+  .articuloForm p {
+      margin: 0 0 10px 0;
+  }
 
-    /* Contenedor de botones "Agregar/Quitar Artículo" */
-    .form-buttons {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-    }
+  /* Contenedor de botones para agregar/quitar artículo */
+  .form-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+  }
 
-    /* Contenedor del botón de Guardar Artículos */
-    .button-container {
-        margin-top: 10px;
-        text-align: right; 
-        width: 100%;
-    }
+  /* Contenedor del botón de guardar */
+  .button-container {
+      margin-top: 10px;
+      text-align: right;
+      width: 100%;
+  }
 
-    /* Estilos de los botones */
-    button {
-        border: none;
-        border-radius: 20px;
-        padding: 10px 20px;
-        background-color: #4e62cc;
-        color: white;
-        cursor: pointer;
-        font-family: 'Open Sans', sans-serif;
-        transition: background-color 0.3s ease;
-    }
-    button:hover {
-        background-color: #3957d4;
-    }
+  button {
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      background-color: #4e62cc;
+      color: white;
+      cursor: pointer;
+      font-family: 'Open Sans', sans-serif;
+      transition: background-color 0.3s ease;
+  }
+  button:hover {
+      background-color: #3957d4;
+  }
 
-    /* Tooltip de advertencia (por mayúsculas) */
-    .warning-tooltip {
-        position: absolute;
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 5px;
-        border-radius: 4px;
-        border: 1px solid #f5c6cb;
-        z-index: 1000;
-        font-size: 0.85rem;
-    }
+  .warning-tooltip {
+      position: absolute;
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #f5c6cb;
+      z-index: 1000;
+      font-size: 0.85rem;
+  }
 
-    /* Tooltip para campos en blanco */
-    .warning-tooltip2 {
-        position: absolute;
-        background-color: #ffffff;
-        color: #ec0e24;
-        padding: 5px;
-        border-radius: 4px;
-        border: 1px solid #ff0202;
-        z-index: 1000;
-        font-size: 0.85rem;
-    }
+  .warning-tooltip2 {
+      position: absolute;
+      background-color: #ffffff;
+      color: #ec0e24;
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #ff0202;
+      z-index: 1000;
+      font-size: 0.85rem;
+  }
 
-    /* Media Query: Ajustes para pantallas pequeñas */
-    @media screen and (max-width: 600px) {
-        .custom-card {
-            margin: 10px;
-        }
-        .button-container {
-            text-align: left;
-        }
-        #cotizacionForm {
-            flex-direction: column; /* Apilar bloques */
-        }
-    }
+  @media screen and (max-width: 600px) {
+      .custom-card {
+          margin: 10px;
+      }
+      .button-container {
+          text-align: left;
+      }
+      #cotizacionForm {
+          flex-direction: column;
+      }
+  }
 </style>
-<!-- jQuery -->
-<script 
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-..."
-  crossorigin="anonymous">
-</script>
+{% endblock extra_styles %}
 
-<!-- jQuery UI -->
-<script
-  src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
-  integrity="sha256-..."
-  crossorigin="anonymous">
-</script>
-
-<!-- jQuery UI CSS -->
-<link
-  rel="stylesheet"
-  href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
-
+{% block content %}
 <div class="custom-card">
-    <form id="cotizacionForm" method="post">
-        {% csrf_token %}
-
-        <!-- Bloque de datos del Documento -->
-        <div id="cotizacionFormFields">
-            <h3>Datos del Documento</h3>
-            {{ cotizacion_form.as_p }}
+  <form id="cotizacionForm" method="post">
+    {% csrf_token %}
+    <div id="cotizacionFormFields">
+      <h3>Datos del Documento</h3>
+      {{ cotizacion_form.as_p }}
+    </div>
+    <div id="articuloFormSet" data-form-count="{{ articulo_formset.total_form_count }}">
+      <h3>Artículos del Documento</h3>
+      {{ articulo_formset.management_form }}
+      {% for form in articulo_formset %}
+        <div class="articuloForm">
+          {{ form.as_p }}
         </div>
-
-        <!-- Bloque de artículos -->
-        <div id="articuloFormSet" data-form-count="{{ articulo_formset.total_form_count }}">
-            <h3>Artículos del Documento</h3>
-            {{ articulo_formset.management_form }}
-            
-            <!-- Cada artículo dentro de .articuloForm -->
-            {% for form in articulo_formset %}
-                <div class="articuloForm">
-                    {{ form.as_p }}
-                </div>
-            {% endfor %}
-
-            <div class="form-buttons">
-                <button type="button" id="addArticuloButton">Agregar Artículo</button>
-                <button type="button" id="removeArticuloButton">Quitar Artículo</button>
-            </div>
-        </div>
-
-        <!-- Botón final de guardar -->
-        <div class="button-container">
-            <button type="submit" id="guardarButton">Guardar Artículos</button>
-        </div>
-    </form>
+      {% endfor %}
+      <div class="form-buttons">
+        <button type="button" id="addArticuloButton">Agregar Artículo</button>
+        <button type="button" id="removeArticuloButton">Quitar Artículo</button>
+      </div>
+    </div>
+    <div class="button-container">
+      <button type="submit" id="guardarButton">Guardar Artículos</button>
+    </div>
+  </form>
 </div>
+{% endblock %}
 
+{% block extra_scripts %}
 <script type="text/javascript">
-    let formCount = parseInt(
-      document.getElementById('articuloFormSet').getAttribute('data-form-count'),
-      10
-    );
-  
-    const addArticuloButton = document.getElementById('addArticuloButton');
-    const removeArticuloButton = document.getElementById('removeArticuloButton');
-    const articuloFormSet = document.getElementById('articuloFormSet');
-  
-    // Funciones para actualizar el formset...
-    function updateElementIndex(el, prefix, index) {
-        const idRegex = new RegExp('(' + prefix + '-\\d+)');
-        const replacement = prefix + '-' + index;
-        if (el.id)   el.id   = el.id.replace(idRegex, replacement);
-        if (el.name) el.name = el.name.replace(idRegex, replacement);
-    }
-  
-    // Evento para "Agregar Artículo"
-    addArticuloButton.addEventListener('click', () => {
-        // Clonamos la primera .articuloForm
-        const baseForm = document.querySelectorAll('.articuloForm')[0];
-        const newForm = baseForm.cloneNode(true);
-        formCount++;
-  
-        // Actualizamos los nombres e IDs en cada input/select
-        newForm.querySelectorAll('input, select, textarea, label').forEach((field) => {
-            updateElementIndex(field, 'articulo', formCount - 1);
-            // Limpia valores (excepto checkboxes/radios):
-            if ((field.tagName === 'INPUT' && 
-                 field.type !== 'checkbox' && 
-                 field.type !== 'radio') || 
-                 field.tagName === 'TEXTAREA'
-            ) {
-                field.value = '';
-            }
-            if (field.tagName === 'SELECT') {
-                field.selectedIndex = 0;
-            }
-        });
-  
-        // Insertamos el formulario antes de los botones
-        articuloFormSet.insertBefore(
-          newForm,
-          articuloFormSet.querySelector('.form-buttons')
-        );
-  
-        // Actualizamos el TOTAL_FORMS
-        document.getElementById('id_articulo-TOTAL_FORMS').value = formCount;
-  
-        // ** Luego de añadir el nuevo form, volvemos a enlazar el autocomplete
-        initAutocomplete();
-    });
-  
-    // Evento para "Quitar Artículo"
-    removeArticuloButton.addEventListener('click', () => {
-        if (formCount > 1) {
-            const forms = document.querySelectorAll('.articuloForm');
-            const lastForm = forms[forms.length - 1];
-            articuloFormSet.removeChild(lastForm);
-            formCount--;
-            document.getElementById('id_articulo-TOTAL_FORMS').value = formCount;
-        }
-    });
-  
-    // Al cargar el documento, enlazar autocomplete en los formularios que ya existen
-    document.addEventListener('DOMContentLoaded', (event) => {
-        initAutocomplete();
-    });
-  </script>
+  // Si myJQ no está definido (por alguna razón), defínela aquí:
+  if (typeof myJQ === 'undefined') {
+      var myJQ = jQuery.noConflict(true);
+  }
 
- 
-<script>  
-
-/* ------------------------------------------------------------------
-   Validación de campos vacíos y uso de mayúsculas
------------------------------------------------------------------- */
-document.getElementById('cotizacionForm').addEventListener('submit', function(event) {
-    let fields = this.querySelectorAll('input[type="text"], select, textarea');
-    let hasBlankFields = false;
-    let hasUpperCase = false;
-
-    fields.forEach(function(field) {
-        /* Verificar campos en blanco (excepto inputs hidden) */
-        if (field.value.trim() === '' && field.type !== 'hidden') {
-            let blankFieldWarning = document.createElement('div');
-            blankFieldWarning.textContent = 'Por favor, completa todos los campos.';
-            blankFieldWarning.className = 'text-danger warning-tooltip2';
-            field.insertAdjacentElement('afterend', blankFieldWarning);
-            hasBlankFields = true;
-
-            // Desaparecer el mensaje tras 3 segundos
-            setTimeout(function() {
-                blankFieldWarning.style.opacity = 0;
-                blankFieldWarning.style.transition = 'opacity 0.5s ease-out';
-                setTimeout(function() {
-                    blankFieldWarning.remove();
-                }, 500);
-            }, 3000);
-        }
-
-        /* Verificar uso de mayúsculas */
-        if (/[A-Z]/.test(field.value)) {
-            let upperCaseWarning = document.createElement('div');
-            upperCaseWarning.textContent = 'Por favor, no uses letras mayúsculas.';
-            upperCaseWarning.className = 'text-danger warning-tooltip';
-            field.insertAdjacentElement('afterend', upperCaseWarning);
-            hasUpperCase = true;
-
-            // Desaparecer el mensaje tras 3 segundos
-            setTimeout(function() {
-                upperCaseWarning.style.opacity = 0;
-                upperCaseWarning.style.transition = 'opacity 0.5s ease-out';
-                setTimeout(function() {
-                    upperCaseWarning.remove();
-                }, 500);
-            }, 3000);
-        }
-    });
-
-    /* Si hay algún error, se evita el submit */
-    if (hasBlankFields || hasUpperCase) {
-        event.preventDefault();
-    }
-});
+  // Inicializar variables y manejo del formset usando myJQ
+  let formCount = parseInt(document.getElementById('articuloFormSet').getAttribute('data-form-count'), 10);
+  const addArticuloButton = document.getElementById('addArticuloButton');
+  const removeArticuloButton = document.getElementById('removeArticuloButton');
+  const articuloFormSet = document.getElementById('articuloFormSet');
+  
+  function updateElementIndex(el, prefix, index) {
+      const idRegex = new RegExp('(' + prefix + '-\\d+)');
+      const replacement = prefix + '-' + index;
+      if (el.id)   el.id = el.id.replace(idRegex, replacement);
+      if (el.name) el.name = el.name.replace(idRegex, replacement);
+  }
+  
+  addArticuloButton.addEventListener('click', () => {
+      const baseForm = document.querySelectorAll('.articuloForm')[0];
+      const newForm = baseForm.cloneNode(true);
+      formCount++;
+      newForm.querySelectorAll('input, select, textarea, label').forEach((field) => {
+          updateElementIndex(field, 'articulo', formCount - 1);
+          if ((field.tagName === 'INPUT' && field.type !== 'checkbox' && field.type !== 'radio') || field.tagName === 'TEXTAREA') {
+              field.value = '';
+          }
+          if (field.tagName === 'SELECT') {
+              field.selectedIndex = 0;
+          }
+      });
+      articuloFormSet.insertBefore(newForm, articuloFormSet.querySelector('.form-buttons'));
+      document.getElementById('id_articulo-TOTAL_FORMS').value = formCount;
+      initAutocomplete();
+  });
+  
+  removeArticuloButton.addEventListener('click', () => {
+      if (formCount > 1) {
+          const forms = document.querySelectorAll('.articuloForm');
+          const lastForm = forms[forms.length - 1];
+          articuloFormSet.removeChild(lastForm);
+          formCount--;
+          document.getElementById('id_articulo-TOTAL_FORMS').value = formCount;
+      }
+  });
+  
+  // Inicializar autocomplete usando myJQ
+  document.addEventListener('DOMContentLoaded', function() {
+      initAutocomplete();
+  });
+  
+  function initAutocomplete() {
+      myJQ("input[id$='-nombre']").each(function() {
+          myJQ(this).autocomplete({
+              source: "{% url 'buscar_articulos_nombres' %}",
+              minLength: 2,
+              select: function(event, ui) {
+                  console.log("Seleccionado:", ui.item.value);
+              }
+          });
+      });
+  }
 </script>
 
 <script>
-    function initAutocomplete() {
-      // Selecciona todos los inputs cuyo id termine en '-nombre'
-      $("input[id$='-nombre']").each(function() {
-        $(this).autocomplete({
-          source: "{% url 'buscar_articulos_nombres' %}",
-          minLength: 2,
-          select: function(event, ui) {
-            console.log("Seleccionado:", ui.item.value);
+  // Validación: evitar campos vacíos y mayúsculas
+  document.getElementById('cotizacionForm').addEventListener('submit', function(event) {
+      let fields = this.querySelectorAll('input[type="text"], select, textarea');
+      let hasBlankFields = false;
+      let hasUpperCase = false;
+
+      fields.forEach(function(field) {
+          if (field.value.trim() === '' && field.type !== 'hidden') {
+              let blankFieldWarning = document.createElement('div');
+              blankFieldWarning.textContent = 'Por favor, completa todos los campos.';
+              blankFieldWarning.className = 'text-danger warning-tooltip2';
+              field.insertAdjacentElement('afterend', blankFieldWarning);
+              hasBlankFields = true;
+              setTimeout(function() {
+                  blankFieldWarning.style.opacity = 0;
+                  blankFieldWarning.style.transition = 'opacity 0.5s ease-out';
+                  setTimeout(function() { blankFieldWarning.remove(); }, 500);
+              }, 3000);
           }
-        });
+          if (/[A-Z]/.test(field.value)) {
+              let upperCaseWarning = document.createElement('div');
+              upperCaseWarning.textContent = 'Por favor, no uses letras mayúsculas.';
+              upperCaseWarning.className = 'text-danger warning-tooltip';
+              field.insertAdjacentElement('afterend', upperCaseWarning);
+              hasUpperCase = true;
+              setTimeout(function() {
+                  upperCaseWarning.style.opacity = 0;
+                  upperCaseWarning.style.transition = 'opacity 0.5s ease-out';
+                  setTimeout(function() { upperCaseWarning.remove(); }, 500);
+              }, 3000);
+          }
       });
-    }
-  </script>
-  <script>
-    $(document).ready(function() {
-      // Autocomplete: LUGAR
-      $("#id_cotizacion-lugar").autocomplete({
-        source: "{% url 'buscar_lugares' %}",
-        minLength: 2,
-        select: function(event, ui) {
-          console.log("Lugar seleccionado:", ui.item.value);
-        }
+      if (hasBlankFields || hasUpperCase) {
+          event.preventDefault();
+      }
+  });
+</script>
+
+<script>
+  // Inicializar autocompletes para otros campos usando myJQ
+  myJQ(document).ready(function() {
+      myJQ("#id_cotizacion-lugar").autocomplete({
+          source: "{% url 'buscar_lugares' %}",
+          minLength: 2,
+          select: function(event, ui) { console.log("Lugar seleccionado:", ui.item.value); }
       });
-    
-      // Autocomplete: VENDEDOR
-      $("#id_cotizacion-vendedor").autocomplete({
-        source: "{% url 'buscar_vendedores' %}",
-        minLength: 2,
-        select: function(event, ui) {
-          console.log("Vendedor seleccionado:", ui.item.value);
-        }
+      myJQ("#id_cotizacion-vendedor").autocomplete({
+          source: "{% url 'buscar_vendedores' %}",
+          minLength: 2,
+          select: function(event, ui) { console.log("Vendedor seleccionado:", ui.item.value); }
       });
-    
-      // Autocomplete: COMPRADOR
-      $("#id_cotizacion-comprador").autocomplete({
-        source: "{% url 'buscar_compradores' %}",
-        minLength: 2,
-        select: function(event, ui) {
-          console.log("Comprador seleccionado:", ui.item.value);
-        }
+      myJQ("#id_cotizacion-comprador").autocomplete({
+          source: "{% url 'buscar_compradores' %}",
+          minLength: 2,
+          select: function(event, ui) { console.log("Comprador seleccionado:", ui.item.value); }
       });
-    
-      // Autocomplete: EMPRESA COMPRADORA
-      $("#id_cotizacion-empresa_compradora").autocomplete({
-        source: "{% url 'buscar_empresas_compradoras' %}",
-        minLength: 2,
-        select: function(event, ui) {
-          console.log("Empresa compradora seleccionada:", ui.item.value);
-        }
+      myJQ("#id_cotizacion-empresa_compradora").autocomplete({
+          source: "{% url 'buscar_empresas_compradoras' %}",
+          minLength: 2,
+          select: function(event, ui) { console.log("Empresa compradora seleccionada:", ui.item.value); }
       });
-    
-      // Autocomplete: EMPRESA VENDEDORA
-      $("#id_cotizacion-empresa_vendedora").autocomplete({
-        source: "{% url 'buscar_empresas_vendedoras' %}",
-        minLength: 2,
-        select: function(event, ui) {
-          console.log("Empresa vendedora seleccionada:", ui.item.value);
-        }
+      myJQ("#id_cotizacion-empresa_vendedora").autocomplete({
+          source: "{% url 'buscar_empresas_vendedoras' %}",
+          minLength: 2,
+          select: function(event, ui) { console.log("Empresa vendedora seleccionada:", ui.item.value); }
       });
-    
-      // Autocomplete: FORMA DE PAGO
-      $("#id_cotizacion-forma_pago").autocomplete({
-        source: "{% url 'buscar_formas_pago' %}",
-        minLength: 2,
-        select: function(event, ui) {
-          console.log("Forma de pago seleccionada:", ui.item.value);
-        }
+      myJQ("#id_cotizacion-forma_pago").autocomplete({
+          source: "{% url 'buscar_formas_pago' %}",
+          minLength: 2,
+          select: function(event, ui) { console.log("Forma de pago seleccionada:", ui.item.value); }
       });
-    
-      // Autocomplete: ENTREGA
-      $("#id_cotizacion-entrega").autocomplete({
-        source: "{% url 'buscar_entregas' %}",
-        minLength: 2,
-        select: function(event, ui) {
-          console.log("Entrega seleccionada:", ui.item.value);
-        }
+      myJQ("#id_cotizacion-entrega").autocomplete({
+          source: "{% url 'buscar_entregas' %}",
+          minLength: 2,
+          select: function(event, ui) { console.log("Entrega seleccionada:", ui.item.value); }
       });
-    
-      // Autocomplete: SECCIÓN
-      $("#id_cotizacion-seccion").autocomplete({
-        source: "{% url 'buscar_secciones' %}",
-        minLength: 2,
-        select: function(event, ui) {
-          console.log("Sección seleccionada:", ui.item.value);
-        }
+      myJQ("#id_cotizacion-seccion").autocomplete({
+          source: "{% url 'buscar_secciones' %}",
+          minLength: 2,
+          select: function(event, ui) { console.log("Sección seleccionada:", ui.item.value); }
       });
-    
-      // Autocomplete: CORREO
-      $("#id_cotizacion-correo_vendedor").autocomplete({
-        source: "{% url 'buscar_correos_vendedor' %}",
-        minLength: 2,
-        select: function(event, ui) {
-          console.log("Correo seleccionado:", ui.item.value);
-        }
+      myJQ("#id_cotizacion-correo_vendedor").autocomplete({
+          source: "{% url 'buscar_correos_vendedor' %}",
+          minLength: 2,
+          select: function(event, ui) { console.log("Correo seleccionado:", ui.item.value); }
       });
-    
-    });
-    </script>
-    
-    
+  });
+</script>
 {% endblock %}

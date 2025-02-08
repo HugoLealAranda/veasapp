@@ -127,15 +127,22 @@ LOGIN_REDIRECT_URL = 'home'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+DEBUG = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, "gestionPedidos\static")
+STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "staticfiles")]
+# 1) Donde Django recopilará todos los estáticos al hacer 'collectstatic'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# 2) Donde tienes tus archivos estáticos en desarrollo
+#    (en tu caso, "gestionPedidos/static")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'gestionPedidos', 'static'),
+]
 
-
+# WhiteNoise config
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

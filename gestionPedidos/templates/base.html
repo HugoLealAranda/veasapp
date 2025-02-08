@@ -1,139 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>{% block title %}{% endblock title %}</title>
-    <!-- Favicon-->
-    {% load static %}
-    <link rel="icon" type="image/x-icon" href="{% static 'gestionPedidos/assets/favicon.ico' %}" />
-    <!-- jQuery primero -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>{% block title %}{% endblock title %}</title>
+  
+  {% load static %}
 
-    <!-- Bootstrap después -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="{% static 'gestionPedidos/assets/favicon.ico' %}" />
 
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="{% static 'gestionPedidos/css/styles.css' %}" rel="stylesheet" />
-    {% block extra_head %}
-    {% endblock extra_head %}
-    {% block extra_styles %}
-    {% endblock extra_styles %}
-</head>
-<style>
+  <!-- Core theme CSS (incluye Bootstrap y estilos propios) -->
+  <link href="{% static 'gestionPedidos/css/styles.css' %}" rel="stylesheet" />
+
+  <!-- Bootstrap CSS local -->
+  <link rel="stylesheet" href="{% static 'gestionPedidos/css/bootstrap.min.css' %}">
+
+  <!-- jQuery local (versión 3.6.0) -->
+  <script src="{% static 'gestionPedidos/js/jquery-3.6.0.min.js' %}"></script>
+
+  <!-- jQuery UI CSS (CDN) -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
+
+  <!-- jQuery UI JS (CDN) SIN atributo integrity -->
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+  <!-- Bootstrap JS local -->
+  <script src="{% static 'gestionPedidos/js/bootstrap.bundle.min.js' %}"></script>
+
+  {% block extra_head %}{% endblock extra_head %}
+  {% block extra_styles %}{% endblock extra_styles %}
+
+  <style>
     /* Ajuste para eliminar el espacio en el margen superior */
-    .navbar {
-        margin-top: 1px;
-    }
-    /* Aumentar el espaciado entre los formularios de la barra de navegación */
-    .navbar .d-flex {
-        margin-right: 20px;
-    }
-    /* Ajuste del input de búsqueda */
-    #searchInput {
-        flex: 1;
-        height: 40px;
-        width: 300px; 
-        margin-right: 10px; 
-    }
-    /* Botones con outline y su estado hover/active */
-    .btn-outline-success {
-        border-color: #007bff;
-        color: #29292b;
-    }
-    .btn-outline-success:hover,
-    .nav-link:hover,
-    .dropdown-item:hover {
-        background-color: #007bff;
-        color: white;
-        border-color: #007bff;
-    }
-    .btn-outline-success:active {
-        background-color: #007bff !important;
-        color: white !important;
-        border-color: #007bff !important;
-    }
-    /* Ajuste de layout en contenedor principal (barra de navegación) */
-    .container-fluid {
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 0;
-    }
-    .container-fluid form {
-        flex: 1 1 auto; 
-    }
-    /* Ajuste de la separación entre elementos de menú */
-    .navbar-nav .nav-item {
-        margin-right: 15px;
-    }
+    .navbar { margin-top: 1px; }
   </style>
-</head>
 
+  <!-- ¡Muy importante! Definir myJQ en el head para que esté disponible para las plantillas hijas -->
+  <script>
+    // Aislamos la instancia de jQuery y la asignamos a la variable global myJQ
+    var myJQ = jQuery.noConflict(true);
+  </script>
+</head>
 <body>
-  <!-- Contenedor principal de la página -->
   <div id="page-content-wrapper">
-    <!-- Top navigation -->
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom {% if not show_navbar %}d-none{% endif %}">
       <div class="container-fluid">
-        <!-- LOGO -->
+        <!-- Logo -->
         <nav>
-          <img src="{% static 'images/logo6.png' %}"
-               alt="Logo de mi proyecto"
-               style="width: 180px; margin-right: 10px">
+          <img src="{% static 'gestionPedidos/images/logo6.png' %}" alt="Logo de mi proyecto" style="width: 180px; margin-right: 10px">
         </nav>
-
-        <!-- Botón: Agregar Artículos -->
+        <!-- Navigation forms -->
         <form action="{% url 'agregar_cotizacion' %}" method="get" class="d-flex">
           <button class="btn btn-outline-success" type="submit">Agregar Articulos</button>
         </form>
-
-        <!-- Botón: Base de Datos (admin) -->
         <form action="{% url 'admin:index' %}" method="get" class="d-flex">
           <button class="btn btn-outline-success" type="submit">Base de Datos</button>
         </form>
-
-        <!-- Botón: Generar Informe -->
         <form action="{% url 'generar_informe' %}" method="get" class="d-flex">
           <button class="btn btn-outline-success" type="submit">Generar Informe</button>
         </form>
-
-        <!-- Botón: Volver al Inicio -->
         <form action="{% url 'home' %}" method="get" class="d-flex">
           <button class="btn btn-outline-success" type="submit">Volver al Inicio</button>
         </form>
-
-        <!-- Formulario de búsqueda -->
+        <!-- Search form -->
         <form action="{% url 'buscar' %}" method="get" class="d-flex" onsubmit="return sanitizeInput()">
-          <input 
-            id="searchInput" 
-            class="form-control me-2" 
-            type="search" 
-            name="prd" 
-            placeholder="Buscar Estadísticas..." 
-            aria-label="Search" 
-            value="{{ query }}" 
-            required
-          >
+          <input id="searchInput" class="form-control me-2" type="search" name="prd" placeholder="Buscar Estadísticas..." aria-label="Search" value="{{ query }}" required>
           <button class="btn btn-outline-success" type="submit">Buscar</button>
         </form>
-
-        <!-- Dropdown de usuario / cerrar sesión -->
+        <!-- User dropdown -->
         <div class="d-flex align-items-center">
           <div class="me-3">
             <div class="dropdown">
-              <button 
-                class="btn btn-outline-success dropdown-toggle" 
-                type="button" 
-                id="dropdownMenuButton" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false"
-              >
+              <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                 Bienvenido {{ user.username|upper }}
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <!-- Formulario para cerrar sesión con método POST -->
                 <form action="{% url 'logout' %}" method="post" style="display: inline;">
                   {% csrf_token %}
                   <button type="submit" class="dropdown-item">Cerrar sesión</button>
@@ -141,46 +86,56 @@
               </div>
             </div>
           </div>
-        </div> 
-        <!-- Fin dropdown usuario -->               
-      </div> <!-- /container-fluid -->
+        </div>
+      </div>
     </nav>
-    <!-- /Top navigation -->
 
-    <!-- Contenido de la página -->
+    <!-- Main content -->
     <div class="container-fluid">
-      {% block content %}
-      {% endblock content %}
-
-      {% block extra_scripts %}
-      {% endblock extra_scripts %}
+      {% block content %}{% endblock content %}
+      {% block extra_scripts %}{% endblock extra_scripts %}
+      {% block javascript %}{% endblock javascript %}
     </div>
   </div>
 
-  <!-- Sanitizar input de búsqueda antes del submit -->
-  <script>
-    function sanitizeInput() {
-      var inputField = document.getElementById('searchInput');
-      inputField.value = inputField.value.replace(/"/g, "&quot;");
-      return true; 
-    }
-  </script>
+  <!-- Core theme JS -->
+  <script src="{% static 'gestionPedidos/js/scripts.js' %}"></script>
 
-  <!-- Autocomplete para la barra de búsqueda -->
+  <!-- Usar myJQ (ya definida en el head) para inicializar el autocomplete en la barra de búsqueda -->
   <script>
-    $(document).ready(function() {
-      $("#searchInput").autocomplete({
+    myJQ(document).ready(function() {
+      console.log("Base.html myJQ instance is running!");
+      myJQ("#searchInput").autocomplete({
         source: "{% url 'buscar_articulos_nombres' %}",
         minLength: 2,
         select: function(event, ui) {
-          console.log("Barra de búsqueda - seleccionado:", ui.item.value);
-          // Si quieres, puedes asignar el valor seleccionado:
-          // $("#searchInput").val(ui.item.value);
+          console.log("Seleccionado:", ui.item.value);
         }
-      });
+      }).data('ui-autocomplete')._renderItem = function(ul, item) {
+        return myJQ("<li></li>")
+          .data("item.autocomplete", item)
+          .append("<div>" + item.label + "</div>")
+          .appendTo(ul);
+      };
     });
+    
+    function sanitizeInput() {
+      var inputField = document.getElementById('searchInput');
+      inputField.value = inputField.value.replace(/"/g, "&quot;");
+      return true;
+    }
   </script>
 
-  {% block javascript %}{% endblock javascript %}
+  <style>
+    .navbar .d-flex { margin-right: 20px; }
+    #searchInput { flex: 1; height: 40px; width: 300px; margin-right: 10px; }
+    .btn-outline-success { border-color: #007bff; color: #29292b; }
+    .btn-outline-success:active { background-color: #007bff !important; color: white !important; border-color: #007bff !important; }
+    .btn-outline-success:hover, .nav-link:hover, .dropdown-item:hover { background-color: #007bff; color: white; border-color: #007bff; }
+    .container-fluid { display: flex; flex-wrap: wrap; margin-top: 0; }
+    .container-fluid form { flex: 1 1 80%; }
+    @media (max-width: 768px) { .container-fluid form { flex-basis: 50%; } }
+    .navbar-nav .nav-item { margin-right: 15px; }
+  </style>
 </body>
 </html>

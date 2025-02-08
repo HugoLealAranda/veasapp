@@ -2,7 +2,7 @@
 
 {% block extra_styles %}
 <style>
-  /* Estilos generales del body (ajusta según lo que tengas en base.html) */
+  /* Estilos generales para el informe financiero */
   body {
       font-family: Arial, sans-serif;
       background-color: #f2f2f2;
@@ -10,8 +10,6 @@
       margin: 0;
       padding: 0;
   }
-
-  /* Botón principal (descargar/Imprimir) */
   .button {
       background-color: #0056b3;
       border: none;
@@ -29,10 +27,8 @@
       margin-top: 1em;
   }
   .button:hover {
-      background-color: #003d82; /* Tonalidad más oscura */
+      background-color: #003d82;
   }
-
-  /* Tarjetas o contenedores con fondo blanco */
   .card {
       background-color: #fff;
       border-radius: 5px;
@@ -40,36 +36,22 @@
       margin: 20px auto;
       padding: 20px;
       width: 90%;
-      max-width: 1000px; /* Ancho máximo en pantallas grandes */
+      max-width: 1000px;
   }
-
-  /* Títulos */
   h1, h2, h4 {
       text-align: center;
       margin-top: 20px;
       margin-bottom: 15px;
   }
-  h1 {
-      color: #0e0e0e;
-  }
-  h2 {
-      color: #136eff;
-  }
-  h4 {
-      color: #333;
-  }
-
-  /* Listas dentro de .card */
+  h1 { color: #0e0e0e; }
+  h2 { color: #136eff; }
+  h4 { color: #333; }
   .card ul {
       padding-left: 40px;
       margin-top: 10px;
       margin-bottom: 10px;
   }
-  .card li {
-      margin-bottom: 10px;
-  }
-
-  /* Tablas */
+  .card li { margin-bottom: 10px; }
   table {
       width: 90%;
       margin: 0 auto 20px auto;
@@ -80,30 +62,23 @@
   th, td {
       padding: 8px;
       border: 1px solid #ddd;
-      text-align: center; /* Centrar el contenido */
+      text-align: center;
   }
   th {
       background-color: #f2f2f2;
       font-weight: bold;
   }
-  tr:nth-child(even) {
-      background-color: #f9f9f9;
-  }
-
+  tr:nth-child(even) { background-color: #f9f9f9; }
 </style>
 {% endblock extra_styles %}
 
 {% block content %}
-
-<!-- Tarjeta de rango de fechas -->
 <div class="card">
     <h4>Este informe financiero corresponde a las fechas entre {{ fecha_inicio }} y {{ fecha_fin }}</h4>
 </div>
 
-<!-- Botón para imprimir o descargar PDF -->
 <button class="button" onclick="printPage()">Descargar PDF o Imprimir</button>
 
-<!-- Resumen general del informe -->
 <div class="card">
     <h2>Resumen</h2>
     <p style="font-size: 16px; font-weight: bold; text-align: justify; margin-bottom: 10px;">
@@ -121,17 +96,15 @@
     </p>
 </div>
 
-<!-- Cotizaciones Rechazadas -->
 <div class="card">
     <h2>Cotizaciones Rechazadas</h2>
     <ul>
         {% for numero_cotizacion, comentario in cotizaciones_rechazadas %}
-        <li><strong>{{ numero_cotizacion }}</strong> - {{ comentario }}</li>
+          <li><strong>{{ numero_cotizacion }}</strong> - {{ comentario }}</li>
         {% endfor %}
     </ul>
 </div>
 
-<!-- Informe de Ventas -->
 <div class="card">
     <h2>Informes de Ventas</h2>
     <h4>Ventas totales: {{ suma_valores_totales_ventas }}</h4>
@@ -145,19 +118,18 @@
         </tr>
       </thead>
       <tbody>
-      {% for informe in lista_informes_ventas %}
-        <tr>
-          <td>{{ informe.0 }}</td>
-          <td>{{ informe.1 }}</td>
-          <td>{{ informe.2 }}</td>
-          <td>{{ informe.3 }}</td>
-        </tr>
-      {% endfor %}
+        {% for informe in lista_informes_ventas %}
+          <tr>
+            <td>{{ informe.0 }}</td>
+            <td>{{ informe.1 }}</td>
+            <td>{{ informe.2 }}</td>
+            <td>{{ informe.3 }}</td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
 </div>
 
-<!-- Informe de Compras -->
 <div class="card">
     <h2>Informes de Compras</h2>
     <h4>Compras totales: {{ suma_valores_totales_compras }}</h4>
@@ -171,22 +143,21 @@
         </tr>
       </thead>
       <tbody>
-      {% for informe in lista_informes_compras %}
-        <tr>
-          <td>{{ informe.0 }}</td>
-          <td>{{ informe.1 }}</td>
-          <td>{{ informe.2 }}</td>
-          <td>{{ informe.3 }}</td>
-        </tr>
-      {% endfor %}
+        {% for informe in lista_informes_compras %}
+          <tr>
+            <td>{{ informe.0 }}</td>
+            <td>{{ informe.1 }}</td>
+            <td>{{ informe.2 }}</td>
+            <td>{{ informe.3 }}</td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
 </div>
 
 <script>
-    /* Función para imprimir o descargar la página */
-    function printPage() {
-        window.print();
-    }
+  function printPage() {
+      window.print();
+  }
 </script>
-{% endblock content %}
+{% endblock %}
